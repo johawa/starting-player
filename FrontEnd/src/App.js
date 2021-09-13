@@ -8,7 +8,8 @@ import {
   sendPlayerPressedMouse,
   subscribeToPlayerPressedMouse,
   sendPlayerMouseUp,
-  subscribeToPlayerMouseUp
+  subscribeToPlayerMouseUp,
+  subscribeToActiveUsers,
 } from "./utils/socket.helpers";
 import "./App.css";
 import "./Winner.css";
@@ -45,13 +46,18 @@ function App() {
     });
 
     subscribeToPlayerPressedMouse((err, player) => {
-      if (err) return;     
+      if (err) return;
       userIsPressingMouseDown(player);
     });
 
     subscribeToPlayerMouseUp((err, player) => {
-      if (err) return;     
+      if (err) return;
       userIsMouseUp(player);
+    });
+
+    subscribeToActiveUsers((err, users) => {
+      if (err) return;
+      recordActiveUsers(users);
     });
 
     return () => {
@@ -87,6 +93,10 @@ function App() {
     setAnimate(true); */
   }
 
+  function recordActiveUsers(users) {
+    console.log('recordActiveUsers', users)
+  }
+
   function userIsPressingMouseDown(player) {
     setUserPressingMouse({ player: player, clr: "red" });
   }
@@ -94,7 +104,6 @@ function App() {
   function userIsMouseUp(player) {
     setUserPressingMouse({ player: player, clr: "gray" });
   }
-
 
   function handleMouseUp(ev) {
     sendPlayerMouseUp(playerName, room); // send to Socket.io
@@ -162,7 +171,6 @@ function App() {
         {renderCursor()}
         {renderName()}
       </div>
-   
     </div>
   );
 }

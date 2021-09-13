@@ -26,12 +26,19 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`Disconnected: ${socket.id}`);
+
     activeUsers.forEach((user) => {
       if (user.id === socket.id) {
         activeUsers.delete(user);
       }
     });
 
+    let users = [];
+    activeUsers.forEach((user) => {
+      users.push(user);
+    });
+
+    io.emit("emitActiveUsers", users);
     console.log(activeUsers);
   });
 
@@ -40,6 +47,13 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     activeUsers.add(new User(socket.id));
+    
+    let users = [];
+    activeUsers.forEach((user) => {
+      users.push(user);
+    });
+
+    io.emit("emitActiveUsers", users);
     console.log(activeUsers);
   });
 

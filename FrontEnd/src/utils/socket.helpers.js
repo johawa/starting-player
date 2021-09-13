@@ -12,6 +12,18 @@ export const disconnectSocket = () => {
   if (socket) socket.disconnect();
 };
 
+// Users Start 
+export const subscribeToActiveUsers = (cb) => {
+    if (!socket) return true;
+    socket.on("emitActiveUsers", (msg) => {
+      console.log("Websocket event received! [emitActiveUsers]", msg);
+      return cb(null, msg);
+    });
+  };
+  
+
+// Users End
+
 // mouseMove Start
 export const subscribeToCursorPositionsData = (cb) => {
   if (!socket) return true;
