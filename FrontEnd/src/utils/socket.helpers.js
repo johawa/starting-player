@@ -7,21 +7,20 @@ export const initiateSocket = (room) => {
   if (socket && room) socket.emit("join", room);
 };
 
+
 export const disconnectSocket = () => {
   console.log("Disconnecting socket...");
   if (socket) socket.disconnect();
 };
 
-// Users Start 
+// Users Start
 export const subscribeToActiveUsers = (cb) => {
-    if (!socket) return true;
-    socket.on("emitActiveUsers", (msg) => {
-      console.log("Websocket event received! [emitActiveUsers]", msg);
-      return cb(null, msg);
-    });
-  };
-  
-
+  if (!socket) return true;
+  socket.on("emitActiveUsers", (msg) => {
+    console.log("Websocket event received! [emitActiveUsers]", msg);
+    return cb(null, msg);
+  });
+};
 // Users End
 
 // mouseMove Start
@@ -59,11 +58,11 @@ export const sendPlayerMouseUp = (player, room) => {
 };
 
 export const subscribeToPlayerMouseUp = (cb) => {
-    if (!socket) return true;
-    socket.on("emitplayerMouseUp", (msg) => {
-      console.log("Websocket event received! [emitplayerMouseUp]");
-      return cb(null, msg);
-    });
-  };
+  if (!socket) return true;
+  socket.on("emitplayerMouseUp", (msg) => {
+    console.log("Websocket event received! [emitplayerMouseUp]");
+    return cb(null, msg);
+  });
+};
 
 // mouseUp End

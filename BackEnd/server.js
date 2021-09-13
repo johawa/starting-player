@@ -15,9 +15,11 @@ const io = socket(server, { cors: true });
 const activeUsers = new Set();
 
 class User {
-  constructor(id, clr) {
+  constructor(id, clr, x, y) {
     this.id = id;
     this.clr = clr ? clr : "gray";
+    this.x = x ? x : 0;
+    this.y = y ? y : 0;
   }
 }
 
@@ -47,7 +49,7 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     activeUsers.add(new User(socket.id));
-    
+
     let users = [];
     activeUsers.forEach((user) => {
       users.push(user);
@@ -61,6 +63,8 @@ io.on("connection", (socket) => {
   socket.on("cursorPosition", (data) => {
     const { cords, room } = data;
     // console.log(`cords: ${cords}, room: ${room}`);
+
+
     io.to(room).emit("emitCursorPositionsData", cords);
   });
   // mouseMove End

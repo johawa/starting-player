@@ -10,6 +10,7 @@ import {
   sendPlayerMouseUp,
   subscribeToPlayerMouseUp,
   subscribeToActiveUsers,
+  getSocket,
 } from "./utils/socket.helpers";
 import "./App.css";
 import "./Winner.css";
@@ -29,6 +30,8 @@ function App() {
   const [animate, setAnimate] = useState(false);
   const [state, setState] = useState(states.default);
   const [finalRank, setFinalRank] = useState(null);
+
+  const [activeUsers, setActiveUsers] = useState(null);
 
   const [userPressingMouse, setUserPressingMouse] = useState({
     playerName: playerName,
@@ -94,7 +97,8 @@ function App() {
   }
 
   function recordActiveUsers(users) {
-    console.log('recordActiveUsers', users)
+    console.log("recordActiveUsers", users);
+    setActiveUsers(users);
   }
 
   function userIsPressingMouseDown(player) {
@@ -156,8 +160,8 @@ function App() {
     }
   }
 
-  function renderName() {
-    return <div>{playerName}</div>;
+  function renderName(name) {
+    return <div>{name}</div>;
   }
 
   return (
@@ -171,6 +175,16 @@ function App() {
         {renderCursor()}
         {renderName()}
       </div>
+
+      {activeUsers &&
+        activeUsers.map((user) => {
+          return (
+            <div className="cursor_wrapper" key={user.id}>
+              {renderCursor()}
+              {renderName(user.id)}
+            </div>
+          );
+        })}
     </div>
   );
 }
