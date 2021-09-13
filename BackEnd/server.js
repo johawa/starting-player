@@ -10,7 +10,7 @@ const server = app.listen(PORT, function () {
 });
 
 // Socket setup
-const io = socket(server, { cors: true, origins: ["192.168.1.104"] });
+const io = socket(server, { cors: true });
 
 const activeUsers = new Set();
 
