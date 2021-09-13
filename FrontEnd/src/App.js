@@ -162,6 +162,7 @@ function App() {
         {renderCursor()}
         {renderName()}
       </div>
+   
     </div>
   );
 }
