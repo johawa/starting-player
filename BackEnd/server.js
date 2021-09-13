@@ -24,10 +24,10 @@ io.on("connection", (socket) => {
     socket.join(room);
   });
 
-  socket.on("mouseMove", (data) => {
+  socket.on("cursorPosition", (data) => {
     const { cords, room } = data;
-    // console.log(`cords: ${cords}, room: ${room}`);
-    io.to(room).emit("emitMousePosition", cords);
+    console.log(`cords: ${cords}, room: ${room}`);
+    io.to(room).emit("emitCursorPositionsData", cords);
   });
 
 

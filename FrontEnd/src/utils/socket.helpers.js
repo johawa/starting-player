@@ -12,14 +12,14 @@ export const disconnectSocket = () => {
   if (socket) socket.disconnect();
 };
 
-export const subscribeToChat = (cb) => {
+export const subscribeToCursorPositionsData = (cb) => {
   if (!socket) return true;
-  socket.on("emitMousePosition", (msg) => {
+  socket.on("emitCursorPositionsData", (msg) => {
     console.log("Websocket event received!");
     return cb(null, msg);
   });
 };
 
-export const sendMouseMoveData = (room, cords) => {
-  if (socket) socket.emit("mouseMove", { cords, room });
+export const sendCursorPositionData = (room, cords) => {
+  if (socket) socket.emit("cursorPosition", { cords, room });
 };

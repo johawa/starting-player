@@ -3,8 +3,8 @@ import { shuffleArray } from "./utils/helpers";
 import {
   initiateSocket,
   disconnectSocket,
-  subscribeToChat,
-  sendMouseMoveData,
+  sendCursorPositionData,
+  subscribeToCursorPositionsData,
 } from "./utils/socket.helpers";
 import "./App.css";
 import "./Winner.css";
@@ -23,17 +23,21 @@ const players = ["Johannes", "maarit", "tatze"];
 function App() {
   const [animate, setAnimate] = useState(false);
   const [state, setState] = useState(states.default);
-  const [finalPosition, setFinalPosition] = useState(null);
+  const [finalRank, setFinalRank] = useState(null);
+
+
   const cursor = useRef(null);
 
   const playerName = "Johannes";
 
   useEffect(() => {
     if (room) initiateSocket(room);
-    subscribeToChat((err, cords) => {
+
+    subscribeToCursorPositionsData((err, cords) => {
       if (err) return;
       setCursorPosition(cords);
     });
+
     return () => {
       disconnectSocket();
     };
@@ -42,7 +46,7 @@ function App() {
   function handleMouseMove(ev) {
     const cords = { x: ev.pageX, y: ev.pageY };
     setCursorPosition(cords);
-    sendMouseMoveData(room, cords);
+    sendCursorPositionData(room, cords);
   }
 
   function setCursorPosition(cords) {
@@ -73,9 +77,9 @@ function App() {
   function determineWinner(playerName) {
     shuffleArray(players);
     const position = players.indexOf(playerName);
-    const finalPosition = position + 1;
-    setFinalPosition(finalPosition);
-    if (finalPosition === 1) {
+    const finalRank = position + 1;
+    setFinalRank(finalRank);
+    if (finalRank === 1) {
       setState(states.winner);
     } else {
       setState(states.looser);
@@ -95,7 +99,7 @@ function App() {
       case states.looser:
         return (
           <div className="cursor looser">
-            <LooserCircle finalPosition={finalPosition}></LooserCircle>
+            <LooserCircle finalRank={finalRank}></LooserCircle>
           </div>
         );
       default:
@@ -140,26 +144,26 @@ function WinnerCircle() {
   );
 }
 
-function LooserCircle({ finalPosition }) {
+function LooserCircle({ finalRank }) {
   return (
     <>
       <div className="point_looser" style={{ "--i": 1 }}>
-        {finalPosition}
+        {finalRank}
       </div>
       <div className="point_looser" style={{ "--i": 2 }}>
-        {finalPosition}
+        {finalRank}
       </div>
       <div className="point_looser" style={{ "--i": 3 }}>
-        {finalPosition}
+        {finalRank}
       </div>
       <div className="point_looser" style={{ "--i": 4 }}>
-        {finalPosition}
+        {finalRank}
       </div>
       <div className="point_looser" style={{ "--i": 5 }}>
-        {finalPosition}
+        {finalRank}
       </div>
       <div className="point_looser" style={{ "--i": 6 }}>
-        {finalPosition}
+        {finalRank}
       </div>
     </>
   );
