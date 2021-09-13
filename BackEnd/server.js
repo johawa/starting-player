@@ -10,7 +10,7 @@ const server = app.listen(PORT, function () {
 });
 
 // Socket setup
-const io = socket(server, { cors: true, origins: ['192.168.1.104'] });
+const io = socket(server, { cors: true, origins: ["192.168.1.104"] });
 
 const activeUsers = new Set();
 
@@ -24,11 +24,19 @@ io.on("connection", (socket) => {
     socket.join(room);
   });
 
+  // mouseMove Start
   socket.on("cursorPosition", (data) => {
     const { cords, room } = data;
     console.log(`cords: ${cords}, room: ${room}`);
     io.to(room).emit("emitCursorPositionsData", cords);
   });
+  // mouseMove End
 
-
+  // mousePressed Start
+  socket.on("playerPressedMouse", (data) => {
+    const { player, room } = data;
+    console.log(`playerPressedMouse: ${player}, room: ${room}`);
+    io.to(room).emit("emitplayerPressedMouse", player);
+  });
+  // mousePressed End
 });

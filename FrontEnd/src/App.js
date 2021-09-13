@@ -5,6 +5,8 @@ import {
   disconnectSocket,
   sendCursorPositionData,
   subscribeToCursorPositionsData,
+  sendPlayerPressedMouse,
+  subscribeToPlayerPressedMouse,
 } from "./utils/socket.helpers";
 import "./App.css";
 import "./Winner.css";
@@ -25,7 +27,6 @@ function App() {
   const [state, setState] = useState(states.default);
   const [finalRank, setFinalRank] = useState(null);
 
-
   const cursor = useRef(null);
 
   const playerName = "Johannes";
@@ -38,6 +39,12 @@ function App() {
       setCursorPosition(cords);
     });
 
+    subscribeToPlayerPressedMouse((err, player) => {
+      if (err) return;
+      console.log("startIdleAnimation", player);
+      startIdleAnimation(player);
+    });
+
     return () => {
       disconnectSocket();
     };
@@ -46,7 +53,8 @@ function App() {
   function handleMouseMove(ev) {
     const cords = { x: ev.pageX, y: ev.pageY };
     setCursorPosition(cords);
-    sendCursorPositionData(room, cords);
+
+    sendCursorPositionData(cords, room); // send to Socket.io
   }
 
   function setCursorPosition(cords) {
@@ -55,19 +63,23 @@ function App() {
   }
 
   function handleMouseDown(ev) {
-    let timeleft = 2;
+    sendPlayerPressedMouse(playerName, room); // send to Socket.io
+
+    /*     let timeleft = 2;
     var downloadTimer = setInterval(function () {
       if (timeleft <= 0) {
         determineWinner(playerName);
-        /*   setState(states.looser); */
         clearInterval(downloadTimer);
       }
       console.log("count seconds", timeleft);
       timeleft -= 1;
     }, 1000);
 
+    setAnimate(true); */
+  }
+
+  function startIdleAnimation(player) {
     setAnimate(true);
-    console.log("mouseDown", ev);
   }
 
   function handleMouseUp(ev) {

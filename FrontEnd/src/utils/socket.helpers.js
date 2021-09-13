@@ -12,14 +12,31 @@ export const disconnectSocket = () => {
   if (socket) socket.disconnect();
 };
 
+// mouseMove Start
 export const subscribeToCursorPositionsData = (cb) => {
   if (!socket) return true;
   socket.on("emitCursorPositionsData", (msg) => {
-    console.log("Websocket event received!");
+    console.log("Websocket event received! [subscribeToCursorPositionsData]");
     return cb(null, msg);
   });
 };
 
-export const sendCursorPositionData = (room, cords) => {
+export const sendCursorPositionData = (cords, room) => {
   if (socket) socket.emit("cursorPosition", { cords, room });
 };
+// mouseMove End
+
+// mousePressed Start
+export const sendPlayerPressedMouse = (player, room) => {
+  if (socket) socket.emit("playerPressedMouse", { player, room });
+};
+
+export const subscribeToPlayerPressedMouse = (cb) => {
+  if (!socket) return true;
+  socket.on("emitplayerPressedMouse", (msg) => {
+    console.log("Websocket event received! [emitplayerPressedMouse]");
+    return cb(null, msg);
+  });
+};
+
+// mousePressed End
