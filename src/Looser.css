@@ -1,0 +1,37 @@
+.looser {
+  background-color: grey;
+  display: grid;
+  grid-template-areas: "layer";
+  place-items: center;
+  animation: rotate 1s linear infinite;
+}  
+
+.point_looser {
+  position: relative;
+  grid-area: layer;
+
+  font-size: 16px;
+  color: white;
+  border-radius: 50%;
+
+  --radius: 4.2vmin;
+
+  --d: calc(var(--i) / 6);
+
+  --r-offset: -0.25turn;
+
+  --r-amount: 1turn;
+
+  --r: calc((var(--r-amount) * var(--d)) + var(--r-offset));
+
+  transform: rotate(var(--r)) translate(var(--radius)) rotateZ(90deg);
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-180deg);
+  }
+}

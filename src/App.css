@@ -1,38 +1,85 @@
-.App {
-  text-align: center;
+.app {
+  height: 100vh;
+  width: 100vw;
+  background: rgb(27, 27, 27);
+  color: white;
+  padding: 50px;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.cursor_wrapper {
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.cursor {
+  --radius: 5vmin;
+  width: calc(2 * var(--radius));
+  height: calc(2 * var(--radius));
+  background-color: rebeccapurple;
+  border-radius: 50%;
+  position: relative !important;
 }
 
-@keyframes App-logo-spin {
-  from {
+.point_1 {
+  width: 50%;
+  height: 2px;
+  background: transparent;
+  position: absolute;
+  top: calc(50% - 1px);
+  transform-origin: right;
+}
+
+.point_2 {
+  width: 50%;
+  height: 2px;
+  background: transparent;
+  position: absolute;
+  top: calc(50% - 1px);
+  transform-origin: right;
+}
+
+.point_1:before,
+.point_2:before {
+  content: "";
+  position: absolute;
+  width: 1vmin;
+  height: 1vmin;
+  background: transparent;
+  border-radius: 50%;
+  top: -10px;
+  left: 0px;
+}
+
+.animationRev {
+  animation: circleAnimationRev 3s linear forwards;
+}
+
+.animation {
+  animation: circleAnimation 3s linear forwards;
+}
+
+.animationRev:before {
+  background: white;
+}
+.animation:before {
+  background: white;
+}
+
+@keyframes circleAnimation {
+  0% {
     transform: rotate(0deg);
   }
-  to {
-    transform: rotate(360deg);
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes circleAnimationRev {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-180deg);
   }
 }

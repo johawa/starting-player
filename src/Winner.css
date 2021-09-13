@@ -1,0 +1,36 @@
+.winner {
+  display: grid;
+  grid-template-areas: "layer";
+  place-items: center;
+  animation: rotate 1s linear infinite;
+}
+
+.point_winner {
+  position: relative;
+  grid-area: layer;
+  width: 1vmin;
+  height: 1vmin;
+  background: white;
+  border-radius: 50%;
+
+  --radius: 4.5vmin;
+
+  --d: calc(var(--i) / 6);
+
+  --r-offset: -0.25turn;
+
+  --r-amount: 1turn;
+
+  --r: calc((var(--r-amount) * var(--d)) + var(--r-offset));
+
+  transform: rotate(var(--r)) translate(var(--radius));
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-180deg);
+  }
+}
