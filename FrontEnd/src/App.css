@@ -16,7 +16,7 @@
   --radius: 5vmin;
   width: calc(2 * var(--radius));
   height: calc(2 * var(--radius));
-  background-color: rebeccapurple;
+  background-color: gray;
   border-radius: 50%;  
   position: relative !important;
 }

@@ -7,6 +7,8 @@ import {
   subscribeToCursorPositionsData,
   sendPlayerPressedMouse,
   subscribeToPlayerPressedMouse,
+  sendPlayerMouseUp,
+  subscribeToPlayerMouseUp
 } from "./utils/socket.helpers";
 import "./App.css";
 import "./Winner.css";
@@ -19,17 +21,20 @@ const states = {
 };
 
 const room = "A";
-
 const players = ["Johannes", "maarit", "tatze"];
+const playerName = "Johannes";
 
 function App() {
   const [animate, setAnimate] = useState(false);
   const [state, setState] = useState(states.default);
   const [finalRank, setFinalRank] = useState(null);
 
-  const cursor = useRef(null);
+  const [userPressingMouse, setUserPressingMouse] = useState({
+    playerName: playerName,
+    clr: "gray",
+  });
 
-  const playerName = "Johannes";
+  const cursor = useRef(null);
 
   useEffect(() => {
     if (room) initiateSocket(room);
@@ -40,9 +45,13 @@ function App() {
     });
 
     subscribeToPlayerPressedMouse((err, player) => {
-      if (err) return;
-      console.log("startIdleAnimation", player);
-      startIdleAnimation(player);
+      if (err) return;     
+      userIsPressingMouseDown(player);
+    });
+
+    subscribeToPlayerMouseUp((err, player) => {
+      if (err) return;     
+      userIsMouseUp(player);
     });
 
     return () => {
@@ -78,12 +87,17 @@ function App() {
     setAnimate(true); */
   }
 
-  function startIdleAnimation(player) {
-    setAnimate(true);
+  function userIsPressingMouseDown(player) {
+    setUserPressingMouse({ player: player, clr: "red" });
   }
 
+  function userIsMouseUp(player) {
+    setUserPressingMouse({ player: player, clr: "gray" });
+  }
+
+
   function handleMouseUp(ev) {
-    console.log("mouseUp", ev);
+    sendPlayerMouseUp(playerName, room); // send to Socket.io
   }
 
   function determineWinner(playerName) {
@@ -104,19 +118,28 @@ function App() {
     switch (state) {
       case states.winner:
         return (
-          <div className="cursor winner">
+          <div
+            className="cursor winner"
+            style={{ backgroundColor: userPressingMouse.clr }}
+          >
             <WinnerCircle></WinnerCircle>
           </div>
         );
       case states.looser:
         return (
-          <div className="cursor looser">
+          <div
+            className="cursor looser"
+            style={{ backgroundColor: userPressingMouse.clr }}
+          >
             <LooserCircle finalRank={finalRank}></LooserCircle>
           </div>
         );
       default:
         return (
-          <div className="cursor">
+          <div
+            className="cursor"
+            style={{ backgroundColor: userPressingMouse.clr }}
+          >
             <div className={animate ? "point_1 animationRev" : "point_1"}></div>
             <div className={animate ? "point_2 animation" : "point_2"}></div>
           </div>

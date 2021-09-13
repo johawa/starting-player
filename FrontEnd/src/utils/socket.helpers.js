@@ -40,3 +40,18 @@ export const subscribeToPlayerPressedMouse = (cb) => {
 };
 
 // mousePressed End
+
+// mouseUp Start
+export const sendPlayerMouseUp = (player, room) => {
+  if (socket) socket.emit("playerMouseUp", { player, room });
+};
+
+export const subscribeToPlayerMouseUp = (cb) => {
+    if (!socket) return true;
+    socket.on("emitplayerMouseUp", (msg) => {
+      console.log("Websocket event received! [emitplayerMouseUp]");
+      return cb(null, msg);
+    });
+  };
+
+// mouseUp End

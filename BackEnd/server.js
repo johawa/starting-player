@@ -39,4 +39,12 @@ io.on("connection", (socket) => {
     io.to(room).emit("emitplayerPressedMouse", player);
   });
   // mousePressed End
+
+  // mouseUp Start
+  socket.on("playerMouseUp", (data) => {
+    const { player, room } = data;
+    console.log(`playerMouseUp: ${player}, room: ${room}`);
+    io.to(room).emit("emitplayerMouseUp", player);
+  });
+  // mouseUp End
 });
