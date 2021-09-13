@@ -17,7 +17,7 @@
   width: calc(2 * var(--radius));
   height: calc(2 * var(--radius));
   background-color: rebeccapurple;
-  border-radius: 50%;
+  border-radius: 50%;  
   position: relative !important;
 }
 

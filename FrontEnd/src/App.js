@@ -1,5 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { shuffleArray } from "./utils/helpers";
+import {
+  initiateSocket,
+  disconnectSocket,
+  subscribeToChat,
+  sendMouseMoveData,
+} from "./utils/socket.helpers";
 import "./App.css";
 import "./Winner.css";
 import "./Looser.css";
@@ -9,6 +15,8 @@ const states = {
   looser: "looser",
   default: "default",
 };
+
+const room = "A";
 
 const players = ["Johannes", "maarit", "tatze"];
 
@@ -20,9 +28,26 @@ function App() {
 
   const playerName = "Johannes";
 
+  useEffect(() => {
+    if (room) initiateSocket(room);
+    subscribeToChat((err, cords) => {
+      if (err) return;
+      setCursorPosition(cords);
+    });
+    return () => {
+      disconnectSocket();
+    };
+  }, []);
+
   function handleMouseMove(ev) {
-    cursor.current.style.top = `+${ev.pageY}px`;
-    cursor.current.style.left = `+${ev.pageX}px`;
+    const cords = { x: ev.pageX, y: ev.pageY };
+    setCursorPosition(cords);
+    sendMouseMoveData(room, cords);
+  }
+
+  function setCursorPosition(cords) {
+    cursor.current.style.top = `+${cords.y}px`;
+    cursor.current.style.left = `+${cords.x}px`;
   }
 
   function handleMouseDown(ev) {
