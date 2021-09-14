@@ -134,20 +134,7 @@ function App() {
     }
   }
 
-  /*   function determineWinner(playerName) {
-    shuffleArray(players);
-    const position = players.indexOf(playerName);
-    const finalRank = position + 1;
-    setFinalRank(finalRank);
-    if (finalRank === 1) {
-      setState(states.winner);
-    } else {
-      setState(states.looser);
-    }
 
-    console.log("finalArray", position, players);
-  }
- */
   function renderCursorState() {
     switch (state) {
       case states.winner:

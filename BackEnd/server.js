@@ -14,6 +14,7 @@ const io = socket(server, { cors: true });
 const activeUsers = new Set();
 let timeleft = 2;
 let downloadTimer;
+let winnerArray;
 
 class User {
   constructor(id, clr, x, y) {
@@ -87,7 +88,6 @@ io.on("connection", (socket) => {
     io.to(room).emit("emitAllUserPressingMouseDown", false);
     stopTimer();
 
-    
     activeUsers.forEach((user) => {
       if (user.id === id) {
         user.isPressingMouseDown = false;
@@ -107,7 +107,7 @@ function determineIfAllUserArePressingMouseDown(users) {
 function startTimer() {
   downloadTimer = setInterval(function () {
     if (timeleft <= 0) {
-      // determineWinner(playerName);
+      determineWinner();
       clearInterval(downloadTimer);
     }
     console.log("count seconds", timeleft);
@@ -118,4 +118,26 @@ function startTimer() {
 function stopTimer() {
   clearInterval(downloadTimer);
   timeleft = 2;
+}
+
+function determineWinner() {
+  winnerArray = shuffleArray([...activeUsers.keys()]);
+
+  const position = usersCopy.indexOf(playerName);
+  /*   const finalRank = position + 1;
+  setFinalRank(finalRank);
+  if (finalRank === 1) {
+    setState(states.winner);
+  } else {
+    setState(states.looser);
+  } */
+
+  console.log("finalArray", usersCopy);
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
