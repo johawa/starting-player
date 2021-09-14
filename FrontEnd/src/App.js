@@ -11,6 +11,7 @@ import {
   sendUserMouseUp,
   subscribeToUserMouseUp,
   subscribeToActiveUsers,
+  subscribeToAllUserPressingMouseDown,
   getSocket,
 } from "./utils/socket.helpers";
 import "./App.css";
@@ -30,8 +31,8 @@ function App() {
   const [animate, setAnimate] = useState(false);
   const [state, setState] = useState(states.default);
   const [finalRank, setFinalRank] = useState(null);
-  const [activeUsers, setActiveUsers] = useState([]);
 
+  const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
 
   const cursors = useRef([]);
@@ -64,11 +65,17 @@ function App() {
       userIsPressingMouseUp(player);
     });
 
+    subscribeToAllUserPressingMouseDown((err, boolean) => {
+      if (err) return;
+      allUserPressingMouseDown(boolean);
+    });
+
     return () => {
       disconnectSocket();
     };
   }, []);
 
+  // init Functions
   function initiatetOwnUser(id) {
     setMySocketId(id);
   }
@@ -77,13 +84,13 @@ function App() {
     setActiveUsers(users);
   }
 
+  // Mouse Move
   function handleMouseMove(ev) {
     if (mySocketId) {
       const data = { x: ev.pageX, y: ev.pageY, socketId: mySocketId }; // TODO Refactoring
       sendCursorPositionData(data, room); // send to Socket.io
     }
   }
-
   function setCursorPosition(data) {
     const socketId = data.cords.socketId;
     if (socketId) {
@@ -116,7 +123,19 @@ function App() {
     }
   }
 
-/*   function determineWinner(playerName) {
+  // Events
+  // All Users Pressing Mouse Down
+
+  function allUserPressingMouseDown(bln) {
+    console.log("allUsersPressingMouseDown", bln);  
+    setAnimate(true);
+    
+    if (bln === false) {
+      setAnimate(false);
+    }
+  }
+
+  /*   function determineWinner(playerName) {
     shuffleArray(players);
     const position = players.indexOf(playerName);
     const finalRank = position + 1;

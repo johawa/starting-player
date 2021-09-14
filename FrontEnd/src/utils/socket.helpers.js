@@ -7,7 +7,6 @@ export const initiateSocket = (room) => {
   if (socket && room) socket.emit("join", room);
 };
 
-
 export const disconnectSocket = () => {
   console.log("Disconnecting socket...");
   if (socket) socket.disconnect();
@@ -75,3 +74,13 @@ export const subscribeToUserMouseUp = (cb) => {
 };
 
 // mouseUp End
+
+// Events
+// All Users Pressing Mouse Down
+export const subscribeToAllUserPressingMouseDown = (cb) => {
+  if (!socket) return true;
+  socket.on("emitAllUserPressingMouseDown", (msg) => {
+    console.log("Websocket event received! [emitAllUserPressingMouseDown]");
+    return cb(null, msg);
+  });
+};
