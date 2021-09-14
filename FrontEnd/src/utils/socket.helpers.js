@@ -13,6 +13,15 @@ export const disconnectSocket = () => {
   if (socket) socket.disconnect();
 };
 
+// Gets MySocketId
+export const subscribeToNewConnection = (cb) => {
+  if (!socket) return true;
+  socket.on("emitNewConnection", (msg) => {
+    console.log("Websocket event received! [emitNewConnection]");
+    return cb(null, msg);
+  });
+};
+
 // Users Start
 export const subscribeToActiveUsers = (cb) => {
   if (!socket) return true;

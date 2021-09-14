@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { shuffleArray } from "./utils/helpers";
 import {
   initiateSocket,
+  subscribeToNewConnection,
   disconnectSocket,
   sendCursorPositionData,
   subscribeToCursorPositionsData,
@@ -30,18 +31,24 @@ function App() {
   const [animate, setAnimate] = useState(false);
   const [state, setState] = useState(states.default);
   const [finalRank, setFinalRank] = useState(null);
-
-  const [activeUsers, setActiveUsers] = useState(null);
-
   const [userPressingMouse, setUserPressingMouse] = useState({
     playerName: playerName,
     clr: "gray",
   });
 
+  const [activeUsers, setActiveUsers] = useState(null);
+
+  const [mySocketId, setMySocketId] = useState(null);
+
   const cursor = useRef(null);
 
   useEffect(() => {
     if (room) initiateSocket(room);
+
+    subscribeToNewConnection((err, mySocketId) => {
+      if (err) return;
+      initiatetOwnUser(mySocketId);
+    });
 
     subscribeToCursorPositionsData((err, cords) => {
       if (err) return;
@@ -67,6 +74,10 @@ function App() {
       disconnectSocket();
     };
   }, []);
+
+  function initiatetOwnUser(id) {
+    setMySocketId(id);
+  }
 
   function handleMouseMove(ev) {
     const cords = { x: ev.pageX, y: ev.pageY };
@@ -160,8 +171,34 @@ function App() {
     }
   }
 
-  function renderName(name) {
-    return <div>{name}</div>;
+  function renderName(id) {
+    return <div>{id}</div>;
+  }
+
+  function renderOtherPlayers() {
+    if (activeUsers && mySocketId) {
+      const otherUsers = activeUsers.filter((user) => user.id !== mySocketId);
+
+      return otherUsers.map((user) => {
+        return (
+          <div className="cursor_wrapper" key={user.id}>
+            {renderCursor()}
+            {renderName(user.id)}
+          </div>
+        );
+      });
+    }
+  }
+
+  function renderOwnPLayer() {
+    if (mySocketId) {
+      return (
+        <div ref={cursor} className="cursor_wrapper">
+          {renderCursor()}
+          {renderName(mySocketId)}
+        </div>
+      );
+    }
   }
 
   return (
@@ -171,20 +208,8 @@ function App() {
       onMouseDown={(ev) => handleMouseDown(ev)}
       onMouseUp={(ev) => handleMouseUp(ev)}
     >
-      <div ref={cursor} className="cursor_wrapper">
-        {renderCursor()}
-        {renderName()}
-      </div>
-
-      {activeUsers &&
-        activeUsers.map((user) => {
-          return (
-            <div className="cursor_wrapper" key={user.id}>
-              {renderCursor()}
-              {renderName(user.id)}
-            </div>
-          );
-        })}
+      {renderOwnPLayer()}
+      {renderOtherPlayers()}
     </div>
   );
 }

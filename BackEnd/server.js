@@ -25,6 +25,7 @@ class User {
 
 io.on("connection", (socket) => {
   console.log(`Connected: ${socket.id}`);
+  socket.emit("emitNewConnection", socket.id);
 
   socket.on("disconnect", () => {
     console.log(`Disconnected: ${socket.id}`);
@@ -35,12 +36,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    let users = [];
-    activeUsers.forEach((user) => {
-      users.push(user);
-    });
-
-    io.emit("emitActiveUsers", users);
+    io.emit("emitActiveUsers", [...activeUsers.keys()]);
     console.log(activeUsers);
   });
 
@@ -49,13 +45,8 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     activeUsers.add(new User(socket.id));
-
-    let users = [];
-    activeUsers.forEach((user) => {
-      users.push(user);
-    });
-
-    io.emit("emitActiveUsers", users);
+  
+    io.emit("emitActiveUsers", [...activeUsers.keys()]);
     console.log(activeUsers);
   });
 
