@@ -66,10 +66,22 @@ io.on("connection", (socket) => {
   // mousePressed End
 
   // mouseUp Start
-  socket.on("playerMouseUp", (data) => {
-    const { player, room } = data;
-    // console.log(`playerMouseUp: ${player}, room: ${room}`);
-    io.to(room).emit("emitplayerMouseUp", player);
+  socket.on("userMouseUp", (data) => {
+    const { id, room } = data;
+    console.log(`userMouseUp: ${id}, room: ${room}`);
+    io.to(room).emit("emituserMouseUp", id);
   });
   // mouseUp End
 });
+
+/*     let timeleft = 2;
+    var downloadTimer = setInterval(function () {
+      if (timeleft <= 0) {
+        determineWinner(playerName);
+        clearInterval(downloadTimer);
+      }
+      console.log("count seconds", timeleft);
+      timeleft -= 1;
+    }, 1000);
+
+    setAnimate(true); */

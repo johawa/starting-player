@@ -6,10 +6,10 @@ import {
   disconnectSocket,
   sendCursorPositionData,
   subscribeToCursorPositionsData,
-  sendUserPressedMouse,
-  subscribeToUserPressedMouse,
-  sendPlayerMouseUp,
-  subscribeToPlayerMouseUp,
+  sendUserMouseDown,
+  subscribeToUserMouseDown,
+  sendUserMouseUp,
+  subscribeToUserMouseUp,
   subscribeToActiveUsers,
   getSocket,
 } from "./utils/socket.helpers";
@@ -25,17 +25,11 @@ const states = {
 
 const room = "A";
 const players = ["Johannes", "maarit", "tatze"];
-const playerName = "Johannes";
 
 function App() {
   const [animate, setAnimate] = useState(false);
   const [state, setState] = useState(states.default);
   const [finalRank, setFinalRank] = useState(null);
-  const [userPressingMouse, setUserPressingMouse] = useState({
-    playerName: playerName,
-    clr: "gray",
-  });
-
   const [activeUsers, setActiveUsers] = useState([]);
 
   const [mySocketId, setMySocketId] = useState(null);
@@ -60,14 +54,14 @@ function App() {
       setCursorPosition(cords);
     });
 
-    subscribeToUserPressedMouse((err, id) => {
+    subscribeToUserMouseDown((err, id) => {
       if (err) return;
       userIsPressingMouseDown(id);
     });
 
-    subscribeToPlayerMouseUp((err, player) => {
+    subscribeToUserMouseUp((err, player) => {
       if (err) return;
-      userIsMouseUp(player);
+      userIsPressingMouseUp(player);
     });
 
     return () => {
@@ -77,6 +71,10 @@ function App() {
 
   function initiatetOwnUser(id) {
     setMySocketId(id);
+  }
+
+  function recordActiveUsers(users) {
+    setActiveUsers(users);
   }
 
   function handleMouseMove(ev) {
@@ -94,47 +92,31 @@ function App() {
     }
   }
 
+  // Mouse Down
   function handleMouseDown(ev) {
     if (mySocketId) {
-      sendUserPressedMouse(mySocketId, room); // send to Socket.io
+      sendUserMouseDown(mySocketId, room); // send to Socket.io
     }
-
-    /*     let timeleft = 2;
-    var downloadTimer = setInterval(function () {
-      if (timeleft <= 0) {
-        determineWinner(playerName);
-        clearInterval(downloadTimer);
-      }
-      console.log("count seconds", timeleft);
-      timeleft -= 1;
-    }, 1000);
-
-    setAnimate(true); */
   }
-
-  function recordActiveUsers(users) {
-    console.log("recordActiveUsers", users);
-    setActiveUsers(users);
-  }
-
   function userIsPressingMouseDown(id) {
-    console.log("userIsPressingMouse", id);
     if (id) {
-      console.log(cursors.current[`${id}`].firstChild, "userIsPressingMouse");
       cursors.current[`${id}`].firstChild.style.backgroundColor = "red";
     }
-    // setUserPressingMouse({ id: id, clr: "red" });
   }
 
-  function userIsMouseUp(player) {
-    setUserPressingMouse({ player: player, clr: "gray" });
-  }
-
+  // Mouse Up
   function handleMouseUp(ev) {
-    sendPlayerMouseUp(playerName, room); // send to Socket.io
+    if (mySocketId) {
+      sendUserMouseUp(mySocketId, room); // send to Socket.io
+    }
+  }
+  function userIsPressingMouseUp(id) {
+    if (id) {
+      cursors.current[`${id}`].firstChild.style.backgroundColor = "gray";
+    }
   }
 
-  function determineWinner(playerName) {
+/*   function determineWinner(playerName) {
     shuffleArray(players);
     const position = players.indexOf(playerName);
     const finalRank = position + 1;
@@ -147,7 +129,7 @@ function App() {
 
     console.log("finalArray", position, players);
   }
-
+ */
   function renderCursorState() {
     switch (state) {
       case states.winner:
