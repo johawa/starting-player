@@ -38,17 +38,17 @@ io.on("connection", (socket) => {
     });
 
     io.emit("emitActiveUsers", [...activeUsers.keys()]);
-    console.log(activeUsers);
+    // console.log(activeUsers);
   });
 
   socket.on("join", (room) => {
-    console.log(`Socket ${socket.id} joining ${room}`);
+    // console.log(`Socket ${socket.id} joining ${room}`);
     socket.join(room);
 
     activeUsers.add(new User(socket.id));
 
     io.emit("emitActiveUsers", [...activeUsers.keys()]);
-    console.log(activeUsers);
+    // console.log(activeUsers);
   });
 
   // mouseMove Start
@@ -61,15 +61,16 @@ io.on("connection", (socket) => {
   // mousePressed Start
   socket.on("userPressedMouse", (data) => {
     const { id, room } = data;
+
+    io.to(room).emit("emituserPressedMouse", id);
+
     activeUsers.forEach((user) => {
       if (user.id === id) {
         user.isPressingMouseDown = true;
         // console.log("userMouseDown", user);
       }
     });
-
-    io.to(room).emit("emituserPressedMouse", id);
-
+ 
     if (determineIfAllUserArePressingMouseDown([...activeUsers.keys()])) {
       io.to(room).emit("emitAllUserPressingMouseDown", true);
     }
@@ -79,6 +80,10 @@ io.on("connection", (socket) => {
   // mouseUp Start
   socket.on("userMouseUp", (data) => {
     const { id, room } = data;
+
+    // cancel function when user Presses Up again
+    io.to(room).emit("emitAllUserPressingMouseDown", false);
+
     activeUsers.forEach((user) => {
       if (user.id === id) {
         user.isPressingMouseDown = false;
@@ -86,27 +91,13 @@ io.on("connection", (socket) => {
       }
     });
 
-    // cancel function when user Presses Up again
-    io.to(room).emit("emitAllUserPressingMouseDown", false);
-
     io.to(room).emit("emituserMouseUp", id);
   });
   // mouseUp End
 });
 
 function determineIfAllUserArePressingMouseDown(users) {
-  let boolean;
-
-  users.forEach((user) => {
-    if (user.isPressingMouseDown === false) {
-      boolean = false;
-      return;
-    } else {
-      boolean = true;
-    }
-  });
-
-  return boolean;
+  return ![...users].some((user) => user.isPressingMouseDown === false);
 }
 
 /*     let timeleft = 2;

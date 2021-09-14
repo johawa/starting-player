@@ -93,7 +93,7 @@ function App() {
   }
   function setCursorPosition(data) {
     const socketId = data.cords.socketId;
-    if (socketId) {
+    if (socketId && cursors) {
       cursors.current[`${socketId}`].style.top = `+${data.cords.y}px`;
       cursors.current[`${socketId}`].style.left = `+${data.cords.x}px`;
     }
@@ -129,7 +129,7 @@ function App() {
   function allUserPressingMouseDown(bln) {
     console.log("allUsersPressingMouseDown", bln);  
     setAnimate(true);
-    
+
     if (bln === false) {
       setAnimate(false);
     }
