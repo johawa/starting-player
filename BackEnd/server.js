@@ -98,6 +98,17 @@ io.on("connection", (socket) => {
     io.to(room).emit("emituserMouseUp", id);
   });
   // mouseUp End
+
+  // Event
+  // DetermineWinner
+  socket.on("getWinnerArray", (data) => {
+    const { room } = data;
+
+    const winnerArray = [...activeUsers.keys()];
+    shuffleArray(winnerArray);
+     console.log("emitWinnerArray", winnerArray);
+    io.emit("emitWinnerArray", winnerArray);
+  });
 });
 
 function determineIfAllUserArePressingMouseDown(users) {
@@ -121,18 +132,8 @@ function stopTimer() {
 }
 
 function determineWinner() {
-  winnerArray = shuffleArray([...activeUsers.keys()]);
-
-  const position = usersCopy.indexOf(playerName);
-  /*   const finalRank = position + 1;
-  setFinalRank(finalRank);
-  if (finalRank === 1) {
-    setState(states.winner);
-  } else {
-    setState(states.looser);
-  } */
-
-  console.log("finalArray", usersCopy);
+  const winnerArray = [...activeUsers.keys()];
+  shuffleArray(winnerArray);
 }
 
 function shuffleArray(array) {

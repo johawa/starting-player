@@ -12,7 +12,8 @@ import {
   subscribeToUserMouseUp,
   subscribeToActiveUsers,
   subscribeToAllUserPressingMouseDown,
-  getSocket,
+  getWinnerArray,
+  subscribeToWinnerArray,
 } from "./utils/socket.helpers";
 import "./App.css";
 import "./Winner.css";
@@ -75,6 +76,14 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    // dev
+    subscribeToWinnerArray((err, data) => {
+      if (err) return;
+      processWinners(data);
+    });
+  }, [mySocketId]);
+
   // init Functions
   function initiatetOwnUser(id) {
     setMySocketId(id);
@@ -129,11 +138,33 @@ function App() {
   function allUserPressingMouseDown(bln) {
     setAnimate(true);
 
+    // TODO remove and add listener from BE, winner array will come from the BE
+    determineWinners();
+
     if (bln === false) {
       setAnimate(false);
     }
   }
 
+  // Determine Winners
+  function determineWinners() {
+    getWinnerArray(room);
+  }
+
+  function processWinners(data) {
+    console.log("processWinners", data, mySocketId);
+    if (mySocketId) {
+      const position = data.map((user) => user.id).indexOf(mySocketId) + 1;
+      console.log("processWinners", position);
+      setFinalRank(position);
+      
+      if (position === 1) {
+        setState(states.winner);
+      } else {
+        setState(states.looser);
+      }
+    }
+  }
 
   function renderCursorState() {
     switch (state) {
@@ -202,15 +233,21 @@ function App() {
   }
 
   return (
-    <div
-      className="app"
-      onMouseMove={(ev) => handleMouseMove(ev)}
-      onMouseDown={(ev) => handleMouseDown(ev)}
-      onMouseUp={(ev) => handleMouseUp(ev)}
-    >
-      {renderOwnPLayer()}
-      {renderOtherPlayers()}
-    </div>
+    <>
+      <div style={{ height: "200px" }}>
+        <button onClick={(ev) => determineWinners(ev)}>determineWinners</button>
+      </div>
+      <div
+        className="app"
+        onMouseMove={(ev) => handleMouseMove(ev)}
+        onMouseDown={(ev) => handleMouseDown(ev)}
+        onMouseUp={(ev) => handleMouseUp(ev)}
+      >
+        <br />
+        {renderOwnPLayer()}
+        {renderOtherPlayers()}
+      </div>
+    </>
   );
 }
 

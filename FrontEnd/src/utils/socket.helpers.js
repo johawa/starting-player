@@ -84,3 +84,17 @@ export const subscribeToAllUserPressingMouseDown = (cb) => {
     return cb(null, msg);
   });
 };
+
+// DEV
+
+export const getWinnerArray = (room) => {
+  if (socket) socket.emit("getWinnerArray", room);
+};
+
+export const subscribeToWinnerArray = (cb) => {
+  if (!socket) return true;
+  socket.on("emitWinnerArray", (msg) => {
+    console.log("Websocket event received! [emitWinnerArray]", msg);
+    return cb(null, msg);
+  });
+};
