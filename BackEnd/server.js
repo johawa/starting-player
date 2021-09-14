@@ -11,8 +11,9 @@ const server = app.listen(PORT, function () {
 
 // Socket setup
 const io = socket(server, { cors: true });
-
 const activeUsers = new Set();
+let timeleft = 2;
+let downloadTimer;
 
 class User {
   constructor(id, clr, x, y) {
@@ -70,8 +71,9 @@ io.on("connection", (socket) => {
         // console.log("userMouseDown", user);
       }
     });
- 
+
     if (determineIfAllUserArePressingMouseDown([...activeUsers.keys()])) {
+      startTimer();
       io.to(room).emit("emitAllUserPressingMouseDown", true);
     }
   });
@@ -83,7 +85,9 @@ io.on("connection", (socket) => {
 
     // cancel function when user Presses Up again
     io.to(room).emit("emitAllUserPressingMouseDown", false);
+    stopTimer();
 
+    
     activeUsers.forEach((user) => {
       if (user.id === id) {
         user.isPressingMouseDown = false;
@@ -100,14 +104,18 @@ function determineIfAllUserArePressingMouseDown(users) {
   return ![...users].some((user) => user.isPressingMouseDown === false);
 }
 
-/*     let timeleft = 2;
-    var downloadTimer = setInterval(function () {
-      if (timeleft <= 0) {
-        determineWinner(playerName);
-        clearInterval(downloadTimer);
-      }
-      console.log("count seconds", timeleft);
-      timeleft -= 1;
-    }, 1000);
+function startTimer() {
+  downloadTimer = setInterval(function () {
+    if (timeleft <= 0) {
+      // determineWinner(playerName);
+      clearInterval(downloadTimer);
+    }
+    console.log("count seconds", timeleft);
+    timeleft -= 1;
+  }, 1000);
+}
 
-    setAnimate(true); */
+function stopTimer() {
+  clearInterval(downloadTimer);
+  timeleft = 2;
+}

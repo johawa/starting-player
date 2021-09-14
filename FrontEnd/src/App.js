@@ -127,7 +127,6 @@ function App() {
   // All Users Pressing Mouse Down
 
   function allUserPressingMouseDown(bln) {
-    console.log("allUsersPressingMouseDown", bln);  
     setAnimate(true);
 
     if (bln === false) {
