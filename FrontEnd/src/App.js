@@ -82,17 +82,17 @@ function App() {
   function handleMouseMove(ev) {
     if (mySocketId) {
       const data = { x: ev.pageX, y: ev.pageY, socketId: mySocketId };
-      setCursorPosition(data);
+      // setCursorPosition(data);
       sendCursorPositionData(data, room); // send to Socket.io
     }
   }
 
   function setCursorPosition(data) {
-    const { socketId } = data;
-
+    const socketId = data.cords.socketId;
+    // console.log(cursors.current[`${socketId}`], "cursors", socketId);
     if (socketId) {
-      cursors.current[`${socketId}`].style.top = `+${data.y}px`;
-      cursors.current[`${socketId}`].style.left = `+${data.x}px`;
+      cursors.current[`${socketId}`].style.top = `+${data.cords.y}px`;
+      cursors.current[`${socketId}`].style.left = `+${data.cords.x}px`;
     }
   }
 
