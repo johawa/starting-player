@@ -45,18 +45,18 @@ io.on("connection", (socket) => {
     socket.join(room);
 
     activeUsers.add(new User(socket.id));
-  
+
     io.emit("emitActiveUsers", [...activeUsers.keys()]);
     console.log(activeUsers);
   });
 
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
-    const { cords, room } = data;
-    // console.log(`cords: ${cords}, room: ${room}`);
+    
 
+    console.log(data);
 
-    io.to(room).emit("emitCursorPositionsData", cords);
+    io.to(data.room).emit("emitCursorPositionsData", data);
   });
   // mouseMove End
 

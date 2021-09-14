@@ -80,15 +80,16 @@ function App() {
   }
 
   function handleMouseMove(ev) {
-    const cords = { x: ev.pageX, y: ev.pageY };
-    setCursorPosition(cords);
-
-    sendCursorPositionData(cords, room); // send to Socket.io
+    if (mySocketId) {
+      const data = { x: ev.pageX, y: ev.pageY, socketId: mySocketId };
+      setCursorPosition(data);
+      sendCursorPositionData(data, room); // send to Socket.io
+    }
   }
 
-  function setCursorPosition(cords) {
-    cursor.current.style.top = `+${cords.y}px`;
-    cursor.current.style.left = `+${cords.x}px`;
+  function setCursorPosition(data) {
+    cursor.current.style.top = `+${data.y}px`;
+    cursor.current.style.left = `+${data.x}px`;
   }
 
   function handleMouseDown(ev) {
@@ -138,7 +139,7 @@ function App() {
     console.log("finalArray", position, players);
   }
 
-  function renderCursor() {
+  function renderCursorState() {
     switch (state) {
       case states.winner:
         return (
@@ -182,7 +183,7 @@ function App() {
       return otherUsers.map((user) => {
         return (
           <div className="cursor_wrapper" key={user.id}>
-            {renderCursor()}
+            {renderCursorState()}
             {renderName(user.id)}
           </div>
         );
@@ -193,8 +194,8 @@ function App() {
   function renderOwnPLayer() {
     if (mySocketId) {
       return (
-        <div ref={cursor} className="cursor_wrapper">
-          {renderCursor()}
+        <div ref={cursor} className="cursor_wrapper" key={mySocketId}>
+          {renderCursorState()}
           {renderName(mySocketId)}
         </div>
       );
