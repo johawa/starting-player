@@ -47,14 +47,14 @@ export const sendCursorPositionData = (cords, room) => {
 // mouseMove End
 
 // mousePressed Start
-export const sendPlayerPressedMouse = (player, room) => {
-  if (socket) socket.emit("playerPressedMouse", { player, room });
+export const sendUserPressedMouse = (id, room) => {
+  if (socket) socket.emit("userPressedMouse", { id, room });
 };
 
-export const subscribeToPlayerPressedMouse = (cb) => {
+export const subscribeToUserPressedMouse = (cb) => {
   if (!socket) return true;
-  socket.on("emitplayerPressedMouse", (msg) => {
-    console.log("Websocket event received! [emitplayerPressedMouse]");
+  socket.on("emituserPressedMouse", (msg) => {
+    console.log("Websocket event received! [emituserPressedMouse]");
     return cb(null, msg);
   });
 };

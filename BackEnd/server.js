@@ -51,18 +51,17 @@ io.on("connection", (socket) => {
   });
 
   // mouseMove Start
-  socket.on("cursorPosition", (data) => {    
-    console.log(data);
-
+  socket.on("cursorPosition", (data) => {
+    //TODO sync movement data with user object, to sync position on gamestart
     io.to(data.room).emit("emitCursorPositionsData", data);
   });
   // mouseMove End
 
   // mousePressed Start
-  socket.on("playerPressedMouse", (data) => {
-    const { player, room } = data;
-    // console.log(`playerPressedMouse: ${player}, room: ${room}`);
-    io.to(room).emit("emitplayerPressedMouse", player);
+  socket.on("userPressedMouse", (data) => {
+    const { id, room } = data;
+    console.log(`userPressedMouse: ${id}, room: ${room}`);
+    io.to(room).emit("emituserPressedMouse", id);
   });
   // mousePressed End
 

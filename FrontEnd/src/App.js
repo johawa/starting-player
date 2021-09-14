@@ -6,8 +6,8 @@ import {
   disconnectSocket,
   sendCursorPositionData,
   subscribeToCursorPositionsData,
-  sendPlayerPressedMouse,
-  subscribeToPlayerPressedMouse,
+  sendUserPressedMouse,
+  subscribeToUserPressedMouse,
   sendPlayerMouseUp,
   subscribeToPlayerMouseUp,
   subscribeToActiveUsers,
@@ -60,9 +60,9 @@ function App() {
       setCursorPosition(cords);
     });
 
-    subscribeToPlayerPressedMouse((err, player) => {
+    subscribeToUserPressedMouse((err, id) => {
       if (err) return;
-      userIsPressingMouseDown(player);
+      userIsPressingMouseDown(id);
     });
 
     subscribeToPlayerMouseUp((err, player) => {
@@ -81,15 +81,13 @@ function App() {
 
   function handleMouseMove(ev) {
     if (mySocketId) {
-      const data = { x: ev.pageX, y: ev.pageY, socketId: mySocketId };
-      // setCursorPosition(data);
+      const data = { x: ev.pageX, y: ev.pageY, socketId: mySocketId }; // TODO Refactoring
       sendCursorPositionData(data, room); // send to Socket.io
     }
   }
 
   function setCursorPosition(data) {
     const socketId = data.cords.socketId;
-    // console.log(cursors.current[`${socketId}`], "cursors", socketId);
     if (socketId) {
       cursors.current[`${socketId}`].style.top = `+${data.cords.y}px`;
       cursors.current[`${socketId}`].style.left = `+${data.cords.x}px`;
@@ -97,7 +95,9 @@ function App() {
   }
 
   function handleMouseDown(ev) {
-    sendPlayerPressedMouse(playerName, room); // send to Socket.io
+    if (mySocketId) {
+      sendUserPressedMouse(mySocketId, room); // send to Socket.io
+    }
 
     /*     let timeleft = 2;
     var downloadTimer = setInterval(function () {
@@ -117,8 +117,13 @@ function App() {
     setActiveUsers(users);
   }
 
-  function userIsPressingMouseDown(player) {
-    setUserPressingMouse({ player: player, clr: "red" });
+  function userIsPressingMouseDown(id) {
+    console.log("userIsPressingMouse", id);
+    if (id) {
+      console.log(cursors.current[`${id}`].firstChild, "userIsPressingMouse");
+      cursors.current[`${id}`].firstChild.style.backgroundColor = "red";
+    }
+    // setUserPressingMouse({ id: id, clr: "red" });
   }
 
   function userIsMouseUp(player) {
@@ -147,28 +152,19 @@ function App() {
     switch (state) {
       case states.winner:
         return (
-          <div
-            className="cursor winner"
-            style={{ backgroundColor: userPressingMouse.clr }}
-          >
+          <div className="cursor winner">
             <WinnerCircle></WinnerCircle>
           </div>
         );
       case states.looser:
         return (
-          <div
-            className="cursor looser"
-            style={{ backgroundColor: userPressingMouse.clr }}
-          >
+          <div className="cursor looser">
             <LooserCircle finalRank={finalRank}></LooserCircle>
           </div>
         );
       default:
         return (
-          <div
-            className="cursor"
-            style={{ backgroundColor: userPressingMouse.clr }}
-          >
+          <div className="cursor">
             <div className={animate ? "point_1 animationRev" : "point_1"}></div>
             <div className={animate ? "point_2 animation" : "point_2"}></div>
           </div>
