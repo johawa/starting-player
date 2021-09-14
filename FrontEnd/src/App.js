@@ -36,11 +36,11 @@ function App() {
     clr: "gray",
   });
 
-  const [activeUsers, setActiveUsers] = useState(null);
+  const [activeUsers, setActiveUsers] = useState([]);
 
   const [mySocketId, setMySocketId] = useState(null);
 
-  const cursor = useRef(null);
+  const cursors = useRef([]);
 
   useEffect(() => {
     if (room) initiateSocket(room);
@@ -48,6 +48,11 @@ function App() {
     subscribeToNewConnection((err, mySocketId) => {
       if (err) return;
       initiatetOwnUser(mySocketId);
+    });
+
+    subscribeToActiveUsers((err, users) => {
+      if (err) return;
+      recordActiveUsers(users);
     });
 
     subscribeToCursorPositionsData((err, cords) => {
@@ -63,11 +68,6 @@ function App() {
     subscribeToPlayerMouseUp((err, player) => {
       if (err) return;
       userIsMouseUp(player);
-    });
-
-    subscribeToActiveUsers((err, users) => {
-      if (err) return;
-      recordActiveUsers(users);
     });
 
     return () => {
@@ -88,8 +88,12 @@ function App() {
   }
 
   function setCursorPosition(data) {
-    cursor.current.style.top = `+${data.y}px`;
-    cursor.current.style.left = `+${data.x}px`;
+    const { socketId } = data;
+
+    if (socketId) {
+      cursors.current[`${socketId}`].style.top = `+${data.y}px`;
+      cursors.current[`${socketId}`].style.left = `+${data.x}px`;
+    }
   }
 
   function handleMouseDown(ev) {
@@ -182,7 +186,13 @@ function App() {
 
       return otherUsers.map((user) => {
         return (
-          <div className="cursor_wrapper" key={user.id}>
+          <div
+            ref={(element) => {
+              cursors.current[`${user.id}`] = element;
+            }}
+            className="cursor_wrapper"
+            key={user.id}
+          >
             {renderCursorState()}
             {renderName(user.id)}
           </div>
@@ -194,7 +204,13 @@ function App() {
   function renderOwnPLayer() {
     if (mySocketId) {
       return (
-        <div ref={cursor} className="cursor_wrapper" key={mySocketId}>
+        <div
+          ref={(element) => {
+            cursors.current[`${mySocketId}`] = element;
+          }}
+          className="cursor_wrapper"
+          key={mySocketId}
+        >
           {renderCursorState()}
           {renderName(mySocketId)}
         </div>

@@ -53,7 +53,6 @@ io.on("connection", (socket) => {
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
     
-
     console.log(data);
 
     io.to(data.room).emit("emitCursorPositionsData", data);
