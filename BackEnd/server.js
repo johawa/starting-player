@@ -97,13 +97,14 @@ io.on("connection", (socket) => {
 
     io.to(room).emit("emituserMouseUp", id);
   });
+
   // mouseUp End
 
   // Event
   // DetermineWinner
   socket.on("getWinnerArray", (data) => {
     const { room } = data;
-
+    
     const winnerArray = [...activeUsers.keys()];
     shuffleArray(winnerArray);
      console.log("emitWinnerArray", winnerArray);

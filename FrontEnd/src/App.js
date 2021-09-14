@@ -30,8 +30,9 @@ const players = ["Johannes", "maarit", "tatze"];
 
 function App() {
   const [animate, setAnimate] = useState(false);
-  const [state, setState] = useState(states.default);
-  const [finalRank, setFinalRank] = useState(null);
+
+  const [gameEnded, setGameEnded] = useState(false);
+  const [winnerArray, setWinnerArray] = useState(null);
 
   const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
@@ -152,41 +153,43 @@ function App() {
   }
 
   function processWinners(data) {
-    console.log("processWinners", data, mySocketId);
     if (mySocketId) {
-      const position = data.map((user) => user.id).indexOf(mySocketId) + 1;
-      console.log("processWinners", position);
-      setFinalRank(position);
-      
-      if (position === 1) {
-        setState(states.winner);
-      } else {
-        setState(states.looser);
-      }
+      const winnerArray = data.map((user, index) => {
+        return { id: user.id, position: index };
+      });
+      setWinnerArray(winnerArray);
+      setGameEnded(true);
+      console.log("processWinners", winnerArray);
     }
   }
 
-  function renderCursorState() {
-    switch (state) {
-      case states.winner:
+  function renderCursorState(id) {
+    if (gameEnded === true && winnerArray) {
+      const userWithPosition = winnerArray.filter((user) => user.id === id);
+
+      console.log("processWinners", userWithPosition[0].position);
+      const position = userWithPosition[0].position + 1;
+
+      if (position === 1) {
         return (
           <div className="cursor winner">
             <WinnerCircle></WinnerCircle>
           </div>
         );
-      case states.looser:
+      } else {
         return (
           <div className="cursor looser">
-            <LooserCircle finalRank={finalRank}></LooserCircle>
+            <LooserCircle finalRank={position}></LooserCircle>
           </div>
         );
-      default:
-        return (
-          <div className="cursor">
-            <div className={animate ? "point_1 animationRev" : "point_1"}></div>
-            <div className={animate ? "point_2 animation" : "point_2"}></div>
-          </div>
-        );
+      }
+    } else if (gameEnded === false && !winnerArray) {
+      return (
+        <div className="cursor">
+          <div className={animate ? "point_1 animationRev" : "point_1"}></div>
+          <div className={animate ? "point_2 animation" : "point_2"}></div>
+        </div>
+      );
     }
   }
 
@@ -207,7 +210,7 @@ function App() {
             className="cursor_wrapper"
             key={user.id}
           >
-            {renderCursorState()}
+            {renderCursorState(user.id)}
             {renderName(user.id)}
           </div>
         );
@@ -225,7 +228,7 @@ function App() {
           className="cursor_wrapper"
           key={mySocketId}
         >
-          {renderCursorState()}
+          {renderCursorState(mySocketId)}
           {renderName(mySocketId)}
         </div>
       );
