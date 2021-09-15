@@ -105,6 +105,7 @@ function App() {
   function handleMouseMove(ev) {
     if (mySocketId) {
       const data = { x: ev.pageX, y: ev.pageY, id: mySocketId };
+      console.log("mousePosition", ev);
       sendCursorPositionData(data, room); // send to Socket.io
     }
   }
@@ -123,9 +124,11 @@ function App() {
       sendUserMouseDown(mySocketId, room); // send to Socket.io
     }
   }
-  function userIsPressingMouseDown(id) {
-    if (id) {
-      cursors.current[`${id}`].firstChild.style.backgroundColor = "red";
+  function userIsPressingMouseDown(user) {
+    if (user.id) {
+      cursors.current[
+        `${user.id}`
+      ].firstChild.style.backgroundColor = `${user.clr}`;
     }
   }
 

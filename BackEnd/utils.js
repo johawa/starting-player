@@ -15,6 +15,8 @@ function determineWinner(activeUsers) {
   return winnerArray;
 }
 
+
+
 module.exports = {
   determineWinner,
   determineIfAllUserArePressingMouseDown,

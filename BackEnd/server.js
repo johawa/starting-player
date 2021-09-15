@@ -6,6 +6,20 @@ const {
 const express = require("express");
 const socket = require("socket.io");
 
+const colors = [
+  "#F4DF4EFF",
+  "#FC766AFF",
+  "#5B84B1FF",
+  "#5F4B8BFF",
+  "#42EADDFF",
+  "#CDB599FF",
+  "#00A4CCFF",
+  "#F95700FF",
+  "#2C5F2D",
+  "#00539CFF",
+  "#B1624EFF",
+];
+
 // App setup
 const PORT = 5000;
 const app = express();
@@ -24,7 +38,13 @@ class User {
   constructor(id, room, clr, x, y) {
     this.id = id;
     this.room = room;
-    this.clr = clr ? clr : "red";
+    this.clr = clr
+      ? clr
+      : colors
+          .sort(function () {
+            return 0.5 - Math.random();
+          })
+          .pop();
     this.x = x ? x : 100;
     this.y = y ? y : 100;
     this.isPressingMouseDown = false;
@@ -59,16 +79,14 @@ io.on("connection", (socket) => {
   });
 
   // mouseMove Start
-  socket.on("cursorPosition", (data) => {  
- 
+  socket.on("cursorPosition", (data) => {
     activeUsers.forEach((user) => {
       if (user.id === data.cords.id) {
         user.x = data.cords.x;
-        user.y = data.cords.y;        
+        user.y = data.cords.y;
         io.to(data.room).emit("emitCursorPositionsData", user);
       }
     });
-    
   });
   // mouseMove End
 
@@ -76,11 +94,10 @@ io.on("connection", (socket) => {
   socket.on("userPressedMouse", (data) => {
     const { id, room } = data;
 
-    io.to(room).emit("emituserPressedMouse", id);
-
     activeUsers.forEach((user) => {
       if (user.id === id) {
         user.isPressingMouseDown = true;
+        io.to(room).emit("emituserPressedMouse", user);
       }
     });
 
