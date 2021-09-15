@@ -59,11 +59,11 @@
 }
 
 .animationRev {
-  animation: circleAnimationRev 3s linear forwards;
+  animation: circleAnimationRev 2s linear forwards;
 }
 
 .animation {
-  animation: circleAnimation 3s linear forwards;
+  animation: circleAnimation 2s linear forwards;
 }
 
 .animationRev:before {

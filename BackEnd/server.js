@@ -31,7 +31,7 @@ const server = app.listen(PORT, function () {
 // Socket setup
 const io = socket(server, { cors: true });
 const activeUsers = new Set();
-let timeleft = 2;
+let timeleft = 1;
 let downloadTimer;
 
 class User {
@@ -126,8 +126,6 @@ io.on("connection", (socket) => {
   // Game Ended
   // User Intercept Start
   socket.on("userRestartGameStart", (data) => {
-    console.log("userRestartGameStart", data);
-
     // TODO only emit on Chnages !
 
     activeUsers.forEach((user) => {
@@ -174,5 +172,5 @@ function startTimer() {
 
 function stopTimer() {
   clearInterval(downloadTimer);
-  timeleft = 2;
+  timeleft = 1;
 }
