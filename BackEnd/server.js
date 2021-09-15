@@ -1,6 +1,7 @@
 const {
   determineIfAllUserArePressingMouseDown,
   shuffleArray,
+  determineWinner,
 } = require("./utils");
 const express = require("express");
 const socket = require("socket.io");
@@ -74,7 +75,6 @@ io.on("connection", (socket) => {
         user.isPressingMouseDown = true;
       }
     });
-   
 
     if (determineIfAllUserArePressingMouseDown([...activeUsers.keys()])) {
       startTimer();
@@ -118,7 +118,11 @@ io.on("connection", (socket) => {
 function startTimer() {
   downloadTimer = setInterval(function () {
     if (timeleft <= 0) {
-      determineWinner();
+      // Event
+      // DetermineWinner
+      const winnerArray = determineWinner(activeUsers);
+      io.emit("emitWinnerArray", winnerArray);
+
       clearInterval(downloadTimer);
     }
     console.log("count seconds", timeleft);
@@ -129,9 +133,4 @@ function startTimer() {
 function stopTimer() {
   clearInterval(downloadTimer);
   timeleft = 2;
-}
-
-function determineWinner() {
-  const winnerArray = [...activeUsers.keys()];
-  shuffleArray(winnerArray);
 }

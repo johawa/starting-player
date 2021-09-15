@@ -31,7 +31,7 @@ const room = "A";
 const players = ["Johannes", "maarit", "tatze"];
 
 function App() {
-  const [animate, setAnimate] = useState(false);
+  const [timerAnimation, setTimerAnimation] = useState(false);
 
   const [gameEnded, setGameEnded] = useState(false);
   const [winnerArray, setWinnerArray] = useState(null);
@@ -140,13 +140,12 @@ function App() {
   // All Users Pressing Mouse Down
 
   function allUserPressingMouseDown(bln) {
-    setAnimate(true);
+    setTimerAnimation(true);
 
-    // TODO remove and add listener from BE, winner array will come from the BE
-    
+    // TODO remove and add listener from BE, winner array will come from the BE  
 
     if (bln === false) {
-      setAnimate(false);
+      setTimerAnimation(false);
     }
   }
 
@@ -188,8 +187,8 @@ function App() {
     } else if (gameEnded === false && !winnerArray) {
       return (
         <div className="cursor">
-          <div className={animate ? "point_1 animationRev" : "point_1"}></div>
-          <div className={animate ? "point_2 animation" : "point_2"}></div>
+          <div className={timerAnimation ? "point_1 animationRev" : "point_1"}></div>
+          <div className={timerAnimation ? "point_2 animation" : "point_2"}></div>
         </div>
       );
     }
