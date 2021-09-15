@@ -1,6 +1,6 @@
 const {
   determineIfAllUserArePressingMouseDown,
-  shuffleArray,
+  determineIfAllUserAreInterceptingRestartCircle,
   determineWinner,
 } = require("./utils");
 const express = require("express");
@@ -39,9 +39,10 @@ class User {
     this.id = id;
     this.room = room;
     this.clr = colors.sort(() => 0.5 - Math.random()).pop();
-    this.x = x ? x : 100;
-    this.y = y ? y : 100;
+    this.x = x ? x : 80;
+    this.y = y ? y : 80;
     this.isPressingMouseDown = false;
+    this.isInterceptiongRestartCircle = false;
   }
 }
 
@@ -122,8 +123,40 @@ io.on("connection", (socket) => {
 
   // mouseUp End
 
-  // Event
- 
+  // Game Ended
+  // User Intercept Start
+  socket.on("userRestartGameStart", (data) => {
+    console.log("userRestartGameStart", data);
+
+    activeUsers.forEach((user) => {
+      if (user.id === data.id) {
+        user.isInterceptiongRestartCircle = true;    
+      }
+    });
+
+    io.emit("emituserInterceptRestartCircleStart", [...activeUsers.keys()]);
+
+    if (
+      determineIfAllUserAreInterceptingRestartCircle([...activeUsers.keys()])
+    ) {
+      /*    io.to(room).emit("emitAllUserPressingMouseDown", true);  */
+    }
+  });
+
+  // User Intercept End
+  socket.on("userRestartGameEnd", (data) => {
+    console.log("userRestartGameEnd", data);
+    // cancel function when user Presses Up again
+    /*      io.to(room).emit("emitAllUserPressingMouseDown", false); */
+
+    activeUsers.forEach((user) => {
+      if (user.id === data.id) {
+        user.isInterceptiongRestartCircle = false;
+      }
+    });
+
+    io.emit("emituserInterceptRestartCircleCancel", [...activeUsers.keys()]);
+  });
 });
 
 function startTimer() {

@@ -96,3 +96,31 @@ export const subscribeToWinnerArray = (cb) => {
     return cb(null, msg);
   });
 };
+
+export const sendInterceptRestartGameStart = (data) => {
+  if (socket) socket.emit("userRestartGameStart", data);
+};
+
+export const subscribeToUserInterceptRestartGameStart = (cb) => {
+  if (!socket) return true;
+  socket.on("emituserInterceptRestartCircleStart", (msg) => {
+    console.log(
+      "Websocket event received! [emituserInterceptRestartCircleStart]"
+    );
+    return cb(null, msg);
+  });
+};
+
+export const sendInterceptRestartGameCancel = (data) => {
+  if (socket) socket.emit("userRestartGameEnd", data);
+};
+
+export const subscribeToUserInterceptRestartGameCancel = (cb) => {
+  if (!socket) return true;
+  socket.on("emituserInterceptRestartCircleCancel", (msg) => {
+    console.log(
+      "Websocket event received! [emituserInterceptRestartCircleCancel]"
+    );
+    return cb(null, msg);
+  });
+};

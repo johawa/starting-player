@@ -15,6 +15,10 @@ import {
   subscribeToActiveUsers,
   subscribeToAllUserPressingMouseDown,
   subscribeToWinnerArray,
+  sendInterceptRestartGameStart,
+  sendInterceptRestartGameCancel,
+  subscribeToUserInterceptRestartGameStart,
+  subscribeToUserInterceptRestartGameCancel,
 } from "./utils/socket.helpers";
 import "./styles/App.css";
 import "./styles/Winner.css";
@@ -32,6 +36,10 @@ function App() {
 
   const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
+  const [
+    playersInterceptingRestartCircle,
+    setPlayersInterceptingRestartCircle,
+  ] = useState(null);
 
   const cursors = useRef([]);
 
@@ -74,12 +82,25 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // dev
+    // winner
     subscribeToWinnerArray((err, data) => {
       if (err) return;
       processWinners(data);
     });
   }, [mySocketId]);
+
+  useEffect(() => {
+    // restart
+    subscribeToUserInterceptRestartGameStart((err, id) => {
+      if (err) return;
+      userIsInterceptingRestartGameStart(id);
+    });
+
+    subscribeToUserInterceptRestartGameCancel((err, id) => {
+      if (err) return;
+      userIsInterceptingRestartGameEnd(id);
+    });
+  }, [playersInterceptingRestartCircle]);
 
   // init Functions
   function initiatetOwnUser(id) {
@@ -109,10 +130,12 @@ function App() {
 
       // restartGame Logic
       if (gameEnded === true && data.x < 800 && data.y < 800) {
-        console.log("mousePosition", data, "intercept");
+        sendInterceptRestartGameStart(data);
+        // console.log("mousePosition", data, "intercept");
       }
-      if (gameEnded === true && data.x >= 800 || data.y >= 800) {
-        console.log("mousePosition", data, "intercept ended");
+      if ((gameEnded === true && data.x >= 800) || data.y >= 800) {
+        sendInterceptRestartGameCancel(data);
+        // console.log("mousePosition", data, "intercept ended");
       }
     }
   }
@@ -133,7 +156,6 @@ function App() {
     }
   }
   function userIsPressingMouseDown(user) {
-    console.log("mousePosition", user);
     if (user.id) {
       cursors.current[
         `${user.id}`
@@ -159,11 +181,28 @@ function App() {
   function allUserPressingMouseDown(bln) {
     setTimerAnimation(true);
 
-    // TODO remove and add listener from BE, winner array will come from the BE
-
     if (bln === false) {
       setTimerAnimation(false);
     }
+  }
+
+  // Restart Games
+  function userIsInterceptingRestartGameStart(users) {
+    const amount = users.filter(
+      (user) => user.isInterceptiongRestartCircle
+    ).length;
+
+    setPlayersInterceptingRestartCircle(amount);
+    console.log("test", amount);
+  }
+
+  function userIsInterceptingRestartGameEnd(users) {
+    const amount = users.filter(
+      (user) => user.isInterceptiongRestartCircle
+    ).length;
+
+    setPlayersInterceptingRestartCircle(amount);
+    console.log("test", "end", amount);
   }
 
   function processWinners(data) {
@@ -249,7 +288,7 @@ function App() {
   }
 
   return (
-    <>    
+    <>
       <div
         className="app"
         onMouseMove={(ev) => handleMouseMove(ev)}
@@ -258,7 +297,13 @@ function App() {
       >
         {gameEnded && (
           <div className="gameEnded">
-            <h3>Game Ended, come here to restart Game 🎉</h3>
+            <h3>Game Ended, come here to restart 🎉</h3>
+            <p>
+              {playersInterceptingRestartCircle
+                ? playersInterceptingRestartCircle
+                : 0}
+              /{activeUsers.length}
+            </p>
           </div>
         )}
         {renderOwnPLayer()}
