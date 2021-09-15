@@ -128,9 +128,11 @@ io.on("connection", (socket) => {
   socket.on("userRestartGameStart", (data) => {
     console.log("userRestartGameStart", data);
 
+    // TODO only emit on Chnages !
+
     activeUsers.forEach((user) => {
       if (user.id === data.id) {
-        user.isInterceptiongRestartCircle = true;    
+        user.isInterceptiongRestartCircle = true;
       }
     });
 
@@ -139,16 +141,12 @@ io.on("connection", (socket) => {
     if (
       determineIfAllUserAreInterceptingRestartCircle([...activeUsers.keys()])
     ) {
-      /*    io.to(room).emit("emitAllUserPressingMouseDown", true);  */
+      io.emit("emitAllUserInterceptRestartCircle");
     }
   });
 
   // User Intercept End
   socket.on("userRestartGameEnd", (data) => {
-    console.log("userRestartGameEnd", data);
-    // cancel function when user Presses Up again
-    /*      io.to(room).emit("emitAllUserPressingMouseDown", false); */
-
     activeUsers.forEach((user) => {
       if (user.id === data.id) {
         user.isInterceptiongRestartCircle = false;

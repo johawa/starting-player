@@ -3,12 +3,12 @@ let socket;
 
 export const initiateSocket = (room) => {
   socket = io("http://192.168.1.104:5000");
-  console.log(`Connecting socket...`);
+  //console.log(`Connecting socket...`);
   if (socket && room) socket.emit("join", room);
 };
 
 export const disconnectSocket = () => {
-  console.log("Disconnecting socket...");
+  //console.log("Disconnecting socket...");
   if (socket) socket.disconnect();
 };
 
@@ -16,7 +16,7 @@ export const disconnectSocket = () => {
 export const subscribeToNewConnection = (cb) => {
   if (!socket) return true;
   socket.on("emitNewConnection", (msg) => {
-    console.log("Websocket event received! [emitNewConnection]");
+    //console.log("Websocket event received! [emitNewConnection]");
     return cb(null, msg);
   });
 };
@@ -25,7 +25,7 @@ export const subscribeToNewConnection = (cb) => {
 export const subscribeToActiveUsers = (cb) => {
   if (!socket) return true;
   socket.on("emitActiveUsers", (msg) => {
-    console.log("Websocket event received! [emitActiveUsers]", msg);
+    //console.log("Websocket event received! [emitActiveUsers]", msg);
     return cb(null, msg);
   });
 };
@@ -35,7 +35,7 @@ export const subscribeToActiveUsers = (cb) => {
 export const subscribeToCursorPositionsData = (cb) => {
   if (!socket) return true;
   socket.on("emitCursorPositionsData", (msg) => {
-    console.log("Websocket event received! [subscribeToCursorPositionsData]");
+    //console.log("Websocket event received! [subscribeToCursorPositionsData]");
     return cb(null, msg);
   });
 };
@@ -53,7 +53,7 @@ export const sendUserMouseDown = (id, room) => {
 export const subscribeToUserMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emituserPressedMouse", (msg) => {
-    console.log("Websocket event received! [emituserPressedMouse]");
+    //console.log("Websocket event received! [emituserPressedMouse]");
     return cb(null, msg);
   });
 };
@@ -68,7 +68,7 @@ export const sendUserMouseUp = (id, room) => {
 export const subscribeToUserMouseUp = (cb) => {
   if (!socket) return true;
   socket.on("emituserMouseUp", (msg) => {
-    console.log("Websocket event received! [emituserMouseUp]");
+    //console.log("Websocket event received! [emituserMouseUp]");
     return cb(null, msg);
   });
 };
@@ -80,10 +80,7 @@ export const subscribeToUserMouseUp = (cb) => {
 export const subscribeToAllUserPressingMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emitAllUserPressingMouseDown", (msg) => {
-    console.log(
-      "Websocket event received! [emitAllUserPressingMouseDown]",
-      msg
-    );
+    //console.log("Websocket event received! [emitAllUserPressingMouseDown]", mmn);
     return cb(null, msg);
   });
 };
@@ -92,11 +89,12 @@ export const subscribeToAllUserPressingMouseDown = (cb) => {
 export const subscribeToWinnerArray = (cb) => {
   if (!socket) return true;
   socket.on("emitWinnerArray", (msg) => {
-    console.log("Websocket event received! [emitWinnerArray]", msg);
+    //console.log("Websocket event received! [emitWinnerArray]", msg);
     return cb(null, msg);
   });
 };
 
+// Intercept Start
 export const sendInterceptRestartGameStart = (data) => {
   if (socket) socket.emit("userRestartGameStart", data);
 };
@@ -104,13 +102,12 @@ export const sendInterceptRestartGameStart = (data) => {
 export const subscribeToUserInterceptRestartGameStart = (cb) => {
   if (!socket) return true;
   socket.on("emituserInterceptRestartCircleStart", (msg) => {
-    console.log(
-      "Websocket event received! [emituserInterceptRestartCircleStart]"
-    );
+    //console.log("Websocket event received! [emituserInterceptRestartCircleStart]");
     return cb(null, msg);
   });
 };
 
+// Intercept End
 export const sendInterceptRestartGameCancel = (data) => {
   if (socket) socket.emit("userRestartGameEnd", data);
 };
@@ -118,9 +115,15 @@ export const sendInterceptRestartGameCancel = (data) => {
 export const subscribeToUserInterceptRestartGameCancel = (cb) => {
   if (!socket) return true;
   socket.on("emituserInterceptRestartCircleCancel", (msg) => {
-    console.log(
-      "Websocket event received! [emituserInterceptRestartCircleCancel]"
-    );
+    //console.log("Websocket event received! [emituserInterceptRestartCircleCancel]");
     return cb(null, msg);
+  });
+};
+
+export const subscribeToAllUserInterceptRestartCircle = (cb) => {
+  if (!socket) return true;
+  socket.on("emitAllUserInterceptRestartCircle", () => {
+    //console.log("Websocket event received! [emitAllUserInterceptRestartCircle]");
+    return cb(null);
   });
 };

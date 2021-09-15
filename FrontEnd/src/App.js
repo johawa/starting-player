@@ -19,6 +19,7 @@ import {
   sendInterceptRestartGameCancel,
   subscribeToUserInterceptRestartGameStart,
   subscribeToUserInterceptRestartGameCancel,
+  subscribeToAllUserInterceptRestartCircle,
 } from "./utils/socket.helpers";
 import "./styles/App.css";
 import "./styles/Winner.css";
@@ -93,14 +94,19 @@ function App() {
     // restart
     subscribeToUserInterceptRestartGameStart((err, id) => {
       if (err) return;
-      userIsInterceptingRestartGameStart(id);
+      userIsInterceptingRestartGame(id);
     });
 
     subscribeToUserInterceptRestartGameCancel((err, id) => {
       if (err) return;
-      userIsInterceptingRestartGameEnd(id);
+      userIsInterceptingRestartGame(id);
     });
-  }, [playersInterceptingRestartCircle]);
+
+    subscribeToAllUserInterceptRestartCircle((err, id) => {
+      if (err) return;
+      allUserInterceptRestartCircle();
+    });
+  }, [playersInterceptingRestartCircle, gameEnded]);
 
   // init Functions
   function initiatetOwnUser(id) {
@@ -187,22 +193,20 @@ function App() {
   }
 
   // Restart Games
-  function userIsInterceptingRestartGameStart(users) {
+  function userIsInterceptingRestartGame(users) {
     const amount = users.filter(
       (user) => user.isInterceptiongRestartCircle
     ).length;
 
     setPlayersInterceptingRestartCircle(amount);
-    console.log("test", amount);
   }
 
-  function userIsInterceptingRestartGameEnd(users) {
-    const amount = users.filter(
-      (user) => user.isInterceptiongRestartCircle
-    ).length;
-
-    setPlayersInterceptingRestartCircle(amount);
-    console.log("test", "end", amount);
+  function allUserInterceptRestartCircle() {
+    // RestartGame
+    setTimerAnimation(false);
+    setGameEnded(false);
+    setWinnerArray(null);
+    setPlayersInterceptingRestartCircle(null);
   }
 
   function processWinners(data) {
