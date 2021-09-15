@@ -142,7 +142,7 @@ function App() {
   function allUserPressingMouseDown(bln) {
     setTimerAnimation(true);
 
-    // TODO remove and add listener from BE, winner array will come from the BE  
+    // TODO remove and add listener from BE, winner array will come from the BE
 
     if (bln === false) {
       setTimerAnimation(false);
@@ -187,8 +187,12 @@ function App() {
     } else if (gameEnded === false && !winnerArray) {
       return (
         <div className="cursor">
-          <div className={timerAnimation ? "point_1 animationRev" : "point_1"}></div>
-          <div className={timerAnimation ? "point_2 animation" : "point_2"}></div>
+          <div
+            className={timerAnimation ? "point_1 animationRev" : "point_1"}
+          ></div>
+          <div
+            className={timerAnimation ? "point_2 animation" : "point_2"}
+          ></div>
         </div>
       );
     }
@@ -234,16 +238,15 @@ function App() {
 
   return (
     <>
-      <div style={{ height: "200px" }}>
+      {/*    <div style={{ height: "200px" }}>
         <button onClick={(ev) => determineWinners(ev)}>determineWinners</button>
-      </div>
+      </div> */}
       <div
         className="app"
         onMouseMove={(ev) => handleMouseMove(ev)}
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
-        <br />
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>
