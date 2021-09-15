@@ -38,13 +38,7 @@ class User {
   constructor(id, room, clr, x, y) {
     this.id = id;
     this.room = room;
-    this.clr = clr
-      ? clr
-      : colors
-          .sort(function () {
-            return 0.5 - Math.random();
-          })
-          .pop();
+    this.clr = colors.sort(() => 0.5 - Math.random()).pop();
     this.x = x ? x : 100;
     this.y = y ? y : 100;
     this.isPressingMouseDown = false;
@@ -129,15 +123,7 @@ io.on("connection", (socket) => {
   // mouseUp End
 
   // Event
-  // DetermineWinner
-  socket.on("getWinnerArray", (data) => {
-    const { room } = data;
-
-    const winnerArray = [...activeUsers.keys()];
-    shuffleArray(winnerArray);
-
-    io.emit("emitWinnerArray", winnerArray);
-  });
+ 
 });
 
 function startTimer() {

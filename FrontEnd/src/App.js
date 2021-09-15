@@ -14,7 +14,6 @@ import {
   subscribeToUserMouseUp,
   subscribeToActiveUsers,
   subscribeToAllUserPressingMouseDown,
-  getWinnerArray,
   subscribeToWinnerArray,
 } from "./utils/socket.helpers";
 import "./styles/App.css";
@@ -105,16 +104,25 @@ function App() {
   function handleMouseMove(ev) {
     if (mySocketId) {
       const data = { x: ev.pageX, y: ev.pageY, id: mySocketId };
-      console.log("mousePosition", ev);
+
       sendCursorPositionData(data, room); // send to Socket.io
+
+      // restartGame Logic
+      if (gameEnded === true && data.x < 800 && data.y < 800) {
+        console.log("mousePosition", data, "intercept");
+      }
+      if (gameEnded === true && data.x >= 800 || data.y >= 800) {
+        console.log("mousePosition", data, "intercept ended");
+      }
     }
   }
   function setCursorPosition(user) {
     const socketId = user.id;
+    const radius = 80;
 
     if (socketId && cursors.current[`${socketId}`] && activeUsers) {
-      cursors.current[`${socketId}`].style.top = `+${user.y}px`;
-      cursors.current[`${socketId}`].style.left = `+${user.x}px`;
+      cursors.current[`${socketId}`].style.top = `+${user.y - radius}px`;
+      cursors.current[`${socketId}`].style.left = `+${user.x - radius}px`;
     }
   }
 
@@ -125,6 +133,7 @@ function App() {
     }
   }
   function userIsPressingMouseDown(user) {
+    console.log("mousePosition", user);
     if (user.id) {
       cursors.current[
         `${user.id}`
@@ -240,19 +249,18 @@ function App() {
   }
 
   return (
-    <>
-      {/*    <div style={{ height: "200px" }}>
-        <button onClick={(ev) => determineWinners(ev)}>determineWinners</button>
-      </div> */}
+    <>    
       <div
         className="app"
         onMouseMove={(ev) => handleMouseMove(ev)}
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
-        <div className="gameEnded">
-          <h3>Game Ended, come here to restart Game 🎉</h3>
-        </div>
+        {gameEnded && (
+          <div className="gameEnded">
+            <h3>Game Ended, come here to restart Game 🎉</h3>
+          </div>
+        )}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>

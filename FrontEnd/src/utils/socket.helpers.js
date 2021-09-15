@@ -88,12 +88,7 @@ export const subscribeToAllUserPressingMouseDown = (cb) => {
   });
 };
 
-// DEV
-
-export const getWinnerArray = (room) => {
-  if (socket) socket.emit("getWinnerArray", room);
-};
-
+// Winner / Game Ended
 export const subscribeToWinnerArray = (cb) => {
   if (!socket) return true;
   socket.on("emitWinnerArray", (msg) => {
