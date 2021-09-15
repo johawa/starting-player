@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
-import { shuffleArray } from "./utils/helpers";
+import { WinnerCircle } from "./components/WinnerCircle";
+import { LooserCircle } from "./components/LooserCircle";
+import { renderName } from "./components/RenderName";
 import {
   initiateSocket,
   subscribeToNewConnection,
@@ -103,7 +105,8 @@ function App() {
   }
   function setCursorPosition(data) {
     const socketId = data.cords.socketId;
-    if (socketId && cursors) {
+
+    if (socketId && cursors.current) {
       cursors.current[`${socketId}`].style.top = `+${data.cords.y}px`;
       cursors.current[`${socketId}`].style.left = `+${data.cords.x}px`;
     }
@@ -159,14 +162,12 @@ function App() {
       });
       setWinnerArray(winnerArray);
       setGameEnded(true);
-      console.log("processWinners", winnerArray);
     }
   }
 
   function renderCursorState(id) {
     if (gameEnded === true && winnerArray) {
       const userWithPosition = winnerArray.filter((user) => user.id === id);
-
       console.log("processWinners", userWithPosition[0].position);
       const position = userWithPosition[0].position + 1;
 
@@ -191,10 +192,6 @@ function App() {
         </div>
       );
     }
-  }
-
-  function renderName(id) {
-    return <div>{id}</div>;
   }
 
   function renderOtherPlayers() {
@@ -249,44 +246,6 @@ function App() {
         <br />
         {renderOwnPLayer()}
         {renderOtherPlayers()}
-      </div>
-    </>
-  );
-}
-
-function WinnerCircle() {
-  return (
-    <>
-      <div className="point_winner" style={{ "--i": 1 }}></div>
-      <div className="point_winner" style={{ "--i": 2 }}></div>
-      <div className="point_winner" style={{ "--i": 3 }}></div>
-      <div className="point_winner" style={{ "--i": 4 }}></div>
-      <div className="point_winner" style={{ "--i": 5 }}></div>
-      <div className="point_winner" style={{ "--i": 6 }}></div>
-    </>
-  );
-}
-
-function LooserCircle({ finalRank }) {
-  return (
-    <>
-      <div className="point_looser" style={{ "--i": 1 }}>
-        {finalRank}
-      </div>
-      <div className="point_looser" style={{ "--i": 2 }}>
-        {finalRank}
-      </div>
-      <div className="point_looser" style={{ "--i": 3 }}>
-        {finalRank}
-      </div>
-      <div className="point_looser" style={{ "--i": 4 }}>
-        {finalRank}
-      </div>
-      <div className="point_looser" style={{ "--i": 5 }}>
-        {finalRank}
-      </div>
-      <div className="point_looser" style={{ "--i": 6 }}>
-        {finalRank}
       </div>
     </>
   );

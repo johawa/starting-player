@@ -14,7 +14,7 @@ const io = socket(server, { cors: true });
 const activeUsers = new Set();
 let timeleft = 2;
 let downloadTimer;
-let winnerArray;
+
 
 class User {
   constructor(id, clr, x, y) {
