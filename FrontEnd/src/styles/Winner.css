@@ -3,17 +3,28 @@
   grid-template-areas: "layer";
   place-items: center;
   animation: rotate 1s linear infinite;
+  position: relative;
+}
+
+.info_winner {
+  position: absolute;
+  top: 25%;
+  left: 32%;
+  z-index: 2;
+  font-size: 54px;
 }
 
 .point_winner {
   position: relative;
   grid-area: layer;
-  width: 1vmin;
-  height: 1vmin;
-  background: white;
+  width: 12px;
+  height: 12px;
+
   border-radius: 50%;
 
-  --radius: 4.5vmin;
+  background-image: linear-gradient(43deg, #4158d0 0%, #ffcc70 100%);
+
+  --radius: 74px;
 
   --d: calc(var(--i) / 6);
 

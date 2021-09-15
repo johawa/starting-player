@@ -228,15 +228,21 @@ function App() {
 
       if (position && position === 1) {
         return (
-          <div className="cursor winner">
-            <WinnerCircle></WinnerCircle>
-          </div>
+          <>
+            <div className="info_winner">🥇</div>
+            <div className="cursor winner">
+              <WinnerCircle></WinnerCircle>
+            </div>
+          </>
         );
       } else if (position && position !== 1) {
         return (
-          <div className="cursor looser">
-            <LooserCircle finalRank={position}></LooserCircle>
-          </div>
+          <>
+            <div className="info_looser">{position}</div>
+            <div className="cursor looser">
+              <LooserCircle finalRank={position}></LooserCircle>
+            </div>
+          </>
         );
       }
     } else if (gameEnded === false && !winnerArray) {
