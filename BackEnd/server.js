@@ -1,3 +1,7 @@
+const {
+  determineIfAllUserArePressingMouseDown,
+  shuffleArray,
+} = require("./utils");
 const express = require("express");
 const socket = require("socket.io");
 
@@ -14,7 +18,6 @@ const io = socket(server, { cors: true });
 const activeUsers = new Set();
 let timeleft = 2;
 let downloadTimer;
-
 
 class User {
   constructor(id, clr, x, y) {
@@ -69,9 +72,9 @@ io.on("connection", (socket) => {
     activeUsers.forEach((user) => {
       if (user.id === id) {
         user.isPressingMouseDown = true;
-        // console.log("userMouseDown", user);
       }
     });
+   
 
     if (determineIfAllUserArePressingMouseDown([...activeUsers.keys()])) {
       startTimer();
@@ -104,17 +107,13 @@ io.on("connection", (socket) => {
   // DetermineWinner
   socket.on("getWinnerArray", (data) => {
     const { room } = data;
-    
+
     const winnerArray = [...activeUsers.keys()];
     shuffleArray(winnerArray);
-     console.log("emitWinnerArray", winnerArray);
+
     io.emit("emitWinnerArray", winnerArray);
   });
 });
-
-function determineIfAllUserArePressingMouseDown(users) {
-  return ![...users].some((user) => user.isPressingMouseDown === false);
-}
 
 function startTimer() {
   downloadTimer = setInterval(function () {
@@ -135,11 +134,4 @@ function stopTimer() {
 function determineWinner() {
   const winnerArray = [...activeUsers.keys()];
   shuffleArray(winnerArray);
-}
-
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
 }

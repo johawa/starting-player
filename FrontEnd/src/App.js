@@ -106,7 +106,7 @@ function App() {
   function setCursorPosition(data) {
     const socketId = data.cords.socketId;
 
-    if (socketId && cursors.current) {
+    if (socketId && cursors.current[`${socketId}`] && activeUsers) {
       cursors.current[`${socketId}`].style.top = `+${data.cords.y}px`;
       cursors.current[`${socketId}`].style.left = `+${data.cords.x}px`;
     }
@@ -143,7 +143,7 @@ function App() {
     setAnimate(true);
 
     // TODO remove and add listener from BE, winner array will come from the BE
-    determineWinners();
+    
 
     if (bln === false) {
       setAnimate(false);
@@ -168,16 +168,17 @@ function App() {
   function renderCursorState(id) {
     if (gameEnded === true && winnerArray) {
       const userWithPosition = winnerArray.filter((user) => user.id === id);
-      console.log("processWinners", userWithPosition[0].position);
-      const position = userWithPosition[0].position + 1;
+      const position = userWithPosition[0]
+        ? userWithPosition[0].position + 1
+        : null;
 
-      if (position === 1) {
+      if (position && position === 1) {
         return (
           <div className="cursor winner">
             <WinnerCircle></WinnerCircle>
           </div>
         );
-      } else {
+      } else if (position && position !== 1) {
         return (
           <div className="cursor looser">
             <LooserCircle finalRank={position}></LooserCircle>

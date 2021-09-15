@@ -80,7 +80,7 @@ export const subscribeToUserMouseUp = (cb) => {
 export const subscribeToAllUserPressingMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emitAllUserPressingMouseDown", (msg) => {
-    console.log("Websocket event received! [emitAllUserPressingMouseDown]");
+    console.log("Websocket event received! [emitAllUserPressingMouseDown]", msg);
     return cb(null, msg);
   });
 };
