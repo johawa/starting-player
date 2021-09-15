@@ -21,11 +21,12 @@ let timeleft = 2;
 let downloadTimer;
 
 class User {
-  constructor(id, clr, x, y) {
+  constructor(id, room, clr, x, y) {
     this.id = id;
+    this.room = room;
     this.clr = clr ? clr : "gray";
-    this.x = x ? x : 0;
-    this.y = y ? y : 0;
+    this.x = x ? x : 100;
+    this.y = y ? y : 100;
     this.isPressingMouseDown = false;
   }
 }
@@ -58,9 +59,16 @@ io.on("connection", (socket) => {
   });
 
   // mouseMove Start
-  socket.on("cursorPosition", (data) => {
-    //TODO sync movement data with user object, to sync position on gamestart
-    io.to(data.room).emit("emitCursorPositionsData", data);
+  socket.on("cursorPosition", (data) => {  
+ 
+    activeUsers.forEach((user) => {
+      if (user.id === data.cords.id) {
+        user.x = data.cords.x;
+        user.y = data.cords.y;        
+        io.to(data.room).emit("emitCursorPositionsData", user);
+      }
+    });
+    
   });
   // mouseMove End
 

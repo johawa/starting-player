@@ -94,21 +94,31 @@ function App() {
 
   function recordActiveUsers(users) {
     setActiveUsers(users);
+    syncInitCursorPositionOfOtherUsers(users);
+  }
+
+  // sync the positions of other players when you join a game
+  function syncInitCursorPositionOfOtherUsers(users) {
+    users.forEach((user) => {
+      if (user.id !== mySocketId) {
+        setCursorPosition(user);
+      }
+    });
   }
 
   // Mouse Move
   function handleMouseMove(ev) {
     if (mySocketId) {
-      const data = { x: ev.pageX, y: ev.pageY, socketId: mySocketId }; // TODO Refactoring
+      const data = { x: ev.pageX, y: ev.pageY, id: mySocketId };
       sendCursorPositionData(data, room); // send to Socket.io
     }
   }
-  function setCursorPosition(data) {
-    const socketId = data.cords.socketId;
+  function setCursorPosition(user) {
+    const socketId = user.id;
 
     if (socketId && cursors.current[`${socketId}`] && activeUsers) {
-      cursors.current[`${socketId}`].style.top = `+${data.cords.y}px`;
-      cursors.current[`${socketId}`].style.left = `+${data.cords.x}px`;
+      cursors.current[`${socketId}`].style.top = `+${user.y}px`;
+      cursors.current[`${socketId}`].style.left = `+${user.x}px`;
     }
   }
 
@@ -147,11 +157,6 @@ function App() {
     if (bln === false) {
       setTimerAnimation(false);
     }
-  }
-
-  // Determine Winners
-  function determineWinners() {
-    getWinnerArray(room);
   }
 
   function processWinners(data) {
