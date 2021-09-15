@@ -24,7 +24,7 @@ class User {
   constructor(id, room, clr, x, y) {
     this.id = id;
     this.room = room;
-    this.clr = clr ? clr : "gray";
+    this.clr = clr ? clr : "red";
     this.x = x ? x : 100;
     this.y = y ? y : 100;
     this.isPressingMouseDown = false;

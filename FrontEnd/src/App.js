@@ -17,18 +17,13 @@ import {
   getWinnerArray,
   subscribeToWinnerArray,
 } from "./utils/socket.helpers";
-import "./App.css";
-import "./Winner.css";
-import "./Looser.css";
-
-const states = {
-  winner: "winner",
-  looser: "looser",
-  default: "default",
-};
+import "./styles/App.css";
+import "./styles/Winner.css";
+import "./styles/Looser.css";
+import "./styles/GameEnded.css";
+import "./styles/Font.css";
 
 const room = "A";
-const players = ["Johannes", "maarit", "tatze"];
 
 function App() {
   const [timerAnimation, setTimerAnimation] = useState(false);
@@ -235,7 +230,7 @@ function App() {
           key={mySocketId}
         >
           {renderCursorState(mySocketId)}
-          {renderName(mySocketId)}
+          {renderName(`It's you`)}
         </div>
       );
     }
@@ -252,6 +247,9 @@ function App() {
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
+        <div className="gameEnded">
+          <h3>Game Ended, come here to restart Game 🎉</h3>
+        </div>
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>

@@ -1,10 +1,17 @@
 .app {
+  position: absolute;
+  top: 0;
+  bottom: 0;
   height: 100vh;
+  min-height: 100vh;
   width: 100vw;
+  min-width: 100vw;
+  overflow: hidden;
+
   background: rgb(27, 27, 27);
   color: white;
-  padding: 50px;
 }
+
 .cursor_wrapper {
   position: absolute;
   display: flex;
@@ -13,11 +20,11 @@
 }
 
 .cursor {
-  --radius: 5vmin;
+  --radius: 80px;
   width: calc(2 * var(--radius));
   height: calc(2 * var(--radius));
   background-color: gray;
-  border-radius: 50%;  
+  border-radius: 50%;
   position: relative !important;
 }
 
