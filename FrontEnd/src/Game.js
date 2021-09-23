@@ -42,9 +42,7 @@ function Game({ roomId }) {
 
   const cursors = useRef([]);
 
-  useEffect(() => {
-    console.log("dev");
-  }, []);
+  
 
   useEffect(() => {
     if (roomId) initiateSocket(roomId);

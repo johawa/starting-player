@@ -1,7 +1,11 @@
 import React from "react";
 import Modal from "react-modal";
-import { initiateSocket } from "../utils/socket.helpers";
 import { v4 as uuidv4 } from "uuid";
+
+export const ModalState = {
+  create: "create",
+  join: "join",
+};
 
 const customStyles = {
   content: {
@@ -17,7 +21,7 @@ const customStyles = {
 Modal.setAppElement("#root");
 const roomId = uuidv4();
 
-export function ModalComponent({ open, closeModal, afterOpenModal }) {
+export function ModalComponent({ open, closeModal, afterOpenModal, mode }) {
   function handleSubmit(event) {
     event.preventDefault();
     const username = event.currentTarget.elements.username.value;
@@ -29,7 +33,7 @@ export function ModalComponent({ open, closeModal, afterOpenModal }) {
 
     // if (username) initiateSocket(roomId);
 
-    if (username) closeModal('success', roomId);
+    if (username) closeModal("success", roomId);
   }
 
   function renderCreateNewRoom() {
@@ -56,7 +60,7 @@ export function ModalComponent({ open, closeModal, afterOpenModal }) {
         contentLabel="Example Modal"
         shouldCloseOnOverlayClick={false}
       >
-        <div>{renderCreateNewRoom()}</div>
+        <div>{mode === ModalState.create && renderCreateNewRoom()}</div>
       </Modal>
     </>
   );

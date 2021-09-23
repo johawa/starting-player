@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Game from "./Game";
-import { ModalComponent } from "./components/ModalComponent";
-import { initiateSocket } from "./utils/socket.helpers";
+import { ModalComponent, ModalState } from "./components/ModalComponent";
 
 function App() {
-  const [modalIsOpen, setIsOpen] = React.useState(true);
-  const [roomId, setRoomId] = React.useState(null);
+  const [modalIsOpen, setIsOpen] = useState(true);
+  const [roomId, setRoomId] = useState(null);
+  const [modalState, setModalState] = useState(ModalState.create);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get("roomId");
+    if (roomId) {
+      setRoomId(roomId);
+      localStorage.setItem("roomId", roomId);
+      setModalState(ModalState.join);
+    }
+    if (!roomId) setModalState(ModalState.create);
+
+    console.log("dev", roomId);
+  }, []);
 
   // Modal
   function openModal() {
@@ -25,6 +38,7 @@ function App() {
   return (
     <>
       <ModalComponent
+        mode={modalState}
         open={modalIsOpen}
         openModal={openModal}
         closeModal={closeModal}
