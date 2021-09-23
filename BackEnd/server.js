@@ -35,7 +35,7 @@ let timeleft = 1;
 let downloadTimer;
 
 class User {
-  constructor(id, room, clr, x, y) {
+  constructor(id, room, x, y) {
     this.id = id;
     this.room = room;
     this.clr = colors.sort(() => 0.5 - Math.random()).pop();
@@ -43,6 +43,14 @@ class User {
     this.y = y ? y : 80;
     this.isPressingMouseDown = false;
     this.isInterceptiongRestartCircle = false;
+  }
+}
+
+class Game {
+  static id = 0;
+
+  constructor(room) {
+    this.room = room;
   }
 }
 
@@ -64,7 +72,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join", (room) => {
-    // console.log(`Socket ${socket.id} joining ${room}`);
+    if (!room) console.log(`Socket ${socket.id} joining ${room}`);
+
     socket.join(room);
 
     activeUsers.add(new User(socket.id));

@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { WinnerCircle } from "./components/WinnerCircle";
 import { LooserCircle } from "./components/LooserCircle";
 import { renderName } from "./components/RenderName";
+import { ModalComponent } from "./components/ModalComponent";
 import {
   initiateSocket,
   subscribeToNewConnection,
@@ -30,6 +31,7 @@ import "./styles/Font.css";
 const room = "A";
 
 function App() {
+  const [modalIsOpen, setIsOpen] = React.useState(true);
   const [timerAnimation, setTimerAnimation] = useState(false);
 
   const [gameEnded, setGameEnded] = useState(false);
@@ -45,7 +47,11 @@ function App() {
   const cursors = useRef([]);
 
   useEffect(() => {
-    if (room) initiateSocket(room);
+    console.log("dev");
+  }, []);
+
+  useEffect(() => {
+    //  if (room) initiateSocket(room);
 
     subscribeToNewConnection((err, mySocketId) => {
       if (err) return;
@@ -125,6 +131,17 @@ function App() {
         setCursorPosition(user);
       }
     });
+  }
+
+  // Modal
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {}
+
+  function closeModal() {
+    setIsOpen(false);
   }
 
   // Mouse Move
@@ -297,25 +314,35 @@ function App() {
     }
   }
 
+  function renderGameEnded() {
+    return (
+      <div className="gameEnded">
+        <h3>Game Ended, come here to restart 🎉</h3>
+        <p>
+          {playersInterceptingRestartCircle
+            ? playersInterceptingRestartCircle
+            : 0}
+          /{activeUsers.length}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
+      <ModalComponent
+        open={modalIsOpen}
+        openModal={openModal}
+        closeModal={closeModal}
+        afterOpenModal={afterOpenModal}
+      ></ModalComponent>
       <div
         className="app"
         onMouseMove={(ev) => handleMouseMove(ev)}
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
-        {gameEnded && (
-          <div className="gameEnded">
-            <h3>Game Ended, come here to restart 🎉</h3>
-            <p>
-              {playersInterceptingRestartCircle
-                ? playersInterceptingRestartCircle
-                : 0}
-              /{activeUsers.length}
-            </p>
-          </div>
-        )}
+        {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>
