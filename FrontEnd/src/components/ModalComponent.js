@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import { initiateSocket } from "../utils/socket.helpers";
+import { v4 as uuidv4 } from "uuid";
 
 const customStyles = {
   content: {
@@ -14,17 +15,21 @@ const customStyles = {
 };
 
 Modal.setAppElement("#root");
+const roomId = uuidv4();
 
 export function ModalComponent({ open, closeModal, afterOpenModal }) {
   function handleSubmit(event) {
     event.preventDefault();
     const username = event.currentTarget.elements.username.value;
-    const roomname = "A";
-    console.log("event", { roomname }, { username });
-    localStorage.setItem("ps-username", username);
 
-    if (roomname) initiateSocket(roomname);
-    // closeModal();
+    console.log("event", { username });
+    localStorage.setItem("ps-username", username);
+    localStorage.setItem("ps-roomId", roomId);
+    window.history.pushState({}, null, `?roomId=${roomId}`);
+
+    // if (username) initiateSocket(roomId);
+
+    if (username) closeModal('success', roomId);
   }
 
   function renderCreateNewRoom() {
@@ -35,7 +40,7 @@ export function ModalComponent({ open, closeModal, afterOpenModal }) {
           <label htmlFor="username">Username:</label>
           <input type="text" id="username" />
           <br />
-          <button type="submit">Submit</button>
+          <button type="submit">Create new Game</button>
         </form>
       </>
     );

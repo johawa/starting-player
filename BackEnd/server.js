@@ -47,10 +47,15 @@ class User {
 }
 
 class Game {
-  static id = 0;
+  static #id = 0;
 
   constructor(room) {
+    Game.#id++;
     this.room = room;
+  }
+
+  get id() {
+    return Game.#id;
   }
 }
 
@@ -72,12 +77,17 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join", (room) => {
-    if (!room) console.log(`Socket ${socket.id} joining ${room}`);
+    const gameInstance = new Game(room);
 
-    socket.join(room);
+    console.log(
+      `Socket ${socket.id} joining ${room}`,
+      gameInstance,
+      gameInstance.id
+    );
+    socket.join(room);    
+   
 
     activeUsers.add(new User(socket.id));
-
     io.emit("emitActiveUsers", [...activeUsers.keys()]);
     // console.log(activeUsers);
   });
