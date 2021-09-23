@@ -22,29 +22,49 @@ Modal.setAppElement("#root");
 const roomId = uuidv4();
 
 export function ModalComponent({ open, closeModal, afterOpenModal, mode }) {
-  function handleSubmit(event) {
+  function handleCreateGame(event) {
     event.preventDefault();
     const username = event.currentTarget.elements.username.value;
 
-    console.log("event", { username });
     localStorage.setItem("ps-username", username);
     localStorage.setItem("ps-roomId", roomId);
     window.history.pushState({}, null, `?roomId=${roomId}`);
 
-    // if (username) initiateSocket(roomId);
+    if (username) closeModal("create", roomId);
+  }
 
-    if (username) closeModal("success", roomId);
+  function handleJoinGame(event) {
+    event.preventDefault();
+
+    const username = event.currentTarget.elements.username.value;
+    localStorage.setItem("ps-username", username);
+
+    if (username) closeModal("join", null);
   }
 
   function renderCreateNewRoom() {
     return (
       <>
         <h1>Create a Room</h1>
-        <form className="formWrapper" onSubmit={handleSubmit}>
+        <form className="formWrapper" onSubmit={handleCreateGame}>
           <label htmlFor="username">Username:</label>
           <input type="text" id="username" />
           <br />
           <button type="submit">Create new Game</button>
+        </form>
+      </>
+    );
+  }
+
+  function renderJoinRoom() {
+    return (
+      <>
+        <h1>Join a Room</h1>
+        <form className="formWrapper" onSubmit={handleJoinGame}>
+          <label htmlFor="username">Username:</label>
+          <input type="text" id="username" />
+          <br />
+          <button type="submit">Join Game</button>
         </form>
       </>
     );
@@ -60,7 +80,11 @@ export function ModalComponent({ open, closeModal, afterOpenModal, mode }) {
         contentLabel="Example Modal"
         shouldCloseOnOverlayClick={false}
       >
-        <div>{mode === ModalState.create && renderCreateNewRoom()}</div>
+        <div>
+          {mode === ModalState.create
+            ? renderCreateNewRoom()
+            : renderJoinRoom()}
+        </div>
       </Modal>
     </>
   );

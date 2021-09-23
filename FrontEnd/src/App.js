@@ -3,6 +3,7 @@ import Game from "./Game";
 import { ModalComponent, ModalState } from "./components/ModalComponent";
 
 function App() {
+  const [renderModal, setRenderModal] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(true);
   const [roomId, setRoomId] = useState(null);
   const [modalState, setModalState] = useState(ModalState.create);
@@ -10,12 +11,33 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const roomId = urlParams.get("roomId");
-    if (roomId) {
+
+    const username = localStorage.getItem("ps-username");
+    console.log(username, roomId);
+
+    // refresh Page Case
+    if (username && roomId) {
+      setRenderModal(false);
       setRoomId(roomId);
-      localStorage.setItem("roomId", roomId);
+    }
+    // new Case
+    if (username && !roomId) {
+      setRenderModal(true);
+      localStorage.removeItem("ps-roomId");
+      localStorage.removeItem("ps-username");
+    }
+    // Join Case
+    if (roomId && !username) {
+      setRenderModal(true);
+      setRoomId(roomId);
+      localStorage.setItem("ps-roomId", roomId);
       setModalState(ModalState.join);
     }
-    if (!roomId) setModalState(ModalState.create);
+    // Create Case
+    if (!roomId && !username) {
+      setRenderModal(true);
+      setModalState(ModalState.create);
+    }
 
     console.log("dev", roomId);
   }, []);
@@ -27,9 +49,13 @@ function App() {
 
   function afterOpenModal() {}
 
-  function closeModal(state, roomId) {
-    console.log(state);
-    if (state === "success") {
+  function closeModal(msg, roomId) {
+    if (msg === "create") {
+      setRoomId(roomId);
+      setIsOpen(false);
+    }
+    if (msg === "join") {
+      const roomId = localStorage.getItem("ps-roomId");
       setRoomId(roomId);
       setIsOpen(false);
     }
@@ -37,13 +63,15 @@ function App() {
 
   return (
     <>
-      <ModalComponent
-        mode={modalState}
-        open={modalIsOpen}
-        openModal={openModal}
-        closeModal={closeModal}
-        afterOpenModal={afterOpenModal}
-      ></ModalComponent>
+      {renderModal && (
+        <ModalComponent
+          mode={modalState}
+          open={modalIsOpen}
+          openModal={openModal}
+          closeModal={closeModal}
+          afterOpenModal={afterOpenModal}
+        ></ModalComponent>
+      )}
 
       {roomId && <Game roomId={roomId}></Game>}
     </>
