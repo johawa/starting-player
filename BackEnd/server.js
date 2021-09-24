@@ -35,9 +35,10 @@ let timeleft = 1;
 let downloadTimer;
 
 class User {
-  constructor(id, room, x, y) {
+  constructor(id, room, username, x, y) {
     this.id = id;
     this.room = room;
+    this.username = username;
     this.clr = colors.sort(() => 0.5 - Math.random()).pop();
     this.x = x ? x : 80;
     this.y = y ? y : 80;
@@ -83,14 +84,19 @@ io.on("connection", (socket) => {
     // console.log(activeUsers);
   });
 
-  socket.on("join", (room) => {
+  socket.on("join", (data) => {
+    const { room, userName } = data;
+ 
     const gameInstance = new Room(room);
 
     // console.log(`Socket ${socket.id} joining ${room}`);
-
+    socket.data.username = userName;
     socket.join(room);
+    console.log("join", socket.rooms)
 
     activeUsers.add(new User(socket.id, room));
+
+   
     io.to(room).emit("emitActiveUsers", [...activeUsers.keys()]);
     // console.log(activeUsers);
   });

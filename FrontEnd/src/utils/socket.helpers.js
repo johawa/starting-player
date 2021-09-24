@@ -1,10 +1,10 @@
 import io from "socket.io-client";
 let socket;
 
-export const initiateSocket = (room) => {
+export const initiateSocket = (room, userName) => {
   socket = io("http://192.168.1.104:5000");
   //console.log(`Connecting socket...`);
-  if (socket && room) socket.emit("join", room);
+  if (socket && room) socket.emit("join", {room, userName});
 };
 
 export const disconnectSocket = () => {
@@ -35,7 +35,7 @@ export const subscribeToActiveUsers = (cb) => {
 export const subscribeToCursorPositionsData = (cb) => {
   if (!socket) return true;
   socket.on("emitCursorPositionsData", (msg) => {
-    console.log("Websocket event received! [subscribeToCursorPositionsData]", msg);
+    // console.log("Websocket event received! [subscribeToCursorPositionsData]");
     return cb(null, msg);
   });
 };

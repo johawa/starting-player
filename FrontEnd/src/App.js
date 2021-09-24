@@ -11,6 +11,7 @@ function App() {
   const [renderModal, setRenderModal] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(true);
   const [roomId, setRoomId] = useState(null);
+  const [userName, setUserName] = useState(null);
   const [modalState, setModalState] = useState(ModalState.create);
 
   useEffect(() => {
@@ -18,21 +19,24 @@ function App() {
     const roomId = urlParams.get("roomId");
 
     const username = localStorage.getItem("ps-username");
-    console.log(username, roomId);
+    console.log({username}, {roomId});
 
     // refresh Page Case
     if (username && roomId) {
       setRenderModal(false);
+      setUserName(username);
       setRoomId(roomId);
     }
     // new Case
     if (username && !roomId) {
+      setUserName(username);
       setRenderModal(true);
       localStorage.removeItem("ps-roomId");
       localStorage.removeItem("ps-username");
     }
     // Join Case
     if (roomId && !username) {
+      setUserName(null);
       setRenderModal(true);
       setRoomId(roomId);
       localStorage.setItem("ps-roomId", roomId);
@@ -40,6 +44,7 @@ function App() {
     }
     // Create Case
     if (!roomId && !username) {
+      setUserName(null);
       setRenderModal(true);
       setModalState(ModalState.create);
     }
@@ -58,11 +63,13 @@ function App() {
     if (msg === "create") {
       setRoomId(roomId);
       setIsOpen(false);
-    } else if (msg === "join") {
+    }
+    if (msg === "join") {
       const roomId = localStorage.getItem("ps-roomId");
       setRoomId(roomId);
       setIsOpen(false);
-    } else if (msg === "recreate") {
+    }
+    if (msg === "recreate") {
       setRoomId(roomId);
       setIsOpen(false);
     }
@@ -95,7 +102,7 @@ function App() {
         ></GameModal>
       )}
 
-      {roomId && <Game roomId={roomId}></Game>}
+      {roomId && <Game roomId={roomId} userName={userName}></Game>}
       <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>
     </>
   );
