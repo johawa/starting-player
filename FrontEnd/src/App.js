@@ -69,8 +69,13 @@ function App() {
   // Event Listeners
 
   function handler({ key }) {
-    if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
-      console.log("Open Menux");
+    if (
+      ESCAPE_KEYS.includes(String(key)) ||
+      X_KEY.includes(String(key).toLowerCase())
+    ) {
+      setRenderModal(true);
+      setModalState(ModalState.menu);
+      setIsOpen(true);
     }
   }
 
@@ -89,6 +94,7 @@ function App() {
       )}
 
       {roomId && <Game roomId={roomId}></Game>}
+      <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>
     </>
   );
 }

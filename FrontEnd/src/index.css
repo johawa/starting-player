@@ -3,3 +3,12 @@ body {
   padding: 0;
   font-family: 'Saira', sans-serif;
 }
+
+.menu_info_text {
+  color: white;
+  position: absolute;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  bottom: 8%;
+}

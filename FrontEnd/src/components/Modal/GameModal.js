@@ -51,6 +51,7 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
     }
   }
 
+  console.log(mode);
   return (
     <>
       <Modal
