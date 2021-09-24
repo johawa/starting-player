@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Game from "./Game";
-import { ModalComponent, ModalState } from "./components/ModalComponent";
+import { GameModal } from "./components/Modal/GameModal";
+import { ModalState } from "./components/Modal/settings";
 
 function App() {
   const [renderModal, setRenderModal] = useState(false);
@@ -64,13 +65,13 @@ function App() {
   return (
     <>
       {renderModal && (
-        <ModalComponent
+        <GameModal
           mode={modalState}
           open={modalIsOpen}
           openModal={openModal}
           closeModal={closeModal}
           afterOpenModal={afterOpenModal}
-        ></ModalComponent>
+        ></GameModal>
       )}
 
       {roomId && <Game roomId={roomId}></Game>}
