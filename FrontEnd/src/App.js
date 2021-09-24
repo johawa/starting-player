@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import Game from "./Game";
 import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
+import { useEventListener } from "./utils/useEventListener";
+
+const ESCAPE_KEYS = ["27", "Escape"];
+const X_KEY = ["88", "x"];
 
 function App() {
   const [renderModal, setRenderModal] = useState(false);
@@ -61,6 +65,16 @@ function App() {
       setIsOpen(false);
     }
   }
+
+  // Event Listeners
+
+  function handler({ key }) {
+    if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
+      console.log("Open Menux");
+    }
+  }
+
+  useEventListener("keydown", handler);
 
   return (
     <>

@@ -2,13 +2,12 @@ import React from "react";
 import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
 import { customStyles, ModalState } from "./settings";
-import { RenderCreateNewRoom, RenderJoinRoom } from "./content";
+import { RenderCreateNewRoom, RenderJoinRoom, RenderMenu } from "./content";
 
 Modal.setAppElement("#root");
 const roomId = uuidv4();
 
 export function GameModal({ open, closeModal, afterOpenModal, mode }) {
-
   function handleCreateGame(event) {
     event.preventDefault();
 
