@@ -2,7 +2,7 @@ import io from "socket.io-client";
 let socket;
 
 export const initiateSocket = (room, userName) => {
-  socket = io("http://192.168.1.104:5000");
+  socket = io(`http://192.168.1.104:5000/${room}`);
   //console.log(`Connecting socket...`);
   if (socket && room) socket.emit("join", {room, userName});
 };

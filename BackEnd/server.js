@@ -30,6 +30,7 @@ const server = app.listen(PORT, function () {
 
 // Socket setup
 const io = socket(server, { cors: true });
+
 const activeUsers = new Set();
 let timeleft = 1;
 let downloadTimer;
@@ -46,8 +47,6 @@ class User {
     this.isInterceptiongRestartCircle = false;
   }
 }
-
-
 
 class Room {
   static #roomCounter = 0;
@@ -67,7 +66,14 @@ class Room {
   }
 }
 
-io.on("connection", (socket) => {
+const workspace = io.of(
+  /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/
+);
+
+workspace.on("connection", (socket) => {
+  const namespace = socket.nsp;
+  console.log('namespacename', namespace.name)
+
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
 
@@ -80,24 +86,23 @@ io.on("connection", (socket) => {
       }
     });
 
-    io.emit("emitActiveUsers", [...activeUsers.keys()]);
+    namespace.emit("emitActiveUsers", [...activeUsers.keys()]);
     // console.log(activeUsers);
   });
 
   socket.on("join", (data) => {
     const { room, userName } = data;
- 
+
     const gameInstance = new Room(room);
 
     // console.log(`Socket ${socket.id} joining ${room}`);
     socket.data.username = userName;
     socket.join(room);
-    console.log("join", socket.rooms)
+    console.log("join", namespace);
 
     activeUsers.add(new User(socket.id, room));
 
-   
-    io.to(room).emit("emitActiveUsers", [...activeUsers.keys()]);
+    namespace.emit("emitActiveUsers", [...activeUsers.keys()]);
     // console.log(activeUsers);
   });
 
@@ -109,7 +114,7 @@ io.on("connection", (socket) => {
       if (user.id === data.cords.id) {
         user.x = data.cords.x;
         user.y = data.cords.y;
-        io.to(room).emit("emitCursorPositionsData", user);
+        namespace.emit("emitCursorPositionsData", user);
       }
     });
   });
@@ -122,13 +127,13 @@ io.on("connection", (socket) => {
     activeUsers.forEach((user) => {
       if (user.id === id) {
         user.isPressingMouseDown = true;
-        io.to(room).emit("emituserPressedMouse", user);
+        namespace.emit("emituserPressedMouse", user);
       }
     });
 
     if (determineIfAllUserArePressingMouseDown([...activeUsers.keys()])) {
       startTimer();
-      io.to(room).emit("emitAllUserPressingMouseDown", true);
+      namespace.emit("emitAllUserPressingMouseDown", true);
     }
   });
   // mousePressed End
@@ -138,7 +143,7 @@ io.on("connection", (socket) => {
     const { id, room } = data;
 
     // cancel function when user Presses Up again
-    io.to(room).emit("emitAllUserPressingMouseDown", false);
+    namespace.emit("emitAllUserPressingMouseDown", false);
     stopTimer();
 
     activeUsers.forEach((user) => {
@@ -148,7 +153,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    io.to(room).emit("emituserMouseUp", id);
+    namespace.emit("emituserMouseUp", id);
   });
 
   // mouseUp End
@@ -164,12 +169,12 @@ io.on("connection", (socket) => {
       }
     });
 
-    io.emit("emituserInterceptRestartCircleStart", [...activeUsers.keys()]);
+    namespace.emit("emituserInterceptRestartCircleStart", [...activeUsers.keys()]);
 
     if (
       determineIfAllUserAreInterceptingRestartCircle([...activeUsers.keys()])
     ) {
-      io.emit("emitAllUserInterceptRestartCircle");
+      namespace.emit("emitAllUserInterceptRestartCircle");
     }
   });
 
@@ -181,7 +186,7 @@ io.on("connection", (socket) => {
       }
     });
 
-    io.emit("emituserInterceptRestartCircleCancel", [...activeUsers.keys()]);
+    namespace.emit("emituserInterceptRestartCircleCancel", [...activeUsers.keys()]);
   });
 });
 
@@ -191,7 +196,7 @@ function startTimer() {
       // Event
       // DetermineWinner
       const winnerArray = determineWinner(activeUsers);
-      io.emit("emitWinnerArray", winnerArray);
+      namespace.emit("emitWinnerArray", winnerArray);
 
       clearInterval(downloadTimer);
     }
