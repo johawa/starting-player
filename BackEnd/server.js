@@ -46,16 +46,23 @@ class User {
   }
 }
 
-class Game {
-  static #id = 0;
+
+
+class Room {
+  static #roomCounter = 0;
 
   constructor(room) {
-    Game.#id++;
+    Room.#roomCounter++;
     this.room = room;
+    this.activeUsers = new Set();
   }
 
-  get id() {
-    return Game.#id;
+  addUser() {
+    this.activeUsers.add(new User(socketId, room));
+  }
+
+  get roomCounter() {
+    return Room.#roomCounter;
   }
 }
 
@@ -77,28 +84,26 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join", (room) => {
-    const gameInstance = new Game(room);
+    const gameInstance = new Room(room);
 
-    console.log(
-      `Socket ${socket.id} joining ${room}`,
-      gameInstance,
-      gameInstance.id
-    );
-    socket.join(room);    
-   
+    // console.log(`Socket ${socket.id} joining ${room}`);
 
-    activeUsers.add(new User(socket.id));
-    io.emit("emitActiveUsers", [...activeUsers.keys()]);
+    socket.join(room);
+
+    activeUsers.add(new User(socket.id, room));
+    io.to(room).emit("emitActiveUsers", [...activeUsers.keys()]);
     // console.log(activeUsers);
   });
 
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
+    const { room } = data;
+
     activeUsers.forEach((user) => {
       if (user.id === data.cords.id) {
         user.x = data.cords.x;
         user.y = data.cords.y;
-        io.to(data.room).emit("emitCursorPositionsData", user);
+        io.to(room).emit("emitCursorPositionsData", user);
       }
     });
   });
