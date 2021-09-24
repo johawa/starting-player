@@ -58,9 +58,11 @@ function App() {
     if (msg === "create") {
       setRoomId(roomId);
       setIsOpen(false);
-    }
-    if (msg === "join") {
+    } else if (msg === "join") {
       const roomId = localStorage.getItem("ps-roomId");
+      setRoomId(roomId);
+      setIsOpen(false);
+    } else if (msg === "recreate") {
       setRoomId(roomId);
       setIsOpen(false);
     }

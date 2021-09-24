@@ -19,6 +19,19 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
     if (username) closeModal("create", roomId);
   }
 
+  function handleRecreateGame(event) {
+    event.preventDefault();
+    event.preventDefault();
+
+    const username = event.currentTarget.elements.username.value;
+    localStorage.setItem("ps-username", username);
+    localStorage.setItem("ps-roomId", roomId);
+    window.history.pushState({}, null, `?roomId=${roomId}`);
+    window.location.reload();
+
+    if (username) closeModal("recreate", roomId);
+  }
+
   function handleJoinGame(event) {
     event.preventDefault();
 
@@ -43,7 +56,12 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
         );
 
       case ModalState.menu:
-        return <RenderMenu></RenderMenu>;
+        return (
+          <RenderMenu
+            closeModal={closeModal}
+            handleRecreateGame={handleRecreateGame}
+          ></RenderMenu>
+        );
 
       default:
         console.error("Something went wrong rendering the Modal");
@@ -51,7 +69,6 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
     }
   }
 
-  console.log(mode);
   return (
     <>
       <Modal
@@ -59,8 +76,8 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal"
-        shouldCloseOnOverlayClick={false}
+        contentLabel="Game Modal"
+        shouldCloseOnOverlayClick={true}
       >
         <div>{renderContent(mode)}</div>
       </Modal>

@@ -26,11 +26,20 @@ export function RenderJoinRoom({ handleJoinGame }) {
   );
 }
 
-export function RenderMenu() {
+export function RenderMenu({ closeModal, handleRecreateGame }) {
   return (
     <>
       <h1>Menu</h1>
-      <button>Restart Game</button>
+      <h3>Create a Room</h3>
+      <p>All Current Users will be kicked out</p>
+      <form className="formWrapper" onSubmit={handleRecreateGame}>
+        <label htmlFor="username">Username:</label>
+        <input type="text" id="username" />
+        <br />
+        <button type="submit">Create new Game</button>
+      </form>
+
+      <button onClick={closeModal}>Close Modal</button>
     </>
   );
 }
