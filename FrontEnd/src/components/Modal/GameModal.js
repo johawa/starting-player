@@ -16,12 +16,11 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
     localStorage.setItem("ps-namespace", namespace);
     window.history.pushState({}, null, `?namespace=${namespace}`);
 
-    if (username) closeModal("create", namespace);
+    if (username) closeModal("create", namespace, null);
   }
 
   function handleRecreateGame(event) {
-    event.preventDefault();
-    event.preventDefault();
+    event.preventDefault();   
 
     const username = event.currentTarget.elements.username.value;
     localStorage.setItem("ps-username", username);
@@ -29,17 +28,15 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
     window.history.pushState({}, null, `?namespace=${namespace}`);
     window.location.reload();
 
-    if (username) closeModal("recreate", namespace);
+    if (username) closeModal("recreate", namespace, null);
   }
 
   function handleJoinGame(event) {
     event.preventDefault();
+    const username = event.currentTarget.elements.username.value;  
 
-    const username = event.currentTarget.elements.username.value;
-  
     localStorage.setItem("ps-username", username);
-
-    if (username) closeModal("join", username);
+    if (username) closeModal("join", null, username);
   }
 
   function renderContent(mode) {

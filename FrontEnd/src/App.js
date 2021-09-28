@@ -57,13 +57,14 @@ function App() {
 
   function afterOpenModal() {}
 
-  function closeModal(msg, namespace) {
+  function closeModal(msg, namespace, username) {
     if (msg === "create") {
       setNamespace(namespace);
       setIsOpen(false);
     }
     if (msg === "join") {
       const namespace = localStorage.getItem("ps-namespace");
+      setusername(username);
       setNamespace(namespace);
       setIsOpen(false);
     }
@@ -100,7 +101,7 @@ function App() {
         ></GameModal>
       )}
 
-      {namespace && <Game namespace={namespace} username={username}></Game>}
+      {(namespace && username) && <Game namespace={namespace} username={username}></Game>}
       <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>
     </>
   );

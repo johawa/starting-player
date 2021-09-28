@@ -42,11 +42,11 @@ workspace.on("connection", (socket) => {
 
   socket.on("join", async (data) => {
     const { username } = data;
-    // console.log(`Socket ${socket.id} joining namespace ${namespace.name}`);
+     // console.log(`Socket ${socket.id} joining namespace ${namespace.name}`);
     // set new User
     const user = new User(socket.id, username);
     socket.data = user;
-    console.log(socket.data);
+ 
 
     // get active users array
     const sockets = await namespace.fetchSockets();

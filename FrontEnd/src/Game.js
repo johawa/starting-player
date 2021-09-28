@@ -258,6 +258,7 @@ function Game({ namespace, username }) {
   function renderOtherPlayers() {
     if (activeUsers && mySocketId) {
       const otherUsers = activeUsers.filter((user) => user.id !== mySocketId);
+      console.dir(otherUsers);
 
       return otherUsers.map((user) => {
         return (
@@ -269,7 +270,7 @@ function Game({ namespace, username }) {
             key={user.id}
           >
             {renderCursorState(user.id)}
-            {renderName(user.username)}
+            {renderName(user.username ? user.username : 'New User')}
           </div>
         );
       });
