@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
 import { customStyles, ModalState } from "./settings";
-import { RenderCreateNewRoom, RenderJoinRoom, RenderMenu } from "./content";
+import { RenderCreateNewNamespace, RenderJoinNamespace, RenderMenu } from "./content";
 
 Modal.setAppElement("#root");
 const namespace = uuidv4();
@@ -45,14 +45,14 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
     switch (mode) {
       case ModalState.create:
         return (
-          <RenderCreateNewRoom
+          <RenderCreateNewNamespace
             handleCreateGame={handleCreateGame}
-          ></RenderCreateNewRoom>
+          ></RenderCreateNewNamespace>
         );
 
       case ModalState.join:
         return (
-          <RenderJoinRoom handleJoinGame={handleJoinGame}></RenderJoinRoom>
+          <RenderJoinNamespace handleJoinGame={handleJoinGame}></RenderJoinNamespace>
         );
 
       case ModalState.menu:

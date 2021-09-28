@@ -1,7 +1,7 @@
-export function RenderCreateNewRoom({ handleCreateGame }) {
+export function RenderCreateNewNamespace({ handleCreateGame }) {
   return (
     <>
-      <h1>Create a Room</h1>
+      <h1>Create a Namespace</h1>
       <form className="formWrapper" onSubmit={handleCreateGame}>
         <label htmlFor="username">username:</label>
         <input type="text" id="username" />
@@ -12,10 +12,10 @@ export function RenderCreateNewRoom({ handleCreateGame }) {
   );
 }
 
-export function RenderJoinRoom({ handleJoinGame }) {
+export function RenderJoinNamespace({ handleJoinGame }) {
   return (
     <>
-      <h1>Join a Room</h1>
+      <h1>Join a Namespace</h1>
       <form className="formWrapper" onSubmit={handleJoinGame}>
         <label htmlFor="username">username:</label>
         <input type="text" id="username" />
@@ -30,7 +30,7 @@ export function RenderMenu({ closeModal, handleRecreateGame }) {
   return (
     <>
       <h1>Menu</h1>
-      <h3>Create a Room</h3>
+      <h3>Create a Namespace</h3>
       <p>All Current Users will be kicked out</p>
       <form className="formWrapper" onSubmit={handleRecreateGame}>
         <label htmlFor="username">username:</label>

@@ -40,14 +40,14 @@ export const subscribeToCursorPositionsData = (cb) => {
   });
 };
 
-export const sendCursorPositionData = (cords, room) => {
-  if (socket) socket.emit("cursorPosition", { cords, room });
+export const sendCursorPositionData = (cords, Namespace) => {
+  if (socket) socket.emit("cursorPosition", { cords, Namespace });
 };
 // mouseMove End
 
 // mousePressed Start
-export const sendUserMouseDown = (id, room) => {
-  if (socket) socket.emit("userPressedMouse", { id, room });
+export const sendUserMouseDown = (id, Namespace) => {
+  if (socket) socket.emit("userPressedMouse", { id, Namespace });
 };
 
 export const subscribeToUserMouseDown = (cb) => {
@@ -61,8 +61,8 @@ export const subscribeToUserMouseDown = (cb) => {
 // mousePressed End
 
 // mouseUp Start
-export const sendUserMouseUp = (id, room) => {
-  if (socket) socket.emit("userMouseUp", { id, room });
+export const sendUserMouseUp = (id, Namespace) => {
+  if (socket) socket.emit("userMouseUp", { id, Namespace });
 };
 
 export const subscribeToUserMouseUp = (cb) => {
