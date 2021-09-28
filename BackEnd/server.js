@@ -27,11 +27,11 @@ WORKSPACE.on("connection", (socket) => {
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
 
-  socket.on("disconnect",           async () =>     handleDisconnect(namespaceInstance, socket, data));
+  socket.on("disconnect",           async () =>     handleDisconnect(namespaceInstance));
   socket.on("join",                 async (data) => handleJoin(namespaceInstance, socket, data));
 
   socket.on("cursorPosition",       data =>         setCurrentPosition(namespaceInstance, socket, data));
-  socket.on("userPressedMouse",     async () =>     handleUserPressedMouse(namespaceInstance, socket));
+  socket.on("userMouseDown",        async () =>     handleUserPressedMouse(namespaceInstance, socket));
   socket.on("userMouseUp",          () =>           handleUserMouseUp(namespaceInstance, socket));
 
   socket.on("userRestartGameStart", async () =>     handleRestartGameStart(namespaceInstance, socket));

@@ -47,7 +47,7 @@ export const sendCursorPositionData = (cords) => {
 
 // mousePressed Start
 export const sendUserMouseDown = () => {
-  if (socket) socket.emit("userPressedMouse");
+  if (socket) socket.emit("userMouseDown");
 };
 
 export const subscribeToUserMouseDown = (cb) => {

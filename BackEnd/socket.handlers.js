@@ -13,16 +13,13 @@ async function handleJoin(namespaceInstance, socket, data) {
 
   const activeUsers = await namespaceInstance.getActiveUsers();
   console.log("join", activeUsers);
-
   namespaceInstance.connection.emit("emitActiveUsers", activeUsers);
 }
 
-async function handleDisconnect(namespaceInstance, socket, data) {
+async function handleDisconnect(namespaceInstance) {
   // console.log(`Disconnected: ${socket.id}`);
   const activeUsers = await namespaceInstance.getActiveUsers();
   console.log("disconnect", activeUsers);
-  // console.log(users);
-
   namespaceInstance.connection.emit("emitActiveUsers", activeUsers);
 }
 
@@ -39,12 +36,9 @@ function handleUserMouseUp(namespaceInstance, socket) {
 
 async function handleUserPressedMouse(namespaceInstance, socket) {
   if (Object.keys(socket.data).length === 0) return;
-  // set user mouse Down
-  socket.data.setPressingMouseDown(true);
-  // emit socket.data
-  namespaceInstance.connection.emit("emituserPressedMouse", socket.data);
 
-  // get active users array
+  socket.data.setPressingMouseDown(true); 
+  namespaceInstance.connection.emit("emituserPressedMouse", socket.data);
   const activeUsers = await namespaceInstance.getActiveUsers();
 
   if (determineIfAllUserArePressingMouseDown(activeUsers)) {
@@ -60,9 +54,8 @@ async function handleUserPressedMouse(namespaceInstance, socket) {
 function setCurrentPosition(namespaceInstance, socket, data) {
   const { cords } = data;
   if (Object.keys(socket.data).length === 0) return;
-  // set cords data of socket
+
   socket.data.setCords(cords.x, cords.y);
-  // emit socket.data
   namespaceInstance.connection.emit("emitCursorPositionsData", socket.data);
 }
 
@@ -70,9 +63,7 @@ async function handleRestartGameStart(namespaceInstance, socket) {
   if (Object.keys(socket.data).length === 0) return;
   socket.data.setIsInterceptiongRestartCircle(true);
 
-  // get active users array
   const activeUsers = await namespaceInstance.getActiveUsers();
-
   namespaceInstance.connection.emit("emituserInterceptRestartCircleStart", activeUsers);
 
   if (determineIfAllUserAreInterceptingRestartCircle(activeUsers)) {
@@ -83,9 +74,8 @@ async function handleRestartGameStart(namespaceInstance, socket) {
 async function handleRestartGameEnd(namespaceInstance, socket) {
   if (Object.keys(socket.data).length === 0) return;
   socket.data.setIsInterceptiongRestartCircle(false);
-  // get active users array
-  const activeUsers = await namespaceInstance.getActiveUsers();
 
+  const activeUsers = await namespaceInstance.getActiveUsers();
   namespaceInstance.connection.emit("emituserInterceptRestartCircleCancel", activeUsers);
 }
 
