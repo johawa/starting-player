@@ -1,4 +1,4 @@
-const colors = [
+const COLORS = [
   "#F4DF4EFF",
   "#FC766AFF",
   "#5B84B1FF",
@@ -12,6 +12,9 @@ const colors = [
   "#B1624EFF",
 ];
 
+const PORT = 5000;
+
 module.exports = {
-  colors,
+  COLORS,
+  PORT,
 };

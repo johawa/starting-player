@@ -1,10 +1,10 @@
-const { colors } = require("../constants/colors");
+const { COLORS } = require("../constants/constants");
 
 class User {
   constructor(id, username) {
     this.id = id;
     this.username = username;
-    this.clr = colors.sort(() => 0.5 - Math.random()).pop();
+    this.clr = COLORS.sort(() => 0.5 - Math.random()).pop();
     this.x = 80;
     this.y = 80;
     this.isPressingMouseDown = false;

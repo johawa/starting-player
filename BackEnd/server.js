@@ -4,12 +4,12 @@ const {
   determineWinner,
 } = require("./utils");
 const { User } = require("./models/user");
-const { startTimer, stopTimer } = require("./models/namespace");
+const { NamespaceTimer } = require("./models/namespaceTimer");
+const { PORT } = require("./constants/constants");
 const express = require("express");
 const socket = require("socket.io");
 
 // App setup
-const PORT = 5000;
 const app = express();
 const server = app.listen(PORT, function () {
   console.log(`Listening on port ${PORT}`);
@@ -24,7 +24,8 @@ const workspace = io.of(
 
 workspace.on("connection", (socket) => {
   const namespace = socket.nsp;
-  // console.log('namespacename', namespace.name)
+  // console.log("namespacename", namespace.name);
+  const namespaceRef = new NamespaceTimer(namespace.name);
 
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
@@ -57,6 +58,7 @@ workspace.on("connection", (socket) => {
 
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
+    console.log(socket.nsp.name)
     const { cords, namespace } = data;
     const namespaceInstance = io.of(`${namespace}`);
 
@@ -86,7 +88,7 @@ workspace.on("connection", (socket) => {
 
     if (determineIfAllUserArePressingMouseDown(users)) {
       // Start Time and Emit Winners array if timer runs to 0
-      startTimer().then(() => {
+      namespaceRef.startTimer().then(() => {
         const winnerArray = determineWinner(users);
         namespaceInstance.emit("emitWinnerArray", winnerArray);
       });
@@ -102,7 +104,7 @@ workspace.on("connection", (socket) => {
 
     // cancel function when user Presses Up again
     namespaceInstance.emit("emitAllUserPressingMouseDown", false);
-    stopTimer();
+    namespaceRef.stopTimer();
 
     if (Object.keys(socket.data).length === 0) return;
     socket.data.setPressingMouseDown(false);
