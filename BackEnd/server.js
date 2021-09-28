@@ -77,43 +77,30 @@ workspace.on("connection", (socket) => {
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
 
-  socket.on("disconnect", () => {
-    console.log(`Disconnected: ${socket.id}`);
+  socket.on("disconnect", async () => {
+    //console.log(`Disconnected: ${socket.id}`);
+    // get active users array
+    const sockets = await namespace.fetchSockets();
+    const users = sockets.map((socket) => socket.data);
+    console.log(users);
 
-    activeUsers.forEach((user) => {
-      if (user.id === socket.id) {
-        activeUsers.delete(user);
-      }
-    });
-
-    namespace.emit("emitActiveUsers", [...activeUsers.keys()]);
-    // console.log(activeUsers);
+    namespace.emit("emitActiveUsers", users);
   });
 
   socket.on("join", async (data) => {
-    const { room, userName } = data;
-
-    const gameInstance = new Room(room);
-
-    // console.log(`Socket ${socket.id} joining ${room}`);
-    const user = new User(socket.id);
-
+    const { username } = data;
+    // console.log(`Socket ${socket.id} joining namespace ${namespace.name}`);
+    // set new User
+    const user = new User(socket.id, username);
     socket.data = user;
-    socket.join(room);
 
-    activeUsers.add(new User(socket.id, room));
-
+    // get active users array
     const sockets = await namespace.fetchSockets();
-    const USRS = sockets.map((socket) => socket.data);
-    console.log(USRS);
+    const users = sockets.map((socket) => socket.data);
+    console.log(users);
 
-    /*     for (const socket of sockets) {
-      console.log(socket.data);
-    } */
-
-    // namespace.emit("emitActiveUsers", [...activeUsers.keys()]);
-    namespace.emit("emitActiveUsers", USRS);
-    // console.log(activeUsers);
+    // console.log(`Active Users in namespace ${namespace.name}: ${users.length}`);
+    namespace.emit("emitActiveUsers", users);
   });
 
   // mouseMove Start

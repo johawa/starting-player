@@ -4,7 +4,7 @@ let socket;
 export const initiateSocket = (namespace, username) => {
   socket = io(`http://192.168.1.105:5000/${namespace}`);
   //console.log(`Connecting socket...`);
-  if (socket && namespace) socket.emit("join", {namespace, username});
+  if (socket && namespace) socket.emit("join", {username});
 };
 
 export const disconnectSocket = () => {
