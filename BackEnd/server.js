@@ -50,6 +50,10 @@ class User {
     this.x = x;
     this.y = y;
   }
+
+  setPressingMouseDown(bln) {
+    this.isPressingMouseDown = bln;
+  }
 }
 
 class Room {
@@ -112,7 +116,6 @@ workspace.on("connection", (socket) => {
     const { cords, namespace } = data;
 
     if (!socket) return;
-    
     // set cords data of socket
     socket.data.setCords(cords.x, cords.y);
 
@@ -122,39 +125,36 @@ workspace.on("connection", (socket) => {
   // mouseMove End
 
   // mousePressed Start
-  socket.on("userPressedMouse", (data) => {
-    const { id, room } = data;
+  socket.on("userPressedMouse", async (data) => {
+    const { namespace } = data;
 
-    activeUsers.forEach((user) => {
-      if (user.id === id) {
-        user.isPressingMouseDown = true;
-        namespace.emit("emituserPressedMouse", user);
-      }
-    });
+    if (!socket) return;
+    // set user mouse Down
+    socket.data.setPressingMouseDown(true);
+    // emit socket.data
+    io.of(`${namespace}`).emit("emitCursorPositionsData", socket.data);
 
-    if (determineIfAllUserArePressingMouseDown([...activeUsers.keys()])) {
+    // get active users array
+    const sockets = await io.of(`${namespace}`).fetchSockets();
+    const users = sockets.map((socket) => socket.data);
+
+    if (determineIfAllUserArePressingMouseDown(users)) {
       startTimer();
-      namespace.emit("emitAllUserPressingMouseDown", true);
+      io.of(`${namespace}`).emit("emitAllUserPressingMouseDown", true);
     }
   });
   // mousePressed End
 
   // mouseUp Start
   socket.on("userMouseUp", (data) => {
-    const { id, room } = data;
-
+    const { namespace } = data;
     // cancel function when user Presses Up again
-    namespace.emit("emitAllUserPressingMouseDown", false);
+    io.of(`${namespace}`).emit("emitAllUserPressingMouseDown", false);
     stopTimer();
 
-    activeUsers.forEach((user) => {
-      if (user.id === id) {
-        user.isPressingMouseDown = false;
-        // console.log("userMouseUp", user);
-      }
-    });
+    socket.data.setPressingMouseDown(false);
 
-    namespace.emit("emituserMouseUp", id);
+    io.of(`${namespace}`).emit("emituserMouseUp", socket.id);
   });
 
   // mouseUp End

@@ -4,7 +4,7 @@ let socket;
 export const initiateSocket = (namespace, username) => {
   socket = io(`http://192.168.1.105:5000/${namespace}`);
   //console.log(`Connecting socket...`);
-  if (socket && namespace) socket.emit("join", {username});
+  if (socket && namespace) socket.emit("join", { username });
 };
 
 export const disconnectSocket = () => {
@@ -25,7 +25,7 @@ export const subscribeToNewConnection = (cb) => {
 export const subscribeToActiveUsers = (cb) => {
   if (!socket) return true;
   socket.on("emitActiveUsers", (msg) => {
-    console.log("Websocket event received! [emitActiveUsers]", msg);
+    // console.log("Websocket event received! [emitActiveUsers]", msg);
     return cb(null, msg);
   });
 };
@@ -46,8 +46,8 @@ export const sendCursorPositionData = (cords, namespace) => {
 // mouseMove End
 
 // mousePressed Start
-export const sendUserMouseDown = (id, Namespace) => {
-  if (socket) socket.emit("userPressedMouse", { id, Namespace });
+export const sendUserMouseDown = (namespace) => {
+  if (socket) socket.emit("userPressedMouse", { namespace });
 };
 
 export const subscribeToUserMouseDown = (cb) => {
@@ -61,8 +61,8 @@ export const subscribeToUserMouseDown = (cb) => {
 // mousePressed End
 
 // mouseUp Start
-export const sendUserMouseUp = (id, Namespace) => {
-  if (socket) socket.emit("userMouseUp", { id, Namespace });
+export const sendUserMouseUp = (namespace) => {
+  if (socket) socket.emit("userMouseUp", { namespace });
 };
 
 export const subscribeToUserMouseUp = (cb) => {
@@ -80,7 +80,10 @@ export const subscribeToUserMouseUp = (cb) => {
 export const subscribeToAllUserPressingMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emitAllUserPressingMouseDown", (msg) => {
-    //console.log("Websocket event received! [emitAllUserPressingMouseDown]", mmn);
+    console.log(
+      "Websocket event received! [emitAllUserPressingMouseDown]",
+      msg
+    );
     return cb(null, msg);
   });
 };

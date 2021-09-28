@@ -41,7 +41,6 @@ function Game({ namespace, username }) {
   ] = useState(null);
 
   const cursors = useRef([]);
- 
 
   useEffect(() => {
     if (namespace) initiateSocket(namespace, username);
@@ -129,7 +128,7 @@ function Game({ namespace, username }) {
   // Mouse Move
   function handleMouseMove(ev) {
     if (mySocketId) {
-      const data = { x: ev.pageX, y: ev.pageY, id: mySocketId };
+      const data = { x: ev.pageX, y: ev.pageY };
 
       sendCursorPositionData(data, namespace); // send to Socket.io
 
@@ -156,10 +155,9 @@ function Game({ namespace, username }) {
 
   // Mouse Down
   function handleMouseDown(ev) {
-    if (mySocketId) {
-      sendUserMouseDown(mySocketId, namespace); // send to Socket.io
-    }
+    sendUserMouseDown(namespace); // send to Socket.io
   }
+  
   function userIsPressingMouseDown(user) {
     if (user.id) {
       cursors.current[
@@ -170,10 +168,9 @@ function Game({ namespace, username }) {
 
   // Mouse Up
   function handleMouseUp(ev) {
-    if (mySocketId) {
-      sendUserMouseUp(mySocketId, namespace); // send to Socket.io
-    }
+    sendUserMouseUp(namespace); // send to Socket.io
   }
+
   function userIsPressingMouseUp(id) {
     if (id) {
       cursors.current[`${id}`].firstChild.style.backgroundColor = "gray";
