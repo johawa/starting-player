@@ -157,8 +157,9 @@ function Game({ namespace, username }) {
   function handleMouseDown(ev) {
     sendUserMouseDown(namespace); // send to Socket.io
   }
-  
+
   function userIsPressingMouseDown(user) {
+    console.log("userIsPressingMouseDownser", user.clr)
     if (user.id) {
       cursors.current[
         `${user.id}`

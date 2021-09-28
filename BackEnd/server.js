@@ -3,36 +3,9 @@ const {
   determineIfAllUserAreInterceptingRestartCircle,
   determineWinner,
 } = require("./utils");
+/* const { User } = require("./User.model"); */
 const express = require("express");
 const socket = require("socket.io");
-
-const colors = [
-  "#F4DF4EFF",
-  "#FC766AFF",
-  "#5B84B1FF",
-  "#5F4B8BFF",
-  "#42EADDFF",
-  "#CDB599FF",
-  "#00A4CCFF",
-  "#F95700FF",
-  "#2C5F2D",
-  "#00539CFF",
-  "#B1624EFF",
-];
-
-// App setup
-const PORT = 5000;
-const app = express();
-const server = app.listen(PORT, function () {
-  console.log(`Listening on port ${PORT}`);
-  console.log(`http://localhost:${PORT}`);
-});
-
-// Socket setup
-const io = socket(server, { cors: true });
-
-let timeleft = 1;
-let downloadTimer;
 
 class User {
   constructor(id, room, username, x, y) {
@@ -56,24 +29,35 @@ class User {
   }
 }
 
-class Room {
-  static #roomCounter = 0;
+const colors = [
+  "#F4DF4EFF",
+  "#FC766AFF",
+  "#5B84B1FF",
+  "#5F4B8BFF",
+  "#42EADDFF",
+  "#CDB599FF",
+  "#00A4CCFF",
+  "#F95700FF",
+  "#2C5F2D",
+  "#00539CFF",
+  "#B1624EFF",
+];
 
-  constructor(room) {
-    Room.#roomCounter++;
-    this.room = room;
-    this.activeUsers = new Set();
-  }
-
-  addUser() {
-    this.activeUsers.add(new User(socketId, room));
-  }
-
-  get roomCounter() {
-    return Room.#roomCounter;
-  }
-}
 const activeUsers = new Set();
+
+// App setup
+const PORT = 5000;
+const app = express();
+const server = app.listen(PORT, function () {
+  console.log(`Listening on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
+
+// Socket setup
+const io = socket(server, { cors: true });
+
+let timeleft = 1;
+let downloadTimer;
 
 const workspace = io.of(
   /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/
@@ -82,6 +66,7 @@ const workspace = io.of(
 workspace.on("connection", (socket) => {
   const namespace = socket.nsp;
   // console.log('namespacename', namespace.name)
+
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
 
@@ -114,8 +99,9 @@ workspace.on("connection", (socket) => {
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
     const { cords, namespace } = data;
+    console.log(socket.data);
 
-    if (!socket) return;
+    if (Object.keys(socket.data).length === 0) return;
     // set cords data of socket
     socket.data.setCords(cords.x, cords.y);
 
@@ -127,20 +113,21 @@ workspace.on("connection", (socket) => {
   // mousePressed Start
   socket.on("userPressedMouse", async (data) => {
     const { namespace } = data;
+    const namespaceInstance = io.of(`${namespace}`);
 
-    if (!socket) return;
+    if (Object.keys(socket.data).length === 0) return;
     // set user mouse Down
     socket.data.setPressingMouseDown(true);
     // emit socket.data
-    io.of(`${namespace}`).emit("emitCursorPositionsData", socket.data);
+    namespaceInstance.emit("emituserPressedMouse", socket.data);
 
     // get active users array
-    const sockets = await io.of(`${namespace}`).fetchSockets();
+    const sockets = await namespaceInstance.fetchSockets();
     const users = sockets.map((socket) => socket.data);
 
     if (determineIfAllUserArePressingMouseDown(users)) {
-      startTimer();
-      io.of(`${namespace}`).emit("emitAllUserPressingMouseDown", true);
+      startTimer(namespaceInstance, users);
+      namespaceInstance.emit("emitAllUserPressingMouseDown", true);
     }
   });
   // mousePressed End
@@ -151,7 +138,7 @@ workspace.on("connection", (socket) => {
     // cancel function when user Presses Up again
     io.of(`${namespace}`).emit("emitAllUserPressingMouseDown", false);
     stopTimer();
-
+    
     socket.data.setPressingMouseDown(false);
 
     io.of(`${namespace}`).emit("emituserMouseUp", socket.id);
@@ -195,14 +182,14 @@ workspace.on("connection", (socket) => {
   });
 });
 
-function startTimer() {
+function startTimer(namespace, users) {
   downloadTimer = setInterval(function () {
     if (timeleft <= 0) {
       // Event
       // DetermineWinner
-      const winnerArray = determineWinner(activeUsers);
-      namespace.emit("emitWinnerArray", winnerArray);
+      const winnerArray = determineWinner(users);
 
+      namespace.emit("emitWinnerArray", winnerArray);
       clearInterval(downloadTimer);
     }
     console.log("count seconds", timeleft);

@@ -15,7 +15,7 @@ function shuffleArray(array) {
 }
 
 function determineWinner(activeUsers) {
-  let winnerArray = [...activeUsers.keys()];
+  let winnerArray = [...activeUsers];
   shuffleArray(winnerArray);
   return winnerArray;
 }

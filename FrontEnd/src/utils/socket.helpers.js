@@ -53,7 +53,7 @@ export const sendUserMouseDown = (namespace) => {
 export const subscribeToUserMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emituserPressedMouse", (msg) => {
-    //console.log("Websocket event received! [emituserPressedMouse]");
+    console.log("Websocket event received! [emituserPressedMouse]", msg);
     return cb(null, msg);
   });
 };
@@ -80,10 +80,10 @@ export const subscribeToUserMouseUp = (cb) => {
 export const subscribeToAllUserPressingMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emitAllUserPressingMouseDown", (msg) => {
-    console.log(
+  /*   console.log(
       "Websocket event received! [emitAllUserPressingMouseDown]",
       msg
-    );
+    ); */
     return cb(null, msg);
   });
 };
@@ -92,7 +92,7 @@ export const subscribeToAllUserPressingMouseDown = (cb) => {
 export const subscribeToWinnerArray = (cb) => {
   if (!socket) return true;
   socket.on("emitWinnerArray", (msg) => {
-    //console.log("Websocket event received! [emitWinnerArray]", msg);
+    console.log("Websocket event received! [emitWinnerArray]", msg);
     return cb(null, msg);
   });
 };
