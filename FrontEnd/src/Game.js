@@ -257,8 +257,7 @@ function Game({ namespace, username }) {
 
   function renderOtherPlayers() {
     if (activeUsers && mySocketId) {
-      const otherUsers = activeUsers.filter((user) => user.id !== mySocketId);
-      console.dir(otherUsers);
+      const otherUsers = activeUsers.filter((user) => user.id !== mySocketId); 
 
       return otherUsers.map((user) => {
         return (
@@ -270,7 +269,7 @@ function Game({ namespace, username }) {
             key={user.id}
           >
             {renderCursorState(user.id)}
-            {renderName(user.username ? user.username : 'New User')}
+            {renderName(user.username)}
           </div>
         );
       });
@@ -278,7 +277,10 @@ function Game({ namespace, username }) {
   }
 
   function renderOwnPLayer() {
-    if (mySocketId) {
+    if (activeUsers && mySocketId) {
+      const ownUser = activeUsers.filter((user) => user.id === mySocketId); 
+      console.log(ownUser[0]);
+
       return (
         <div
           ref={(element) => {
@@ -288,7 +290,7 @@ function Game({ namespace, username }) {
           key={mySocketId}
         >
           {renderCursorState(mySocketId)}
-          {renderName(`It's you`)}
+          {renderName(`(${ownUser[0]?.username}) - It's you`)}
         </div>
       );
     }
