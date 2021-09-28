@@ -41,7 +41,7 @@ export const subscribeToCursorPositionsData = (cb) => {
 };
 
 export const sendCursorPositionData = (cords) => {
-  if (socket) socket.emit("cursorPosition", { cords });
+  if (socket) socket.emit("userCursorPosition", { cords });
 };
 // mouseMove End
 

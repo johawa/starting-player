@@ -2,8 +2,8 @@ const {
   determineIfAllUserArePressingMouseDown,
   determineIfAllUserAreInterceptingRestartCircle,
   determineWinner,
-} = require("./utils");
-const { User } = require("./models/user");
+} = require("./utils/utils");
+const { User } = require("./utils/models/user");
 
 async function handleJoin(namespaceInstance, socket, data) {
   const { username } = data;

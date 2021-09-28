@@ -1,5 +1,5 @@
-const { Namespace } = require("./models/namespace");
-const { PORT } = require("./constants/constants");
+const { Namespace } = require("./utils/models/namespace");
+const { PORT } = require("./utils/constants/constants");
 const {
   handleUserMouseUp,
   handleUserPressedMouse,
@@ -30,7 +30,7 @@ WORKSPACE.on("connection", (socket) => {
   socket.on("disconnect",           async () =>     handleDisconnect(namespaceInstance));
   socket.on("join",                 async (data) => handleJoin(namespaceInstance, socket, data));
 
-  socket.on("cursorPosition",       data =>         setCurrentPosition(namespaceInstance, socket, data));
+  socket.on("userCursorPosition",   data =>         setCurrentPosition(namespaceInstance, socket, data));
   socket.on("userMouseDown",        async () =>     handleUserPressedMouse(namespaceInstance, socket));
   socket.on("userMouseUp",          () =>           handleUserMouseUp(namespaceInstance, socket));
 

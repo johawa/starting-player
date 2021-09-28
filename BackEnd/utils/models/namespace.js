@@ -1,4 +1,3 @@
-// TODO put this in Instance
 class Namespace {
   timeleft = 1;
   downloadTimer;

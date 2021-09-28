@@ -14,7 +14,6 @@ const COLORS = [
 
 const PORT = 5000;
 
-
 module.exports = {
   COLORS,
   PORT,  
