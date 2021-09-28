@@ -45,6 +45,11 @@ class User {
     this.isPressingMouseDown = false;
     this.isInterceptiongRestartCircle = false;
   }
+
+  setCords(x, y) {
+    this.x = x;
+    this.y = y;
+  }
 }
 
 class Room {
@@ -73,16 +78,15 @@ const workspace = io.of(
 workspace.on("connection", (socket) => {
   const namespace = socket.nsp;
   // console.log('namespacename', namespace.name)
-
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
 
   socket.on("disconnect", async () => {
-    //console.log(`Disconnected: ${socket.id}`);
+    // console.log(`Disconnected: ${socket.id}`);
     // get active users array
     const sockets = await namespace.fetchSockets();
     const users = sockets.map((socket) => socket.data);
-    console.log(users);
+    // console.log(users);
 
     namespace.emit("emitActiveUsers", users);
   });
@@ -97,23 +101,23 @@ workspace.on("connection", (socket) => {
     // get active users array
     const sockets = await namespace.fetchSockets();
     const users = sockets.map((socket) => socket.data);
-    console.log(users);
-
+    // console.log(users);
     // console.log(`Active Users in namespace ${namespace.name}: ${users.length}`);
+
     namespace.emit("emitActiveUsers", users);
   });
 
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
-    const { room } = data;
+    const { cords, namespace } = data;
 
-    activeUsers.forEach((user) => {
-      if (user.id === data.cords.id) {
-        user.x = data.cords.x;
-        user.y = data.cords.y;
-        namespace.emit("emitCursorPositionsData", user);
-      }
-    });
+    if (!socket) return;
+    
+    // set cords data of socket
+    socket.data.setCords(cords.x, cords.y);
+
+    // emit socket.data
+    io.of(`${namespace}`).emit("emitCursorPositionsData", socket.data);
   });
   // mouseMove End
 

@@ -40,8 +40,8 @@ export const subscribeToCursorPositionsData = (cb) => {
   });
 };
 
-export const sendCursorPositionData = (cords, Namespace) => {
-  if (socket) socket.emit("cursorPosition", { cords, Namespace });
+export const sendCursorPositionData = (cords, namespace) => {
+  if (socket) socket.emit("cursorPosition", { cords, namespace });
 };
 // mouseMove End
 
