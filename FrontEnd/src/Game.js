@@ -257,7 +257,7 @@ function Game({ namespace, username }) {
 
   function renderOtherPlayers() {
     if (activeUsers && mySocketId) {
-      const otherUsers = activeUsers.filter((user) => user.id !== mySocketId); 
+      const otherUsers = activeUsers.filter((user) => user.id !== mySocketId);
 
       return otherUsers.map((user) => {
         return (
@@ -278,8 +278,7 @@ function Game({ namespace, username }) {
 
   function renderOwnPLayer() {
     if (activeUsers && mySocketId) {
-      const ownUser = activeUsers.filter((user) => user.id === mySocketId); 
-      console.log(ownUser[0]);
+      const ownUser = activeUsers.filter((user) => user.id === mySocketId);
 
       return (
         <div
