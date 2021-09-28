@@ -1,10 +1,20 @@
 // TODO put this in Instance
-class NamespaceTimer {
+class Namespace {
   timeleft = 1;
   downloadTimer;
 
-  constructor(id) {
-    this.id = id;
+  constructor(name, io) {
+    this.name = name;
+    this.connection = io.of(`${name}`);
+  }
+
+  getNamespaceName() {
+    return this.name;
+  }
+
+  async getActiveUsers() {
+    const sockets = await this.connection.fetchSockets();
+    return sockets.map((socket) => socket.data);
   }
 
   startTimer() {
@@ -27,5 +37,5 @@ class NamespaceTimer {
 }
 
 module.exports = {
-  NamespaceTimer,
+  Namespace,
 };

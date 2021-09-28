@@ -4,7 +4,7 @@ const {
   determineWinner,
 } = require("./utils");
 const { User } = require("./models/user");
-const { NamespaceTimer } = require("./models/namespaceTimer");
+const { Namespace } = require("./models/namespace");
 const { PORT } = require("./constants/constants");
 const express = require("express");
 const socket = require("socket.io");
@@ -23,93 +23,78 @@ const workspace = io.of(
 );
 
 workspace.on("connection", (socket) => {
-  const namespace = socket.nsp;
-  // console.log("namespacename", namespace.name);
-  const namespaceRef = new NamespaceTimer(namespace.name);
+  const namespaceRef = new Namespace(socket.nsp.name, io);
 
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
 
   socket.on("disconnect", async () => {
     // console.log(`Disconnected: ${socket.id}`);
-    // get active users array
-    const sockets = await namespace.fetchSockets();
-    const users = sockets.map((socket) => socket.data);
+    const users = await namespaceRef.getActiveUsers();
+    console.log("join", users);
     // console.log(users);
 
-    namespace.emit("emitActiveUsers", users);
+    namespaceRef.connection.emit("emitActiveUsers", users);
   });
 
   socket.on("join", async (data) => {
     const { username } = data;
     // console.log(`Socket ${socket.id} joining namespace ${namespace.name}`);
-    // set new User
+
     const user = new User(socket.id, username);
     socket.data = user;
 
-    // get active users array
-    const sockets = await namespace.fetchSockets();
-    const users = sockets.map((socket) => socket.data);
-    // console.log(users);
-    // console.log(`Active Users in namespace ${namespace.name}: ${users.length}`);
+    const users = await namespaceRef.getActiveUsers();
+    console.log("join", users);
 
-    namespace.emit("emitActiveUsers", users);
+    namespaceRef.connection.emit("emitActiveUsers", users);
   });
 
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
-    console.log(socket.nsp.name)
-    const { cords, namespace } = data;
-    const namespaceInstance = io.of(`${namespace}`);
+    const { cords } = data;
 
     if (Object.keys(socket.data).length === 0) return;
     // set cords data of socket
     socket.data.setCords(cords.x, cords.y);
 
     // emit socket.data
-    namespaceInstance.emit("emitCursorPositionsData", socket.data);
+    namespaceRef.connection.emit("emitCursorPositionsData", socket.data);
   });
   // mouseMove End
 
   // mousePressed Start
   socket.on("userPressedMouse", async (data) => {
-    const { namespace } = data;
-    const namespaceInstance = io.of(`${namespace}`);
-
     if (Object.keys(socket.data).length === 0) return;
     // set user mouse Down
     socket.data.setPressingMouseDown(true);
     // emit socket.data
-    namespaceInstance.emit("emituserPressedMouse", socket.data);
+    namespaceRef.connection.emit("emituserPressedMouse", socket.data);
 
     // get active users array
-    const sockets = await namespaceInstance.fetchSockets();
-    const users = sockets.map((socket) => socket.data);
+    const users = await namespaceRef.getActiveUsers();
 
     if (determineIfAllUserArePressingMouseDown(users)) {
       // Start Time and Emit Winners array if timer runs to 0
       namespaceRef.startTimer().then(() => {
         const winnerArray = determineWinner(users);
-        namespaceInstance.emit("emitWinnerArray", winnerArray);
+        namespaceRef.connection.emit("emitWinnerArray", winnerArray);
       });
-      namespaceInstance.emit("emitAllUserPressingMouseDown", true);
+      namespaceRef.connection.emit("emitAllUserPressingMouseDown", true);
     }
   });
   // mousePressed End
 
   // mouseUp Start
   socket.on("userMouseUp", (data) => {
-    const { namespace } = data;
-    const namespaceInstance = io.of(`${namespace}`);
-
     // cancel function when user Presses Up again
-    namespaceInstance.emit("emitAllUserPressingMouseDown", false);
+    namespaceRef.connection.emit("emitAllUserPressingMouseDown", false);
     namespaceRef.stopTimer();
 
     if (Object.keys(socket.data).length === 0) return;
     socket.data.setPressingMouseDown(false);
 
-    namespaceInstance.emit("emituserMouseUp", socket.id);
+    namespaceRef.connection.emit("emituserMouseUp", socket.id);
   });
 
   // mouseUp End
@@ -117,35 +102,27 @@ workspace.on("connection", (socket) => {
   // Game Ended
   // User Intercept Start
   socket.on("userRestartGameStart", async (data) => {
-    const { namespace } = data;
-    const namespaceInstance = io.of(`${namespace}`);
-
     if (Object.keys(socket.data).length === 0) return;
     socket.data.setIsInterceptiongRestartCircle(true);
 
     // get active users array
-    const sockets = await namespaceInstance.fetchSockets();
-    const users = sockets.map((socket) => socket.data);
+    const users = await namespaceRef.getActiveUsers();
 
-    namespaceInstance.emit("emituserInterceptRestartCircleStart", users);
+    namespaceRef.connection.emit("emituserInterceptRestartCircleStart", users);
 
     if (determineIfAllUserAreInterceptingRestartCircle(users)) {
-      namespaceInstance.emit("emitAllUserInterceptRestartCircle");
+      namespaceRef.connection.emit("emitAllUserInterceptRestartCircle");
     }
   });
 
   // User Intercept End
   socket.on("userRestartGameEnd", async (data) => {
-    const { namespace } = data;
-    const namespaceInstance = io.of(`${namespace}`);
-
     if (Object.keys(socket.data).length === 0) return;
     socket.data.setIsInterceptiongRestartCircle(false);
 
     // get active users array
-    const sockets = await namespaceInstance.fetchSockets();
-    const users = sockets.map((socket) => socket.data);
+    const users = await namespaceRef.getActiveUsers();
 
-    namespaceInstance.emit("emituserInterceptRestartCircleCancel", users);
+    namespaceRef.connection.emit("emituserInterceptRestartCircleCancel", users);
   });
 });
