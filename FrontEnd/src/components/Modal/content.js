@@ -3,7 +3,7 @@ export function RenderCreateNewRoom({ handleCreateGame }) {
     <>
       <h1>Create a Room</h1>
       <form className="formWrapper" onSubmit={handleCreateGame}>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="username">username:</label>
         <input type="text" id="username" />
         <br />
         <button type="submit">Create new Game</button>
@@ -17,7 +17,7 @@ export function RenderJoinRoom({ handleJoinGame }) {
     <>
       <h1>Join a Room</h1>
       <form className="formWrapper" onSubmit={handleJoinGame}>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="username">username:</label>
         <input type="text" id="username" />
         <br />
         <button type="submit">Join Game</button>
@@ -33,7 +33,7 @@ export function RenderMenu({ closeModal, handleRecreateGame }) {
       <h3>Create a Room</h3>
       <p>All Current Users will be kicked out</p>
       <form className="formWrapper" onSubmit={handleRecreateGame}>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="username">username:</label>
         <input type="text" id="username" />
         <br />
         <button type="submit">Create new Game</button>

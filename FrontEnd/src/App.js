@@ -11,7 +11,7 @@ function App() {
   const [renderModal, setRenderModal] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(true);
   const [roomId, setRoomId] = useState(null);
-  const [userName, setUserName] = useState(null);
+  const [username, setusername] = useState(null);
   const [modalState, setModalState] = useState(ModalState.create);
 
   useEffect(() => {
@@ -24,19 +24,19 @@ function App() {
     // refresh Page Case
     if (username && roomId) {
       setRenderModal(false);
-      setUserName(username);
+      setusername(username);
       setRoomId(roomId);
     }
     // new Case
     if (username && !roomId) {
-      setUserName(username);
+      setusername(username);
       setRenderModal(true);
       localStorage.removeItem("ps-roomId");
       localStorage.removeItem("ps-username");
     }
     // Join Case
     if (roomId && !username) {
-      setUserName(null);
+      setusername(null);
       setRenderModal(true);
       setRoomId(roomId);
       localStorage.setItem("ps-roomId", roomId);
@@ -44,7 +44,7 @@ function App() {
     }
     // Create Case
     if (!roomId && !username) {
-      setUserName(null);
+      setusername(null);
       setRenderModal(true);
       setModalState(ModalState.create);
     }
@@ -102,7 +102,7 @@ function App() {
         ></GameModal>
       )}
 
-      {roomId && <Game roomId={roomId} userName={userName}></Game>}
+      {roomId && <Game roomId={roomId} username={username}></Game>}
       <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>
     </>
   );

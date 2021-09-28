@@ -27,7 +27,7 @@ import "./styles/Looser.css";
 import "./styles/GameEnded.css";
 import "./styles/Font.css";
 
-function Game({ roomId, userName }) {
+function Game({ roomId, username }) {
   const [timerAnimation, setTimerAnimation] = useState(false);
 
   const [gameEnded, setGameEnded] = useState(false);
@@ -44,7 +44,7 @@ function Game({ roomId, userName }) {
  
 
   useEffect(() => {
-    if (roomId) initiateSocket(roomId, userName);
+    if (roomId) initiateSocket(roomId, username);
 
     subscribeToNewConnection((err, mySocketId) => {
       if (err) return;
