@@ -92,7 +92,7 @@ export const subscribeToAllUserPressingMouseDown = (cb) => {
 export const subscribeToWinnerArray = (cb) => {
   if (!socket) return true;
   socket.on("emitWinnerArray", (msg) => {
-    console.log("Websocket event received! [emitWinnerArray]", msg);
+    // console.log("Websocket event received! [emitWinnerArray]", msg);
     return cb(null, msg);
   });
 };

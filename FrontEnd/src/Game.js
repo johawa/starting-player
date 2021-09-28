@@ -159,7 +159,6 @@ function Game({ namespace, username }) {
   }
 
   function userIsPressingMouseDown(user) {
-    console.log("userIsPressingMouseDownser", user.clr)
     if (user.id) {
       cursors.current[
         `${user.id}`
@@ -270,7 +269,7 @@ function Game({ namespace, username }) {
             key={user.id}
           >
             {renderCursorState(user.id)}
-            {renderName(user.id)}
+            {renderName(user.username)}
           </div>
         );
       });

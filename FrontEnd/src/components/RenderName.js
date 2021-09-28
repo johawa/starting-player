@@ -1,3 +1,3 @@
-export function renderName(id) {
-    return <div>{id}</div>;
+export function renderName(name) {
+    return <div>{name}</div>;
   }

@@ -2,53 +2,11 @@ const {
   determineIfAllUserArePressingMouseDown,
   determineIfAllUserAreInterceptingRestartCircle,
   determineWinner,
+  User,
 } = require("./utils");
 /* const { User } = require("./User.model"); */
 const express = require("express");
 const socket = require("socket.io");
-const { restart } = require("nodemon");
-
-class User {
-  constructor(id, room, username, x, y) {
-    this.id = id;
-    this.room = room;
-    this.username = username;
-    this.clr = colors.sort(() => 0.5 - Math.random()).pop();
-    this.x = x ? x : 80;
-    this.y = y ? y : 80;
-    this.isPressingMouseDown = false;
-    this.isInterceptiongRestartCircle = false;
-  }
-
-  setCords(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  setPressingMouseDown(bln) {
-    this.isPressingMouseDown = bln;
-  }
-
-  setIsInterceptiongRestartCircle(bln) {
-    this.isInterceptiongRestartCircle = bln;
-  }
-}
-
-const colors = [
-  "#F4DF4EFF",
-  "#FC766AFF",
-  "#5B84B1FF",
-  "#5F4B8BFF",
-  "#42EADDFF",
-  "#CDB599FF",
-  "#00A4CCFF",
-  "#F95700FF",
-  "#2C5F2D",
-  "#00539CFF",
-  "#B1624EFF",
-];
-
-const activeUsers = new Set();
 
 // App setup
 const PORT = 5000;
@@ -57,7 +15,6 @@ const server = app.listen(PORT, function () {
   console.log(`Listening on port ${PORT}`);
   console.log(`http://localhost:${PORT}`);
 });
-
 // Socket setup
 const io = socket(server, { cors: true });
 
@@ -91,6 +48,7 @@ workspace.on("connection", (socket) => {
     // set new User
     const user = new User(socket.id, username);
     socket.data = user;
+    console.log(socket.data);
 
     // get active users array
     const sockets = await namespace.fetchSockets();
@@ -163,21 +121,9 @@ workspace.on("connection", (socket) => {
   socket.on("userRestartGameStart", async (data) => {
     const { cords, namespace } = data;
     const namespaceInstance = io.of(`${namespace}`);
-    // TODO only emit on Changes !
+
     if (Object.keys(socket.data).length === 0) return;
-    socket.data.setPressingMouseDown(false);
-
     socket.data.setIsInterceptiongRestartCircle(true);
-
-    /*     activeUsers.forEach((user) => {
-      if (user.id === data.id) {
-        user.isInterceptiongRestartCircle = true;
-      }
-    }); */
-
-    /*     namespace.emit("emituserInterceptRestartCircleStart", [
-      ...activeUsers.keys(),
-    ]); */
 
     // get active users array
     const sockets = await namespaceInstance.fetchSockets();
@@ -195,17 +141,12 @@ workspace.on("connection", (socket) => {
     const { cords, namespace } = data;
     const namespaceInstance = io.of(`${namespace}`);
 
+    if (Object.keys(socket.data).length === 0) return;
     socket.data.setIsInterceptiongRestartCircle(false);
 
     // get active users array
     const sockets = await namespaceInstance.fetchSockets();
     const users = sockets.map((socket) => socket.data);
-
-    /*     activeUsers.forEach((user) => {
-      if (user.id === data.id) {
-        user.isInterceptiongRestartCircle = false;
-      }
-    }); */
 
     namespaceInstance.emit("emituserInterceptRestartCircleCancel", users);
   });

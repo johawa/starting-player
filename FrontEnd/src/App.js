@@ -19,7 +19,7 @@ function App() {
     const namespace = urlParams.get("namespace");
 
     const username = localStorage.getItem("ps-username");
-    console.log({username}, {namespace});
+    console.log({ username }, { namespace });
 
     // refresh Page Case
     if (username && namespace) {
@@ -48,8 +48,6 @@ function App() {
       setRenderModal(true);
       setModalState(ModalState.create);
     }
-
-    console.log("dev", namespace);
   }, []);
 
   // Modal
