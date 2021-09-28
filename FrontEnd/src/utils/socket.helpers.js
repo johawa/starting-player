@@ -98,8 +98,8 @@ export const subscribeToWinnerArray = (cb) => {
 };
 
 // Intercept Start
-export const sendInterceptRestartGameStart = (cords, namespace) => {
-  if (socket) socket.emit("userRestartGameStart", { cords, namespace });
+export const sendInterceptRestartGameStart = (namespace) => {
+  if (socket) socket.emit("userRestartGameStart", { namespace });
 };
 
 export const subscribeToUserInterceptRestartGameStart = (cb) => {
@@ -111,8 +111,8 @@ export const subscribeToUserInterceptRestartGameStart = (cb) => {
 };
 
 // Intercept End
-export const sendInterceptRestartGameCancel = (cords, namespace) => {
-  if (socket) socket.emit("userRestartGameEnd", { cords, namespace });
+export const sendInterceptRestartGameCancel = (namespace) => {
+  if (socket) socket.emit("userRestartGameEnd", { namespace });
 };
 
 export const subscribeToUserInterceptRestartGameCancel = (cb) => {

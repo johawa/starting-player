@@ -134,11 +134,11 @@ function Game({ namespace, username }) {
 
       // restartGame Logic
       if (gameEnded === true && data.x < 800 && data.y < 800) {
-        sendInterceptRestartGameStart(data, namespace);
+        sendInterceptRestartGameStart(namespace);
         // console.log("mousePosition", data, "intercept");
       }
       if ((gameEnded === true && data.x >= 800) || data.y >= 800) {
-        sendInterceptRestartGameCancel(data, namespace);
+        sendInterceptRestartGameCancel(namespace);
         // console.log("mousePosition", data, "intercept ended");
       }
     }

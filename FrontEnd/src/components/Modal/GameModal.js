@@ -36,9 +36,10 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
     event.preventDefault();
 
     const username = event.currentTarget.elements.username.value;
+  
     localStorage.setItem("ps-username", username);
 
-    if (username) closeModal("join", null);
+    if (username) closeModal("join", username);
   }
 
   function renderContent(mode) {

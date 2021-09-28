@@ -2,9 +2,10 @@ const {
   determineIfAllUserArePressingMouseDown,
   determineIfAllUserAreInterceptingRestartCircle,
   determineWinner,
-  User,
+  startTimer,
+  stopTimer,
+  User
 } = require("./utils");
-/* const { User } = require("./User.model"); */
 const express = require("express");
 const socket = require("socket.io");
 
@@ -17,9 +18,6 @@ const server = app.listen(PORT, function () {
 });
 // Socket setup
 const io = socket(server, { cors: true });
-
-let timeleft = 1;
-let downloadTimer;
 
 const workspace = io.of(
   /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/
@@ -119,7 +117,7 @@ workspace.on("connection", (socket) => {
   // Game Ended
   // User Intercept Start
   socket.on("userRestartGameStart", async (data) => {
-    const { cords, namespace } = data;
+    const { namespace } = data;
     const namespaceInstance = io.of(`${namespace}`);
 
     if (Object.keys(socket.data).length === 0) return;
@@ -138,7 +136,7 @@ workspace.on("connection", (socket) => {
 
   // User Intercept End
   socket.on("userRestartGameEnd", async (data) => {
-    const { cords, namespace } = data;
+    const { namespace } = data;
     const namespaceInstance = io.of(`${namespace}`);
 
     if (Object.keys(socket.data).length === 0) return;
@@ -151,21 +149,3 @@ workspace.on("connection", (socket) => {
     namespaceInstance.emit("emituserInterceptRestartCircleCancel", users);
   });
 });
-
-function startTimer() {
-  return new Promise((resolve) => {
-    downloadTimer = setInterval(() => {
-      if (timeleft <= 0) {
-        resolve("done");
-        clearInterval(downloadTimer);
-      }
-      console.log("count seconds", timeleft);
-      timeleft -= 1;
-    }, 1000);
-  });
-}
-
-function stopTimer() {
-  clearInterval(downloadTimer);
-  timeleft = 1;
-}
