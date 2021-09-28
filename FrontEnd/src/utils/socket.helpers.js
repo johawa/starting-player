@@ -80,7 +80,7 @@ export const subscribeToUserMouseUp = (cb) => {
 export const subscribeToAllUserPressingMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emitAllUserPressingMouseDown", (msg) => {
-  /*   console.log(
+    /*   console.log(
       "Websocket event received! [emitAllUserPressingMouseDown]",
       msg
     ); */
@@ -98,8 +98,8 @@ export const subscribeToWinnerArray = (cb) => {
 };
 
 // Intercept Start
-export const sendInterceptRestartGameStart = (data) => {
-  if (socket) socket.emit("userRestartGameStart", data);
+export const sendInterceptRestartGameStart = (cords, namespace) => {
+  if (socket) socket.emit("userRestartGameStart", { cords, namespace });
 };
 
 export const subscribeToUserInterceptRestartGameStart = (cb) => {
@@ -111,8 +111,8 @@ export const subscribeToUserInterceptRestartGameStart = (cb) => {
 };
 
 // Intercept End
-export const sendInterceptRestartGameCancel = (data) => {
-  if (socket) socket.emit("userRestartGameEnd", data);
+export const sendInterceptRestartGameCancel = (cords, namespace) => {
+  if (socket) socket.emit("userRestartGameEnd", { cords, namespace });
 };
 
 export const subscribeToUserInterceptRestartGameCancel = (cb) => {

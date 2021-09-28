@@ -28,6 +28,10 @@ class User {
   setPressingMouseDown(bln) {
     this.isPressingMouseDown = bln;
   }
+
+  setIsInterceptiongRestartCircle(bln) {
+    this.isInterceptiongRestartCircle = bln;
+  }
 }
 
 const colors = [
@@ -100,13 +104,14 @@ workspace.on("connection", (socket) => {
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
     const { cords, namespace } = data;
+    const namespaceInstance = io.of(`${namespace}`);
 
     if (Object.keys(socket.data).length === 0) return;
     // set cords data of socket
     socket.data.setCords(cords.x, cords.y);
 
     // emit socket.data
-    io.of(`${namespace}`).emit("emitCursorPositionsData", socket.data);
+    namespaceInstance.emit("emitCursorPositionsData", socket.data);
   });
   // mouseMove End
 
@@ -139,50 +144,70 @@ workspace.on("connection", (socket) => {
   // mouseUp Start
   socket.on("userMouseUp", (data) => {
     const { namespace } = data;
+    const namespaceInstance = io.of(`${namespace}`);
+
     // cancel function when user Presses Up again
-    io.of(`${namespace}`).emit("emitAllUserPressingMouseDown", false);
+    namespaceInstance.emit("emitAllUserPressingMouseDown", false);
     stopTimer();
 
+    if (Object.keys(socket.data).length === 0) return;
     socket.data.setPressingMouseDown(false);
 
-    io.of(`${namespace}`).emit("emituserMouseUp", socket.id);
+    namespaceInstance.emit("emituserMouseUp", socket.id);
   });
 
   // mouseUp End
 
   // Game Ended
   // User Intercept Start
-  socket.on("userRestartGameStart", (data) => {
-    // TODO only emit on Chnages !
+  socket.on("userRestartGameStart", async (data) => {
+    const { cords, namespace } = data;
+    const namespaceInstance = io.of(`${namespace}`);
+    // TODO only emit on Changes !
+    if (Object.keys(socket.data).length === 0) return;
+    socket.data.setPressingMouseDown(false);
 
-    activeUsers.forEach((user) => {
+    socket.data.setIsInterceptiongRestartCircle(true);
+
+    /*     activeUsers.forEach((user) => {
       if (user.id === data.id) {
         user.isInterceptiongRestartCircle = true;
       }
-    });
+    }); */
 
-    namespace.emit("emituserInterceptRestartCircleStart", [
+    /*     namespace.emit("emituserInterceptRestartCircleStart", [
       ...activeUsers.keys(),
-    ]);
+    ]); */
 
-    if (
-      determineIfAllUserAreInterceptingRestartCircle([...activeUsers.keys()])
-    ) {
-      namespace.emit("emitAllUserInterceptRestartCircle");
+    // get active users array
+    const sockets = await namespaceInstance.fetchSockets();
+    const users = sockets.map((socket) => socket.data);
+
+    namespaceInstance.emit("emituserInterceptRestartCircleStart", users);
+
+    if (determineIfAllUserAreInterceptingRestartCircle(users)) {
+      namespaceInstance.emit("emitAllUserInterceptRestartCircle");
     }
   });
 
   // User Intercept End
-  socket.on("userRestartGameEnd", (data) => {
-    activeUsers.forEach((user) => {
+  socket.on("userRestartGameEnd", async (data) => {
+    const { cords, namespace } = data;
+    const namespaceInstance = io.of(`${namespace}`);
+
+    socket.data.setIsInterceptiongRestartCircle(false);
+
+    // get active users array
+    const sockets = await namespaceInstance.fetchSockets();
+    const users = sockets.map((socket) => socket.data);
+
+    /*     activeUsers.forEach((user) => {
       if (user.id === data.id) {
         user.isInterceptiongRestartCircle = false;
       }
-    });
+    }); */
 
-    namespace.emit("emituserInterceptRestartCircleCancel", [
-      ...activeUsers.keys(),
-    ]);
+    namespaceInstance.emit("emituserInterceptRestartCircleCancel", users);
   });
 });
 
