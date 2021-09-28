@@ -6,6 +6,7 @@ const {
 /* const { User } = require("./User.model"); */
 const express = require("express");
 const socket = require("socket.io");
+const { restart } = require("nodemon");
 
 class User {
   constructor(id, room, username, x, y) {
@@ -99,7 +100,6 @@ workspace.on("connection", (socket) => {
   // mouseMove Start
   socket.on("cursorPosition", (data) => {
     const { cords, namespace } = data;
-    console.log(socket.data);
 
     if (Object.keys(socket.data).length === 0) return;
     // set cords data of socket
@@ -126,7 +126,11 @@ workspace.on("connection", (socket) => {
     const users = sockets.map((socket) => socket.data);
 
     if (determineIfAllUserArePressingMouseDown(users)) {
-      startTimer(namespaceInstance, users);
+      // Start Time and Emit Winners array if timer runs to 0
+      startTimer().then(() => {
+        const winnerArray = determineWinner(users);
+        namespaceInstance.emit("emitWinnerArray", winnerArray);
+      });
       namespaceInstance.emit("emitAllUserPressingMouseDown", true);
     }
   });
@@ -138,7 +142,7 @@ workspace.on("connection", (socket) => {
     // cancel function when user Presses Up again
     io.of(`${namespace}`).emit("emitAllUserPressingMouseDown", false);
     stopTimer();
-    
+
     socket.data.setPressingMouseDown(false);
 
     io.of(`${namespace}`).emit("emituserMouseUp", socket.id);
@@ -182,19 +186,17 @@ workspace.on("connection", (socket) => {
   });
 });
 
-function startTimer(namespace, users) {
-  downloadTimer = setInterval(function () {
-    if (timeleft <= 0) {
-      // Event
-      // DetermineWinner
-      const winnerArray = determineWinner(users);
-
-      namespace.emit("emitWinnerArray", winnerArray);
-      clearInterval(downloadTimer);
-    }
-    console.log("count seconds", timeleft);
-    timeleft -= 1;
-  }, 1000);
+function startTimer() {
+  return new Promise((resolve) => {
+    downloadTimer = setInterval(() => {
+      if (timeleft <= 0) {
+        resolve("done");
+        clearInterval(downloadTimer);
+      }
+      console.log("count seconds", timeleft);
+      timeleft -= 1;
+    }, 1000);
+  });
 }
 
 function stopTimer() {
