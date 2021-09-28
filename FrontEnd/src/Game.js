@@ -130,15 +130,15 @@ function Game({ namespace, username }) {
     if (mySocketId) {
       const data = { x: ev.pageX, y: ev.pageY };
 
-      sendCursorPositionData(data, namespace); // send to Socket.io
+      sendCursorPositionData(data); // send to Socket.io
 
       // restartGame Logic
       if (gameEnded === true && data.x < 800 && data.y < 800) {
-        sendInterceptRestartGameStart(namespace);
+        sendInterceptRestartGameStart();
         // console.log("mousePosition", data, "intercept");
       }
       if ((gameEnded === true && data.x >= 800) || data.y >= 800) {
-        sendInterceptRestartGameCancel(namespace);
+        sendInterceptRestartGameCancel();
         // console.log("mousePosition", data, "intercept ended");
       }
     }
@@ -155,7 +155,7 @@ function Game({ namespace, username }) {
 
   // Mouse Down
   function handleMouseDown(ev) {
-    sendUserMouseDown(namespace); // send to Socket.io
+    sendUserMouseDown(); // send to Socket.io
   }
 
   function userIsPressingMouseDown(user) {
@@ -168,7 +168,7 @@ function Game({ namespace, username }) {
 
   // Mouse Up
   function handleMouseUp(ev) {
-    sendUserMouseUp(namespace); // send to Socket.io
+    sendUserMouseUp(); // send to Socket.io
   }
 
   function userIsPressingMouseUp(id) {

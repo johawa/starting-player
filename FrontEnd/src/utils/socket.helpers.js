@@ -40,14 +40,14 @@ export const subscribeToCursorPositionsData = (cb) => {
   });
 };
 
-export const sendCursorPositionData = (cords, namespace) => {
-  if (socket) socket.emit("cursorPosition", { cords, namespace });
+export const sendCursorPositionData = (cords) => {
+  if (socket) socket.emit("cursorPosition", { cords });
 };
 // mouseMove End
 
 // mousePressed Start
-export const sendUserMouseDown = (namespace) => {
-  if (socket) socket.emit("userPressedMouse", { namespace });
+export const sendUserMouseDown = () => {
+  if (socket) socket.emit("userPressedMouse");
 };
 
 export const subscribeToUserMouseDown = (cb) => {
@@ -61,8 +61,8 @@ export const subscribeToUserMouseDown = (cb) => {
 // mousePressed End
 
 // mouseUp Start
-export const sendUserMouseUp = (namespace) => {
-  if (socket) socket.emit("userMouseUp", { namespace });
+export const sendUserMouseUp = () => {
+  if (socket) socket.emit("userMouseUp");
 };
 
 export const subscribeToUserMouseUp = (cb) => {
@@ -98,8 +98,8 @@ export const subscribeToWinnerArray = (cb) => {
 };
 
 // Intercept Start
-export const sendInterceptRestartGameStart = (namespace) => {
-  if (socket) socket.emit("userRestartGameStart", { namespace });
+export const sendInterceptRestartGameStart = () => {
+  if (socket) socket.emit("userRestartGameStart");
 };
 
 export const subscribeToUserInterceptRestartGameStart = (cb) => {
@@ -111,8 +111,8 @@ export const subscribeToUserInterceptRestartGameStart = (cb) => {
 };
 
 // Intercept End
-export const sendInterceptRestartGameCancel = (namespace) => {
-  if (socket) socket.emit("userRestartGameEnd", { namespace });
+export const sendInterceptRestartGameCancel = () => {
+  if (socket) socket.emit("userRestartGameEnd");
 };
 
 export const subscribeToUserInterceptRestartGameCancel = (cb) => {
