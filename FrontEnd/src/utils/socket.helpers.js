@@ -2,7 +2,7 @@ import io from "socket.io-client";
 let socket;
 
 export const initiateSocket = (room, userName) => {
-  socket = io(`http://192.168.1.104:5000/${room}`);
+  socket = io(`http://192.168.1.105:5000/${room}`);
   //console.log(`Connecting socket...`);
   if (socket && room) socket.emit("join", {room, userName});
 };
@@ -25,7 +25,7 @@ export const subscribeToNewConnection = (cb) => {
 export const subscribeToActiveUsers = (cb) => {
   if (!socket) return true;
   socket.on("emitActiveUsers", (msg) => {
-    //console.log("Websocket event received! [emitActiveUsers]", msg);
+    console.log("Websocket event received! [emitActiveUsers]", msg);
     return cb(null, msg);
   });
 };

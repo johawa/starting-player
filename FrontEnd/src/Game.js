@@ -41,8 +41,7 @@ function Game({ roomId, userName }) {
   ] = useState(null);
 
   const cursors = useRef([]);
-
-  
+ 
 
   useEffect(() => {
     if (roomId) initiateSocket(roomId, userName);

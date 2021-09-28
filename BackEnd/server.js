@@ -31,7 +31,6 @@ const server = app.listen(PORT, function () {
 // Socket setup
 const io = socket(server, { cors: true });
 
-const activeUsers = new Set();
 let timeleft = 1;
 let downloadTimer;
 
@@ -65,6 +64,7 @@ class Room {
     return Room.#roomCounter;
   }
 }
+const activeUsers = new Set();
 
 const workspace = io.of(
   /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/
@@ -72,7 +72,7 @@ const workspace = io.of(
 
 workspace.on("connection", (socket) => {
   const namespace = socket.nsp;
-  console.log('namespacename', namespace.name)
+  // console.log('namespacename', namespace.name)
 
   console.log(`Connected: ${socket.id}`);
   socket.emit("emitNewConnection", socket.id);
@@ -90,19 +90,29 @@ workspace.on("connection", (socket) => {
     // console.log(activeUsers);
   });
 
-  socket.on("join", (data) => {
+  socket.on("join", async (data) => {
     const { room, userName } = data;
 
     const gameInstance = new Room(room);
 
     // console.log(`Socket ${socket.id} joining ${room}`);
-    socket.data.username = userName;
+    const user = new User(socket.id);
+
+    socket.data = user;
     socket.join(room);
-    console.log("join", namespace);
 
     activeUsers.add(new User(socket.id, room));
 
-    namespace.emit("emitActiveUsers", [...activeUsers.keys()]);
+    const sockets = await namespace.fetchSockets();
+    const USRS = sockets.map((socket) => socket.data);
+    console.log(USRS);
+
+    /*     for (const socket of sockets) {
+      console.log(socket.data);
+    } */
+
+    // namespace.emit("emitActiveUsers", [...activeUsers.keys()]);
+    namespace.emit("emitActiveUsers", USRS);
     // console.log(activeUsers);
   });
 
@@ -169,7 +179,9 @@ workspace.on("connection", (socket) => {
       }
     });
 
-    namespace.emit("emituserInterceptRestartCircleStart", [...activeUsers.keys()]);
+    namespace.emit("emituserInterceptRestartCircleStart", [
+      ...activeUsers.keys(),
+    ]);
 
     if (
       determineIfAllUserAreInterceptingRestartCircle([...activeUsers.keys()])
@@ -186,7 +198,9 @@ workspace.on("connection", (socket) => {
       }
     });
 
-    namespace.emit("emituserInterceptRestartCircleCancel", [...activeUsers.keys()]);
+    namespace.emit("emituserInterceptRestartCircleCancel", [
+      ...activeUsers.keys(),
+    ]);
   });
 });
 
