@@ -27,7 +27,7 @@ import "./styles/Looser.css";
 import "./styles/GameEnded.css";
 import "./styles/Font.css";
 
-function Game({ roomId, username }) {
+function Game({ namespace, username }) {
   const [timerAnimation, setTimerAnimation] = useState(false);
 
   const [gameEnded, setGameEnded] = useState(false);
@@ -44,7 +44,7 @@ function Game({ roomId, username }) {
  
 
   useEffect(() => {
-    if (roomId) initiateSocket(roomId, username);
+    if (namespace) initiateSocket(namespace, username);
 
     subscribeToNewConnection((err, mySocketId) => {
       if (err) return;
@@ -131,7 +131,7 @@ function Game({ roomId, username }) {
     if (mySocketId) {
       const data = { x: ev.pageX, y: ev.pageY, id: mySocketId };
 
-      sendCursorPositionData(data, roomId); // send to Socket.io
+      sendCursorPositionData(data, namespace); // send to Socket.io
 
       // restartGame Logic
       if (gameEnded === true && data.x < 800 && data.y < 800) {
@@ -157,7 +157,7 @@ function Game({ roomId, username }) {
   // Mouse Down
   function handleMouseDown(ev) {
     if (mySocketId) {
-      sendUserMouseDown(mySocketId, roomId); // send to Socket.io
+      sendUserMouseDown(mySocketId, namespace); // send to Socket.io
     }
   }
   function userIsPressingMouseDown(user) {
@@ -171,7 +171,7 @@ function Game({ roomId, username }) {
   // Mouse Up
   function handleMouseUp(ev) {
     if (mySocketId) {
-      sendUserMouseUp(mySocketId, roomId); // send to Socket.io
+      sendUserMouseUp(mySocketId, namespace); // send to Socket.io
     }
   }
   function userIsPressingMouseUp(id) {

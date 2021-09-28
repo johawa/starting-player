@@ -5,7 +5,7 @@ import { customStyles, ModalState } from "./settings";
 import { RenderCreateNewRoom, RenderJoinRoom, RenderMenu } from "./content";
 
 Modal.setAppElement("#root");
-const roomId = uuidv4();
+const namespace = uuidv4();
 
 export function GameModal({ open, closeModal, afterOpenModal, mode }) {
   function handleCreateGame(event) {
@@ -13,10 +13,10 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
 
     const username = event.currentTarget.elements.username.value;
     localStorage.setItem("ps-username", username);
-    localStorage.setItem("ps-roomId", roomId);
-    window.history.pushState({}, null, `?roomId=${roomId}`);
+    localStorage.setItem("ps-namespace", namespace);
+    window.history.pushState({}, null, `?namespace=${namespace}`);
 
-    if (username) closeModal("create", roomId);
+    if (username) closeModal("create", namespace);
   }
 
   function handleRecreateGame(event) {
@@ -25,11 +25,11 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
 
     const username = event.currentTarget.elements.username.value;
     localStorage.setItem("ps-username", username);
-    localStorage.setItem("ps-roomId", roomId);
-    window.history.pushState({}, null, `?roomId=${roomId}`);
+    localStorage.setItem("ps-namespace", namespace);
+    window.history.pushState({}, null, `?namespace=${namespace}`);
     window.location.reload();
 
-    if (username) closeModal("recreate", roomId);
+    if (username) closeModal("recreate", namespace);
   }
 
   function handleJoinGame(event) {

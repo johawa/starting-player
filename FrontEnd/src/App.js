@@ -10,46 +10,46 @@ const X_KEY = ["88", "x"];
 function App() {
   const [renderModal, setRenderModal] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(true);
-  const [roomId, setRoomId] = useState(null);
+  const [namespace, setNamespace] = useState(null);
   const [username, setusername] = useState(null);
   const [modalState, setModalState] = useState(ModalState.create);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const roomId = urlParams.get("roomId");
+    const namespace = urlParams.get("namespace");
 
     const username = localStorage.getItem("ps-username");
-    console.log({username}, {roomId});
+    console.log({username}, {namespace});
 
     // refresh Page Case
-    if (username && roomId) {
+    if (username && namespace) {
       setRenderModal(false);
       setusername(username);
-      setRoomId(roomId);
+      setNamespace(namespace);
     }
     // new Case
-    if (username && !roomId) {
+    if (username && !namespace) {
       setusername(username);
       setRenderModal(true);
-      localStorage.removeItem("ps-roomId");
+      localStorage.removeItem("ps-namespace");
       localStorage.removeItem("ps-username");
     }
     // Join Case
-    if (roomId && !username) {
+    if (namespace && !username) {
       setusername(null);
       setRenderModal(true);
-      setRoomId(roomId);
-      localStorage.setItem("ps-roomId", roomId);
+      setNamespace(namespace);
+      localStorage.setItem("ps-namespace", namespace);
       setModalState(ModalState.join);
     }
     // Create Case
-    if (!roomId && !username) {
+    if (!namespace && !username) {
       setusername(null);
       setRenderModal(true);
       setModalState(ModalState.create);
     }
 
-    console.log("dev", roomId);
+    console.log("dev", namespace);
   }, []);
 
   // Modal
@@ -59,18 +59,18 @@ function App() {
 
   function afterOpenModal() {}
 
-  function closeModal(msg, roomId) {
+  function closeModal(msg, namespace) {
     if (msg === "create") {
-      setRoomId(roomId);
+      setNamespace(namespace);
       setIsOpen(false);
     }
     if (msg === "join") {
-      const roomId = localStorage.getItem("ps-roomId");
-      setRoomId(roomId);
+      const namespace = localStorage.getItem("ps-namespace");
+      setNamespace(namespace);
       setIsOpen(false);
     }
     if (msg === "recreate") {
-      setRoomId(roomId);
+      setNamespace(namespace);
       setIsOpen(false);
     }
   }
@@ -102,7 +102,7 @@ function App() {
         ></GameModal>
       )}
 
-      {roomId && <Game roomId={roomId} username={username}></Game>}
+      {namespace && <Game namespace={namespace} username={username}></Game>}
       <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>
     </>
   );

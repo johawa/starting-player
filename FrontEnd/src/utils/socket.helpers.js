@@ -1,10 +1,10 @@
 import io from "socket.io-client";
 let socket;
 
-export const initiateSocket = (room, username) => {
-  socket = io(`http://192.168.1.105:5000/${room}`);
+export const initiateSocket = (namespace, username) => {
+  socket = io(`http://192.168.1.105:5000/${namespace}`);
   //console.log(`Connecting socket...`);
-  if (socket && room) socket.emit("join", {room, username});
+  if (socket && namespace) socket.emit("join", {namespace, username});
 };
 
 export const disconnectSocket = () => {
