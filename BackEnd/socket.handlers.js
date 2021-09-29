@@ -12,15 +12,19 @@ async function handleJoin(namespaceInstance, socket, data) {
   socket.data = user;
 
   const activeUsers = await namespaceInstance.getActiveUsers();
-  console.log("join", activeUsers);
   namespaceInstance.connection.emit("emitActiveUsers", activeUsers);
 }
 
-async function handleDisconnect(namespaceInstance) {
+async function handleDisconnect(namespaceInstance, socket) {
   // console.log(`Disconnected: ${socket.id}`);
   const activeUsers = await namespaceInstance.getActiveUsers();
   console.log("disconnect", activeUsers);
   namespaceInstance.connection.emit("emitActiveUsers", activeUsers);
+
+  if (activeUsers.length === 0) {
+    console.log(`deleteNamespace, active namespaceInstances: ${socket.nsp.namespaceInstance.id - 1}`);
+    delete socket.nsp.namespaceInstance;
+  }
 }
 
 function handleUserMouseUp(namespaceInstance, socket) {
@@ -37,7 +41,7 @@ function handleUserMouseUp(namespaceInstance, socket) {
 async function handleUserPressedMouse(namespaceInstance, socket) {
   if (Object.keys(socket.data).length === 0) return;
 
-  socket.data.setPressingMouseDown(true); 
+  socket.data.setPressingMouseDown(true);
   namespaceInstance.connection.emit("emituserPressedMouse", socket.data);
   const activeUsers = await namespaceInstance.getActiveUsers();
 
