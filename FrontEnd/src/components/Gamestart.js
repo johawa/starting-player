@@ -25,12 +25,12 @@ export function Gamestart({ closeModal }) {
         </div>
         <div className="create__contentWrapper">
           <div className="formWrapper">
-            <h1>Create a Namespace</h1>
+            <h1>Player Start</h1>
             <form onSubmit={handleCreateGame}>
-              <label htmlFor="username">username:</label>
-              <input type="text" id="username" placeholder="Username" />
-              <br />
-              <button type="submit">Create new Game</button>
+              <label htmlFor="username"></label>
+              <input type="text" id="username" placeholder="Your Username" />
+
+              <button type="submit">create new game</button>
             </form>
           </div>
         </div>

@@ -16,15 +16,17 @@ body {
 button {
   border: none;
   width: 180px;
-  height: 50px;
+  height: 70px;
   margin: 30px auto;
-  color: #f9f9f9;
+  color: #705df2;
   border-radius: 4px;
-  background-color: #79b0af;
+  background-color: white;
   border-bottom: solid 4px #69a09f;
   border-right: solid 4px #69a09f;
   font-size: 18px;
+  font-weight: bold;
   box-shadow: -1px -1px 0px rgba(255, 255, 255, 0.1) inset;
+
   -moz-transition: all 0.2s ease;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
@@ -38,13 +40,20 @@ button:hover {
 }
 
 input {
+  line-height: 2;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 3px;
   margin-bottom: 10px;
-  width: 100%;
+  width: 180px;
   box-sizing: border-box;
-  font-family: montserrat;
-  color: #2c3e50;
+  color: #150c21;
   font-size: 13px;
+}
+
+input, 
+input::-webkit-input-placeholder {
+  line-height: 2;
+  color: #150c21;
+  font-weight: bold;
 }
