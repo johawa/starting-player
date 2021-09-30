@@ -22,7 +22,7 @@ async function handleDisconnect(namespaceInstance, socket) {
   namespaceInstance.connection.emit("emitActiveUsers", activeUsers);
 
   if (activeUsers.length === 0) {
-    console.log(`deleteNamespace, active namespaceInstances: ${socket.nsp.namespaceInstance.id - 1}`);
+    console.log(`clear Namespace, active namespaceInstances: ${socket.nsp.namespaceInstance.id - 1}`);
     delete socket.nsp.namespaceInstance;
   }
 }

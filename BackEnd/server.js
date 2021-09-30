@@ -24,16 +24,13 @@ const WORKSPACE = io.of(/[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3
 
 io.on("new_namespace", (namespace) => {
   namespace.namespaceInstance = new Namespace(namespace.name, io);
-  console.log(namespace);
-  
 });
 
 WORKSPACE.on("connection", (socket) => {
-  // const namespaceInstance = new Namespace(socket.nsp.name, io);
   const namespaceInstance = socket.nsp.namespaceInstance;
   console.log(`Connected: ${socket.id}`);
-  socket.emit("emitNewConnection", socket.id);
 
+  socket.emit("emitNewConnection", socket.id);
   socket.on("disconnect", async () => handleDisconnect(namespaceInstance, socket));
   socket.on("join", async (data) => handleJoin(namespaceInstance, socket, data));
 

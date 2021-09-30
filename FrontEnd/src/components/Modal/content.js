@@ -17,8 +17,8 @@ export function RenderJoinNamespace({ handleJoinGame }) {
     <>
       <h1>Join a Namespace</h1>
       <form className="formWrapper" onSubmit={handleJoinGame}>
-        <label htmlFor="username">username:</label>
-        <input type="text" id="username" />
+        <label htmlFor="username"></label>
+        <input type="text" id="username" placeholder="Username"/>
         <br />
         <button type="submit">Join Game</button>
       </form>

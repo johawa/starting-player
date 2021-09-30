@@ -1,0 +1,23 @@
+.modal_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ReactModal__Overlay {
+  background: url(../asstest/circles.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #1d1b1b !important;
+
+  animation-duration: .5s;
+  animation-iteration-count: 1;
+  animation-name: rotate;
+  animation-timing-function: linear;
+}
+
+@keyframes rotate {
+    from { transform: rotate(  0deg); }
+    to   { transform: rotate(360deg); }
+  }
