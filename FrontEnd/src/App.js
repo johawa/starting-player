@@ -3,6 +3,8 @@ import Game from "./Game";
 import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
+import { Gamestart } from "./components/Gamestart";
+import { render } from "@testing-library/react";
 
 const ESCAPE_KEYS = ["27", "Escape"];
 const X_KEY = ["88", "x"];
@@ -74,13 +76,30 @@ function App() {
     }
   }
 
+  function renderContent() {
+    console.log({ renderModal }, { modalState });
+    if (renderModal) {
+      switch (modalState) {
+        case ModalState.create:
+          return <Gamestart closeModal={closeModal}></Gamestart>;
+        default:
+          return (
+            <GameModal
+              mode={modalState}
+              open={modalIsOpen}
+              openModal={openModal}
+              closeModal={closeModal}
+              afterOpenModal={afterOpenModal}
+            ></GameModal>
+          );
+      }
+    }
+  }
+
   // Event Listeners
 
   function handler({ key }) {
-    if (
-      ESCAPE_KEYS.includes(String(key)) ||
-      X_KEY.includes(String(key).toLowerCase())
-    ) {
+    if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
       setRenderModal(true);
       setModalState(ModalState.menu);
       setIsOpen(true);
@@ -91,17 +110,8 @@ function App() {
 
   return (
     <>
-      {renderModal && (
-        <GameModal
-          mode={modalState}
-          open={modalIsOpen}
-          openModal={openModal}
-          closeModal={closeModal}
-          afterOpenModal={afterOpenModal}
-        ></GameModal>
-      )}
-
-      {(namespace && username) && <Game namespace={namespace} username={username}></Game>}
+      {renderContent()}
+      {namespace && username && <Game namespace={namespace} username={username}></Game>}
       <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>
     </>
   );
