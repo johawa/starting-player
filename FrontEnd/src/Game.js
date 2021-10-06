@@ -302,7 +302,7 @@ function Game({ namespace, username }) {
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
-        <GameBackground></GameBackground>
+       {/*  <GameBackground></GameBackground>  */}
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}

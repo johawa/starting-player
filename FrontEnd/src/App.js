@@ -13,32 +13,33 @@ function App() {
   const [renderModal, setRenderModal] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(true);
   const [namespace, setNamespace] = useState(null);
-  const [username, setusername] = useState(null);
+  const [username, setUsername] = useState(null);
   const [modalState, setModalState] = useState(ModalState.create);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const namespace = urlParams.get("namespace");
-
     const username = localStorage.getItem("ps-username");
+
+    // username and namespace from browser Memory
     console.log({ username }, { namespace });
 
     // refresh Page Case
     if (username && namespace) {
       setRenderModal(false);
-      setusername(username);
+      setUsername(username);
       setNamespace(namespace);
     }
     // new Case
     if (username && !namespace) {
-      setusername(username);
+      setUsername(username);
       setRenderModal(true);
       localStorage.removeItem("ps-namespace");
       localStorage.removeItem("ps-username");
     }
     // Join Case
     if (namespace && !username) {
-      setusername(null);
+      setUsername(null);
       setRenderModal(true);
       setNamespace(namespace);
       localStorage.setItem("ps-namespace", namespace);
@@ -46,7 +47,7 @@ function App() {
     }
     // Create Case
     if (!namespace && !username) {
-      setusername(null);
+      setUsername(null);
       setRenderModal(true);
       setModalState(ModalState.create);
     }
@@ -66,7 +67,7 @@ function App() {
     }
     if (msg === "join") {
       const namespace = localStorage.getItem("ps-namespace");
-      setusername(username);
+      setUsername(username);
       setNamespace(namespace);
       setIsOpen(false);
     }
@@ -76,12 +77,18 @@ function App() {
     }
   }
 
+  function createNewGame(namespace, username) {
+    console.log("create new Game", namespace, username);
+    setUsername(username);
+    setNamespace(namespace);
+  }
+
   function renderContent() {
     console.log({ renderModal }, { modalState });
     if (renderModal) {
       switch (modalState) {
         case ModalState.create:
-          return <Gamestart closeModal={closeModal}></Gamestart>;
+          return <Gamestart createNewGame={createNewGame}></Gamestart>;
         default:
           return (
             <GameModal
@@ -96,9 +103,19 @@ function App() {
     }
   }
 
+  function renderInfo() {
+    if (ModalState.create || ModalState.join) {
+      return;
+    }
+    return <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>;
+  }
+
   // Event Listeners
 
   function handler({ key }) {
+    if (ModalState.create || ModalState.join) {
+      return;
+    }
     if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
       setRenderModal(true);
       setModalState(ModalState.menu);
@@ -111,8 +128,8 @@ function App() {
   return (
     <>
       {renderContent()}
-      {namespace && username && <Game namespace={namespace} username={username}></Game>}
-      <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>
+      {namespace && <Game namespace={namespace} username={username}></Game>}
+      {renderInfo()}
     </>
   );
 }

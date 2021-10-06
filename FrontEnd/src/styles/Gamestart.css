@@ -20,6 +20,7 @@
   width: auto;
   height: 70%;
   animation: spin 300s linear infinite;
+  pointer-events: none;
 }
 
 .create__contentWrapper {

@@ -8,7 +8,8 @@
   min-width: 100vw;
   overflow: hidden;
 
-  background: -webkit-linear-gradient(top, #152c3e, #37618a);
+  /*  background: -webkit-linear-gradient(top, #152c3e, #37618a); */
+  background: #150c21;
   color: white;
 }
 

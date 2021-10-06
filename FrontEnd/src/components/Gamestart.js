@@ -5,16 +5,18 @@ import "../styles/Gamestart.css";
 
 const namespace = uuidv4();
 
-export function Gamestart({ closeModal }) {
+export function Gamestart({ createNewGame }) {
+
   function handleCreateGame(event) {
     event.preventDefault();
-
+    
     const username = event.currentTarget.elements.username.value;
     localStorage.setItem("ps-username", username);
     localStorage.setItem("ps-namespace", namespace);
     window.history.pushState({}, null, `?namespace=${namespace}`);
+    console.log("create", username, namespace);
 
-    if (username) closeModal("create", namespace, null);
+    if (username) createNewGame(namespace, username);
   }
 
   return (

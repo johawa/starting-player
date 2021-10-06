@@ -1,7 +1,7 @@
 export function Tree({ id }) {
   return (
-    <svg class="trees">
-      <g class="tree" id="tree" transform="translate(400,30)">
+    <svg className="trees">
+      <g className="tree" id="tree" transform="translate(400,30)">
         <polygon points="25,75 27,44 21,34 25,33 30,41 38,33 40,34 31,46 29,75" fill="#3f2145" />
         <polygon points="29,75 31,46 32,45 32,74" fill="#812743" />
 
