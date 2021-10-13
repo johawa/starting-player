@@ -4,6 +4,9 @@ import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
 import { Gamestart } from "./components/Gamestart";
+import { ToastContainer, toast } from "react-toastify";
+import "./styles/Fonts.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const ESCAPE_KEYS = ["27", "Escape"];
 const X_KEY = ["88", "x"];
@@ -133,10 +136,10 @@ function App() {
         var link = window.location.href;
         navigator.clipboard.writeText(link).then(
           function () {
-            console.log("Async: Copying to clipboard was successful!");
+            toast("📋 Invitation link copied to Clipboard");
           },
           function (err) {
-            console.error("Async: Could not copy text: ", err);
+            toast.error("Something went wrong copying the Invitation Link");
           }
         );
       }

@@ -6,10 +6,9 @@ import "../styles/Gamestart.css";
 const namespace = uuidv4();
 
 export function Gamestart({ createNewGame }) {
-
   function handleCreateGame(event) {
     event.preventDefault();
-    
+
     const username = event.currentTarget.elements.username.value;
     localStorage.setItem("ps-username", username);
     localStorage.setItem("ps-namespace", namespace);
@@ -32,7 +31,9 @@ export function Gamestart({ createNewGame }) {
               <label htmlFor="username"></label>
               <input type="text" id="username" placeholder="Your Username" />
 
-              <button type="submit">create new game</button>
+              <button className="default-button" type="submit">
+                create new game
+              </button>
             </form>
           </div>
         </div>

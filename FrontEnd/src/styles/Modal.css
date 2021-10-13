@@ -53,12 +53,3 @@
   color: red;
 }
 
-button {
-  border-top: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-}
-
-button:hover {
-  border-right: solid 1px #ccc;
-  border-top: solid 1px #ccc;
-}
