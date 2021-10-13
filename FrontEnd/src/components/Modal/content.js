@@ -30,7 +30,7 @@ export function RenderMenu({ dismissModal, handleRecreateGame }) {
   return (
     <>
       <h1>Menu</h1>
-      <h3>Create a Namespace</h3>
+      <h3>Create a new Game</h3>
       <p>All Current Users will be kicked out</p>
       <form className="formWrapper" onSubmit={handleRecreateGame}>
         <label htmlFor="username">username:</label>

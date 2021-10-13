@@ -96,7 +96,7 @@ function App() {
               open={modalIsOpen}
               openModal={openModal}
               closeModal={closeModal}
-              dismissModal={() => setModalState(false)}
+              dismissModal={() => setRenderModal(false)}
               afterOpenModal={afterOpenModal}
             ></GameModal>
           );
