@@ -35,7 +35,7 @@ export const subscribeToActiveUsers = (cb) => {
 export const subscribeToCursorPositionsData = (cb) => {
   if (!socket) return true;
   socket.on("emitCursorPositionsData", (msg) => {
-    console.log("Websocket event received! [subscribeToCursorPositionsData]", msg);
+    // console.log("Websocket event received! [subscribeToCursorPositionsData]", msg);
     return cb(null, msg);
   });
 };
