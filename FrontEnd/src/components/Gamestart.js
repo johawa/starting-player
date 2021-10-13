@@ -10,8 +10,8 @@ export function Gamestart({ createNewGame }) {
     event.preventDefault();
 
     const username = event.currentTarget.elements.username.value;
-    localStorage.setItem("ps-username", username);
-    localStorage.setItem("ps-namespace", namespace);
+    sessionStorage .setItem("ps-username", username);
+    sessionStorage .setItem("ps-namespace", namespace);
     window.history.pushState({}, null, `?namespace=${namespace}`);
     console.log("create", username, namespace);
 

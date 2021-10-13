@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const namespace = urlParams.get("namespace");
-    const username = localStorage.getItem("ps-username");
+    const username = sessionStorage.getItem("ps-username");
 
     // username and namespace from browser Memory
     // console.log({ username }, { namespace });
@@ -37,15 +37,15 @@ function App() {
     if (username && !namespace) {
       setUsername(username);
       setRenderModal(true);
-      localStorage.removeItem("ps-namespace");
-      localStorage.removeItem("ps-username");
+      sessionStorage.removeItem("ps-namespace");
+      sessionStorage.removeItem("ps-username");
     }
     // Join Case
     if (namespace && !username) {
       setUsername(null);
       setRenderModal(true);
       setNamespace(namespace);
-      localStorage.setItem("ps-namespace", namespace);
+      sessionStorage.setItem("ps-namespace", namespace);
       setModalState(ModalState.join);
     }
     // Create Case
@@ -53,7 +53,7 @@ function App() {
       setUsername(null);
       setRenderModal(true);
       setModalState(ModalState.create);
-    }   
+    }
   }, []);
 
   // Modal
@@ -69,7 +69,7 @@ function App() {
       setIsOpen(false);
     }
     if (msg === "join") {
-      const namespace = localStorage.getItem("ps-namespace");
+      const namespace = sessionStorage.getItem("ps-namespace");
       setUsername(username);
       setNamespace(namespace);
       setIsOpen(false);

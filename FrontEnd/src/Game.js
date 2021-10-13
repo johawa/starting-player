@@ -28,7 +28,6 @@ import "./styles/Looser.css";
 import "./styles/GameEnded.css";
 import { toast } from "react-toastify";
 
-
 function Game({ namespace, username }) {
   const [timerAnimation, setTimerAnimation] = useState(false);
 
@@ -49,7 +48,7 @@ function Game({ namespace, username }) {
       initiatetOwnUser(mySocketId);
     });
 
-    subscribteToUserJoin()
+    subscribteToUserJoin();
 
     subscribeToActiveUsers((err, users) => {
       if (err) return;
@@ -117,8 +116,6 @@ function Game({ namespace, username }) {
     syncInitCursorPositionOfOtherUsers(users);
   }
 
-
-
   // sync the positions of other players when you join a game
   function syncInitCursorPositionOfOtherUsers(users) {
     users.forEach((user) => {
@@ -126,7 +123,7 @@ function Game({ namespace, username }) {
         setCursorPosition(user);
       }
     });
-  }  
+  }
 
   // Mouse Move
   function handleMouseMove(ev) {
@@ -307,7 +304,7 @@ function Game({ namespace, username }) {
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
-       {/*  <GameBackground></GameBackground>  */}
+        {/*  <GameBackground></GameBackground>  */}
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
