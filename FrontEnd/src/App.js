@@ -53,7 +53,7 @@ function App() {
       setUsername(null);
       setRenderModal(true);
       setModalState(ModalState.create);
-    }
+    }   
   }, []);
 
   // Modal

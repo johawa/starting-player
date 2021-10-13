@@ -19,7 +19,7 @@ export function RenderCreateNewNamespace({ handleCreateGame }) {
 export function RenderJoinNamespace({ handleJoinGame }) {
   return (
     <>
-      <h1>Join a Namespace</h1>
+      <h1>Join</h1>
       <form className="formWrapper" onSubmit={handleJoinGame}>
         <label htmlFor="username"></label>
         <input type="text" id="username" placeholder="Username" />
