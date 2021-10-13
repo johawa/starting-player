@@ -67,7 +67,10 @@ export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode
         contentLabel="Game Modal"
         shouldCloseOnOverlayClick={true}
       >
-        <div className="modal_content">{renderContent(mode)}</div>
+        <>
+          <div className="modal__menu__topbar"></div>
+          <div className="modal_content">{renderContent(mode)}</div>
+        </>
       </Modal>
     </>
   );

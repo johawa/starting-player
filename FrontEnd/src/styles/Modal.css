@@ -1,4 +1,20 @@
+.ReactModal__Content {
+  padding: 0px !important;
+  margin: -1px;
+}
+
+.modal__menu__topbar {
+  background: linear-gradient( to right, #4cd964, #5ac8fa, #007aff, #34aadc, #5856d6, #ff2d55 );
+  margin-top: -1px;
+  height: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
 .modal_content {
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -61,3 +77,12 @@
 .warn {
   color: red;
 }
+/* linear-gradient(
+    to right,
+    #4cd964,
+    #5ac8fa,
+    #007aff,
+    #34aadc,
+    #5856d6,
+    #ff2d55
+  ); */

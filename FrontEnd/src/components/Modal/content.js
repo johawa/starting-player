@@ -37,11 +37,11 @@ export function RenderMenu({ dismissModal, handleRecreateGame }) {
     var link = window.location.href;
     navigator.clipboard.writeText(link).then(
       function () {
-        toast("📋 Invitation link copied to Clipboard");
+        toast("📋 Invitation link copied to clipboard");
         dismissModal();
       },
       function (err) {
-        toast.error("Something went wrong copying the Invitation Link");
+        toast.error("Something went wrong copying the invitation link");
       }
     );
   };
