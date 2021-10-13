@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export function RenderCreateNewNamespace({ handleCreateGame }) {
   return (
     <>
@@ -31,9 +33,23 @@ export function RenderJoinNamespace({ handleJoinGame }) {
 }
 
 export function RenderMenu({ dismissModal, handleRecreateGame }) {
+  const copyLinkToClipboad = () => {
+    var link = window.location.href;
+    navigator.clipboard.writeText(link).then(
+      function () {
+        toast("📋 Invitation link copied to Clipboard");
+        dismissModal();
+      },
+      function (err) {
+        toast.error("Something went wrong copying the Invitation Link");
+      }
+    );
+  };
+
   return (
     <>
       <h1>Menu</h1>
+
       <div className="modal__menu__newGame">
         <h2>Create a new Game</h2>
         <br />
@@ -45,6 +61,11 @@ export function RenderMenu({ dismissModal, handleRecreateGame }) {
           </button>
           <p className="warn">All Current Users will be kicked out</p>
         </form>
+      </div>
+      <div className="modal__menu__copy">
+        <button className="default-button" onClick={copyLinkToClipboad}>
+          Copy Invitation Link
+        </button>
       </div>
       <div className="modal__menu__dismiss">
         <button className="default-button" onClick={dismissModal}>

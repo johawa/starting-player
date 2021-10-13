@@ -4,7 +4,7 @@ import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
 import { Gamestart } from "./components/Gamestart";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "./styles/Fonts.css";
 import "react-toastify/dist/ReactToastify.css";
 

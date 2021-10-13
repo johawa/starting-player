@@ -42,14 +42,22 @@
 }
 
 .modal__menu__dismiss {
-  margin-top: 15px;
-  margin-bottom: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   box-sizing: border-box;
   width: 100%;
   display: flex;
 }
 
+.modal__menu__copy {
+  margin-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid gray;
+}
+
 .warn {
   color: red;
 }
-
