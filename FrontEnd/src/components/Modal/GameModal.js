@@ -8,7 +8,7 @@ import "../../styles/Modal.css";
 Modal.setAppElement("#root");
 const namespace = uuidv4();
 
-export function GameModal({ open, closeModal, afterOpenModal, mode }) {
+export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode }) {
   function handleCreateGame(event) {
     event.preventDefault();
 
@@ -49,7 +49,7 @@ export function GameModal({ open, closeModal, afterOpenModal, mode }) {
         return <RenderJoinNamespace handleJoinGame={handleJoinGame}></RenderJoinNamespace>;
 
       case ModalState.menu:
-        return <RenderMenu closeModal={closeModal} handleRecreateGame={handleRecreateGame}></RenderMenu>;
+        return <RenderMenu dismissModal={dismissModal} handleRecreateGame={handleRecreateGame}></RenderMenu>;
 
       default:
         console.error("Something went wrong rendering the Modal");

@@ -96,6 +96,7 @@ function App() {
               open={modalIsOpen}
               openModal={openModal}
               closeModal={closeModal}
+              dismissModal={() => setModalState(false)}
               afterOpenModal={afterOpenModal}
             ></GameModal>
           );
@@ -104,18 +105,12 @@ function App() {
   }
 
   function renderInfo() {
-    if (ModalState.create || ModalState.join) {
-      return;
-    }
     return <h3 className="menu_info_text">Press [X] or [ESC] to open Menu</h3>;
   }
 
   // Event Listeners
 
   function handler({ key }) {
-    if (ModalState.create || ModalState.join) {
-      return;
-    }
     if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
       setRenderModal(true);
       setModalState(ModalState.menu);

@@ -169,7 +169,7 @@ function Game({ namespace, username }) {
 
   function userIsPressingMouseUp(id) {
     if (id) {
-      cursors.current[`${id}`].firstChild.style.backgroundColor = "gray";
+     //  cursors.current[`${id}`].firstChild.style.backgroundColor = "gray";
     }
   }
 

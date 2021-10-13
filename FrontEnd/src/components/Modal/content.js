@@ -26,7 +26,7 @@ export function RenderJoinNamespace({ handleJoinGame }) {
   );
 }
 
-export function RenderMenu({ closeModal, handleRecreateGame }) {
+export function RenderMenu({ dismissModal, handleRecreateGame }) {
   return (
     <>
       <h1>Menu</h1>
@@ -39,7 +39,7 @@ export function RenderMenu({ closeModal, handleRecreateGame }) {
         <button type="submit">Create new Game</button>
       </form>
 
-      <button onClick={closeModal}>Close Modal</button>
+      <button onClick={dismissModal}>Close Modal</button>
     </>
   );
 }
