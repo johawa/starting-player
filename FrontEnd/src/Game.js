@@ -21,12 +21,11 @@ import {
   subscribeToUserInterceptRestartGameCancel,
   subscribeToAllUserInterceptRestartCircle,
 } from "./utils/socket.helpers";
-import { GameBackground } from "./components/GameBackground";
 import "./styles/App.css";
 import "./styles/Winner.css";
 import "./styles/Looser.css";
 import "./styles/GameEnded.css";
-import "./styles/Font.css";
+
 
 function Game({ namespace, username }) {
   const [timerAnimation, setTimerAnimation] = useState(false);

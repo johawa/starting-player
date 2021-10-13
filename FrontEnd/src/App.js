@@ -4,7 +4,7 @@ import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
 import { Gamestart } from "./components/Gamestart";
-import { render } from "@testing-library/react";
+
 
 const ESCAPE_KEYS = ["27", "Escape"];
 const X_KEY = ["88", "x"];

@@ -18,7 +18,7 @@ export function RenderJoinNamespace({ handleJoinGame }) {
       <h1>Join a Namespace</h1>
       <form className="formWrapper" onSubmit={handleJoinGame}>
         <label htmlFor="username"></label>
-        <input type="text" id="username" placeholder="Username"/>
+        <input type="text" id="username" placeholder="Username" />
         <br />
         <button type="submit">Join Game</button>
       </form>
@@ -30,16 +30,19 @@ export function RenderMenu({ dismissModal, handleRecreateGame }) {
   return (
     <>
       <h1>Menu</h1>
-      <h3>Create a new Game</h3>
-      <p>All Current Users will be kicked out</p>
-      <form className="formWrapper" onSubmit={handleRecreateGame}>
-        <label htmlFor="username">username:</label>
-        <input type="text" id="username" />
+      <div className="modal__menu__newGame">
+        <h2>Create a new Game</h2>
         <br />
-        <button type="submit">Create new Game</button>
-      </form>
-
-      <button onClick={dismissModal}>Close Modal</button>
+        <form className="formWrapper" onSubmit={handleRecreateGame}>
+          <label htmlFor="username"></label>
+          <input type="text" id="username" placeholder="Username" />
+          <button type="submit">Create new Game</button>
+          <p className="warn">All Current Users will be kicked out</p>
+        </form>
+      </div>
+      <div className="modal__menu__dismiss">
+        <button onClick={dismissModal}>Close Modal</button>
+      </div>
     </>
   );
 }

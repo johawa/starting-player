@@ -3,4 +3,62 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: #150c21;
+}
+
+.modal__menu__newGame {
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+  box-sizing: content-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 25px;
+}
+
+.modal__menu__newGame form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#username {
+  line-height: 2;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 9px;
+  margin-bottom: 10px;
+  width: 180px;
+  box-sizing: border-box;
+  color: #150c21;
+  font-size: 15px;
+}
+
+#username,
+#username::-webkit-input-placeholder {
+  line-height: 2;
+  color: #150c21;
+  font-weight: bold;
+}
+
+.modal__menu__dismiss {
+  margin-top: 15px;
+  margin-bottom: 25px;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+}
+
+.warn {
+  color: red;
+}
+
+button {
+  border-top: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+button:hover {
+  border-right: solid 1px #ccc;
+  border-top: solid 1px #ccc;
 }
