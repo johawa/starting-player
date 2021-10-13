@@ -4,7 +4,7 @@ import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
 import { Gamestart } from "./components/Gamestart";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "./styles/Fonts.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,7 +25,7 @@ function App() {
     const username = localStorage.getItem("ps-username");
 
     // username and namespace from browser Memory
-    console.log({ username }, { namespace });
+    // console.log({ username }, { namespace });
 
     // refresh Page Case
     if (username && namespace) {
@@ -81,13 +81,11 @@ function App() {
   }
 
   function createNewGame(namespace, username) {
-    console.log("create new Game", namespace, username);
     setUsername(username);
     setNamespace(namespace);
   }
 
   function renderContent() {
-    console.log({ renderModal }, { modalState });
     if (renderModal) {
       switch (modalState) {
         case ModalState.create:

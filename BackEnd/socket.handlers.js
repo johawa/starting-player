@@ -13,13 +13,15 @@ async function handleJoin(namespaceInstance, socket, data) {
   const user = new User(socket.id, username);
   socket.data = user;
   if (!namespaceInstance) return;
+  socket.broadcast.emit("emitUserJoinOrDisconnect", { username, type: "join" });
+
   const activeUsers = await namespaceInstance?.getActiveUsers();
   namespaceInstance?.connection.emit("emitActiveUsers", activeUsers);
 }
 
 async function handleDisconnect(namespaceInstance, socket) {
-  // console.log(`Disconnected: ${socket.id}`);
   if (!namespaceInstance) return;
+  socket.broadcast.emit("emitUserJoinOrDisconnect", { username: socket.data.username, type: "disconnect" });
   const activeUsers = await namespaceInstance?.getActiveUsers();
   console.log("disconnect", activeUsers);
   namespaceInstance?.connection.emit("emitActiveUsers", activeUsers);

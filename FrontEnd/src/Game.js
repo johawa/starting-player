@@ -20,11 +20,13 @@ import {
   subscribeToUserInterceptRestartGameStart,
   subscribeToUserInterceptRestartGameCancel,
   subscribeToAllUserInterceptRestartCircle,
+  subscribteToUserJoin,
 } from "./utils/socket.helpers";
 import "./styles/App.css";
 import "./styles/Winner.css";
 import "./styles/Looser.css";
 import "./styles/GameEnded.css";
+import { toast } from "react-toastify";
 
 
 function Game({ namespace, username }) {
@@ -46,6 +48,8 @@ function Game({ namespace, username }) {
       if (err) return;
       initiatetOwnUser(mySocketId);
     });
+
+    subscribteToUserJoin()
 
     subscribeToActiveUsers((err, users) => {
       if (err) return;

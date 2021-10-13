@@ -1,4 +1,5 @@
 import io from "socket.io-client";
+import { toast } from "react-toastify";
 let socket;
 
 export const initiateSocket = (namespace, username) => {
@@ -16,7 +17,7 @@ export const disconnectSocket = () => {
 export const subscribeToNewConnection = (cb) => {
   if (!socket) return true;
   socket.on("emitNewConnection", (msg) => {
-    //console.log("Websocket event received! [emitNewConnection]");
+    // console.log("Websocket event received! [emitNewConnection]", msg);
     return cb(null, msg);
   });
 };
@@ -25,8 +26,27 @@ export const subscribeToNewConnection = (cb) => {
 export const subscribeToActiveUsers = (cb) => {
   if (!socket) return true;
   socket.on("emitActiveUsers", (msg) => {
-    // console.log("Websocket event received! [emitActiveUsers]", msg);
+    console.log("Websocket event received! [emitActiveUsers]", msg);
     return cb(null, msg);
+  });
+};
+
+export const subscribteToUserJoin = () => {
+  if (!socket) return true;
+  socket.on("emitUserJoinOrDisconnect", (msg) => {
+    const { username, type } = msg;
+    console.log("Websocket event received! [emitUserJoinOrDisconnect]", msg);
+    switch (type) {
+      case "join":
+        toast.info(`User ${username} joined`);
+        break;
+      case "disconnect":
+        toast.info(`User ${username} left`);
+        break;
+      default:
+        console.error("Something went wrong in [subscribteToUserJoin]");
+        break;
+    }
   });
 };
 // Users End
