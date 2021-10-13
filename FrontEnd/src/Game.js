@@ -114,6 +114,8 @@ function Game({ namespace, username }) {
     syncInitCursorPositionOfOtherUsers(users);
   }
 
+
+
   // sync the positions of other players when you join a game
   function syncInitCursorPositionOfOtherUsers(users) {
     users.forEach((user) => {
@@ -121,7 +123,7 @@ function Game({ namespace, username }) {
         setCursorPosition(user);
       }
     });
-  }
+  }  
 
   // Mouse Move
   function handleMouseMove(ev) {
@@ -169,7 +171,7 @@ function Game({ namespace, username }) {
 
   function userIsPressingMouseUp(id) {
     if (id) {
-     //  cursors.current[`${id}`].firstChild.style.backgroundColor = "gray";
+      cursors.current[`${id}`].firstChild.style.backgroundColor = "transparent";
     }
   }
 

@@ -10,6 +10,7 @@
 
   /*  background: -webkit-linear-gradient(top, #152c3e, #37618a); */
   background: #150c21;
+
   color: white;
 }
 
@@ -24,12 +25,12 @@
   --radius: 80px;
   width: calc(2 * var(--radius));
   height: calc(2 * var(--radius));
- /*  background-color: gray; */
+  /*  background-color: gray; */
 
   background: radial-gradient(circle at 20% 70%, var(--c1), var(--c2));
   border-radius: 50%;
   position: relative !important;
-  border: 2px solid green;
+  border: 3px solid white;
 }
 
 .point_1 {

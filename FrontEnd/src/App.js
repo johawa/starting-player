@@ -112,9 +112,13 @@ function App() {
 
   function handler({ key }) {
     if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
-      setRenderModal(true);
-      setModalState(ModalState.menu);
-      setIsOpen(true);
+      // Open Modal not on LandingPage
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("namespace")) {
+        setRenderModal(true);
+        setModalState(ModalState.menu);
+        setIsOpen(true);
+      }
     }
   }
 
@@ -124,7 +128,7 @@ function App() {
     <>
       {renderContent()}
       {namespace && <Game namespace={namespace} username={username}></Game>}
-      {renderInfo()}
+      {namespace && renderInfo()}
     </>
   );
 }
