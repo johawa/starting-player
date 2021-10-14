@@ -1,6 +1,6 @@
 h1 {
   font-weight: 200;
-  font-size: clamp(3rem, 6vw, 7rem);
+  font-size: clamp(5rem, 6vw, 7rem);
   line-height: 1.2;
   letter-spacing: -0.03em;
   margin: 0;

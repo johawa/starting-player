@@ -18,3 +18,15 @@ export function BackgroundWrapper(props) {
     </>
   );
 }
+
+export function BackgroundWrapper_Mobile(props) {
+  return (
+    <>
+      <div className="app">
+        <div className="create__contentWrapper--mobile">
+          <div className="formWrapper--mobile">{props.children}</div>
+        </div>
+      </div>
+    </>
+  );
+}

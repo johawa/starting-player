@@ -61,7 +61,7 @@ body {
 /* Ipdas */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
   body {
-    font-size: 25%;
+    font-size: 40%;
   }
 
   .app {
@@ -72,7 +72,7 @@ body {
 /* Laptops */
 @media only screen and (min-width: 769px) and (max-width: 1024px) {
   body {
-    font-size: 30%;
+    font-size: 40%;
   }
 
   .app {

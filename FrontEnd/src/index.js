@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import "./styles/Font.css";
 import "react-toastify/dist/ReactToastify.css";
 
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
