@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
-import { WinnerCircle } from "./components/WinnerCircle";
-import { LooserCircle } from "./components/LooserCircle";
-import { renderName } from "./components/RenderName";
+import { WinnerCircle } from "../components/Game/WinnerCircle";
+import { LooserCircle } from "../components/Game/LooserCircle";
+import { renderName } from "../components/Game/RenderName";
 import {
   initiateSocket,
   subscribeToNewConnection,
@@ -21,11 +21,11 @@ import {
   subscribeToUserInterceptRestartGameCancel,
   subscribeToAllUserInterceptRestartCircle,
   subscribteToUserJoin,
-} from "./utils/socket.helpers";
-import "./styles/App.css";
-import "./styles/Winner.css";
-import "./styles/Looser.css";
-import "./styles/GameEnded.css";
+} from "../utils/socket.helpers";
+import "../styles/App.css";
+import "../styles/Winner.css";
+import "../styles/Looser.css";
+import "../styles/GameEnded.css";
 import { toast } from "react-toastify";
 
 function Game({ namespace, username }) {

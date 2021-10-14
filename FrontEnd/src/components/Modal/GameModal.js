@@ -9,17 +9,6 @@ Modal.setAppElement("#root");
 const namespace = uuidv4();
 
 export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode }) {
-  function handleCreateGame(event) {
-    event.preventDefault();
-
-    const username = event.currentTarget.elements.username.value;
-    sessionStorage.setItem("ps-username", username);
-    sessionStorage.setItem("ps-namespace", namespace);
-    window.history.pushState({}, null, `?namespace=${namespace}`);
-
-    if (username) closeModal("create", namespace, null);
-  }
-
   function handleRecreateGame(event) {
     event.preventDefault();
 
@@ -42,9 +31,6 @@ export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode
 
   function renderContent(mode) {
     switch (mode) {
-      case ModalState.create:
-        return <RenderCreateNewNamespace handleCreateGame={handleCreateGame}></RenderCreateNewNamespace>;
-
       case ModalState.join:
         return <RenderJoinNamespace handleJoinGame={handleJoinGame}></RenderJoinNamespace>;
 

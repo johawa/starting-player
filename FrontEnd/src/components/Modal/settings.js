@@ -1,5 +1,4 @@
 export const ModalState = {
-  create: "create",
   join: "join",
   menu: "menu",
 };

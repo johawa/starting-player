@@ -20,10 +20,7 @@ export function Gamestart({ createNewGame }) {
 
   return (
     <>
-      <div className="create__wrapper">
-       {/*  <div className="create__imageWrapper">
-          <img className="create__image" src={circles} alt="rotating_circles"></img>
-        </div> */}
+      <div className="create__wrapper">   
         <div className="create__contentWrapper">
           <div className="formWrapper">
             <h1>Player Start</h1>

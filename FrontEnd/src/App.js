@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Game from "./Game";
+import Game from "./Pages/Game";
 import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
-import { Gamestart } from "./components/Gamestart";
+import { Gamestart } from "./Pages/Gamestart";
 import { toast } from "react-toastify";
 import "./styles/Fonts.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,96 +13,74 @@ const X_KEY = ["88", "x"];
 const SLASH_KEY = ["111", "/"];
 
 function App() {
-  const [renderModal, setRenderModal] = useState(false);
-  const [modalIsOpen, setIsOpen] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(true);
   const [namespace, setNamespace] = useState(null);
   const [username, setUsername] = useState(null);
-  const [modalState, setModalState] = useState(ModalState.create);
+  const [gameIsCreated, setGameIsCreated] = useState(false);
+  const [modalState, setModalState] = useState(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const namespace = urlParams.get("namespace");
     const username = sessionStorage.getItem("ps-username");
 
-    // username and namespace from browser Memory
-    // console.log({ username }, { namespace });
-
     // refresh Page Case
     if (username && namespace) {
-      setRenderModal(false);
+      setGameIsCreated(true);
       setUsername(username);
       setNamespace(namespace);
     }
     // new Case
     if (username && !namespace) {
+      setGameIsCreated(true);
       setUsername(username);
-      setRenderModal(true);
       sessionStorage.removeItem("ps-namespace");
       sessionStorage.removeItem("ps-username");
     }
     // Join Case
     if (namespace && !username) {
+      setGameIsCreated(true);
       setUsername(null);
-      setRenderModal(true);
       setNamespace(namespace);
       sessionStorage.setItem("ps-namespace", namespace);
+
       setModalState(ModalState.join);
     }
     // Create Case
     if (!namespace && !username) {
+      setGameIsCreated(false);
       setUsername(null);
-      setRenderModal(true);
-      setModalState(ModalState.create);
     }
+
+    return () => {
+      console.log("unmount");
+      setGameIsCreated(false);
+      setUsername(null);
+    };
   }, []);
 
-  // Modal
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {}
-
-  function closeModal(msg, namespace, username) {
-    if (msg === "create") {
-      setNamespace(namespace);
-      setIsOpen(false);
-    }
+  // Modalx
+  function closeModal(msg, namespace, username) {  
     if (msg === "join") {
       const namespace = sessionStorage.getItem("ps-namespace");
       setUsername(username);
       setNamespace(namespace);
-      setIsOpen(false);
+      setModalIsOpen(false);
     }
     if (msg === "recreate") {
       setNamespace(namespace);
-      setIsOpen(false);
+      setModalIsOpen(false);
     }
   }
 
   function createNewGame(namespace, username) {
     setUsername(username);
     setNamespace(namespace);
+    setGameIsCreated(true);
   }
 
   function renderContent() {
-    if (renderModal) {
-      switch (modalState) {
-        case ModalState.create:
-          return <Gamestart createNewGame={createNewGame}></Gamestart>;
-        default:
-          return (
-            <GameModal
-              mode={modalState}
-              open={modalIsOpen}
-              openModal={openModal}
-              closeModal={closeModal}
-              dismissModal={() => setRenderModal(false)}
-              afterOpenModal={afterOpenModal}
-            ></GameModal>
-          );
-      }
-    }
+    return <Gamestart createNewGame={createNewGame}></Gamestart>;
   }
 
   function renderInfo() {
@@ -115,15 +93,14 @@ function App() {
   }
 
   // Event Listeners
-
   function handler({ key }) {
     if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
       // Open Modal not on LandingPage
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get("namespace")) {
-        setRenderModal(true);
         setModalState(ModalState.menu);
-        setIsOpen(true);
+        setModalIsOpen(true);
+        console.log("should openModalx")
       }
     }
 
@@ -148,7 +125,7 @@ function App() {
 
   return (
     <>
-      {renderContent()}
+      {gameIsCreated === false && renderContent()}
       {namespace && <Game namespace={namespace} username={username}></Game>}
       {namespace && renderInfo()}
     </>
