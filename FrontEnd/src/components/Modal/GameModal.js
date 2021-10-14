@@ -31,7 +31,7 @@ export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode
   }
 
   function renderContent(mode) {
-    if (mode === null) return;
+   /*  if (mode === null) return;
 
     switch (mode) {
       case ModalState.join:
@@ -43,7 +43,10 @@ export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode
       default:
         console.error("Something went wrong rendering the Modal");
         return <div>Oops ! Something went wrong rendering the Modal</div>;
-    }
+    } */
+
+    return <RenderMenu dismissModal={dismissModal} handleRecreateGame={handleRecreateGame}></RenderMenu>;
+
   }
 
   return (

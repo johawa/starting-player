@@ -3,7 +3,8 @@ import Game from "./Pages/Game";
 import { GameModal } from "./components/Modal/GameModal";
 import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
-import { Gamestart } from "./Pages/Gamestart";
+import { CreateGame } from "./Pages/CreateGame";
+import { JoinGame } from "./Pages/JoinGame";
 import { toast } from "react-toastify";
 import "./styles/Fonts.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,12 +13,18 @@ const ESCAPE_KEYS = ["27", "Escape"];
 const X_KEY = ["88", "x"];
 const SLASH_KEY = ["111", "/"];
 
+const MODE = {
+  create: "create",
+  join: "join",
+  playing: "playing",
+};
+
 function App() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [namespace, setNamespace] = useState(null);
   const [username, setUsername] = useState(null);
-  const [gameIsCreated, setGameIsCreated] = useState(false);
-  const [modalState, setModalState] = useState(null);
+
+  const [mode, setMode] = useState(MODE.create);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -27,35 +34,34 @@ function App() {
 
     // refresh Page Case
     if (username && namespace) {
-      setGameIsCreated(true);
+      setMode(MODE.playing);
       setUsername(username);
       setNamespace(namespace);
     }
     // new Case
-    if (username && !namespace) {
+    /*  if (username && !namespace) {
       setGameIsCreated(false);
+
       setUsername(username);
       sessionStorage.removeItem("ps-namespace");
       sessionStorage.removeItem("ps-username");
-    }
+    } */
     // Join Case
     if (!username && namespace) {
-      setGameIsCreated(true);
+      setMode(MODE.join);
       setUsername(null);
       setNamespace(namespace);
       sessionStorage.setItem("ps-namespace", namespace);
-      setModalIsOpen(true);
-      setModalState(ModalState.join);
     }
     // Create Case
     if (!username && !namespace) {
-      setGameIsCreated(false);
+      setMode(MODE.create);
       setUsername(null);
     }
 
     return () => {
       console.log("unmount");
-      setGameIsCreated(false);
+      setMode(MODE.create);
       setUsername(null);
     };
   }, []);
@@ -63,27 +69,46 @@ function App() {
   // Modalx
   function closeModal(msg, namespace, username) {
     console.log("closeModal", { msg }, { namespace }, { username });
-    if (msg === "join") {
+    /* if (msg === "join") {
       const namespace = sessionStorage.getItem("ps-namespace");
       setUsername(username);
       setNamespace(namespace);
       setModalIsOpen(false);
-      setModalState(null);
-    }
+      setMode(null);
+    } */
     if (msg === "recreate") {
       setNamespace(namespace);
       setModalIsOpen(false);
     }
   }
 
-  function createNewGame(namespace, username) {
+  function joinGame(username) {
+    const namespace = sessionStorage.getItem("ps-namespace");
     setUsername(username);
     setNamespace(namespace);
-    setGameIsCreated(true);
+    setMode(MODE.playing);
+  }
+
+  function createGame(namespace, username) {
+    setUsername(username);
+    setNamespace(namespace);
+    setMode(MODE.playing);
   }
 
   function renderContent() {
-    return <Gamestart createNewGame={createNewGame}></Gamestart>;
+    switch (mode) {
+      case MODE.create:
+        return <CreateGame createGame={createGame}></CreateGame>;
+
+      case MODE.join:
+        return <JoinGame joinGame={joinGame}></JoinGame>;
+
+      case MODE.playing:
+        return null;
+
+      default:
+        console.error("Something went wrong in [renderContent] Function");
+    }
   }
 
   function renderInfo() {
@@ -97,12 +122,7 @@ function App() {
 
   function renderModal() {
     return (
-      <GameModal
-        open={modalIsOpen}
-        closeModal={closeModal}
-        dismissModal={() => setModalIsOpen(false)}
-        mode={modalState}
-      ></GameModal>
+      <GameModal open={modalIsOpen} closeModal={closeModal} dismissModal={() => setModalIsOpen(false)}></GameModal>
     );
   }
 
@@ -112,9 +132,9 @@ function App() {
       // Open Modal not on LandingPage
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get("namespace")) {
-        setModalState(ModalState.menu);
+        setMode(ModalState.menu);
         setModalIsOpen(true);
-        console.log("should openModalx");
+        console.log("should openModal");
       }
     }
 
@@ -139,10 +159,10 @@ function App() {
 
   return (
     <>
-      {gameIsCreated === false && renderContent()}
+      {renderContent()}
       {renderModal()}
       {namespace && username && <Game namespace={namespace} username={username}></Game>}
-      {namespace && renderInfo()}
+      {namespace && username && renderInfo()}
     </>
   );
 }

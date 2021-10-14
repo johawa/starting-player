@@ -15,6 +15,8 @@ async function handleJoin(namespaceInstance, socket, data) {
   if (!namespaceInstance) return;
   socket.broadcast.emit("emitUserJoinOrDisconnect", { username, type: "join" });
 
+  // TODO check if username is already in use, otherwise add number to it
+
   const activeUsers = await namespaceInstance?.getActiveUsers();
   namespaceInstance?.connection.emit("emitActiveUsers", activeUsers);
 }
