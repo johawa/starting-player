@@ -1,15 +1,24 @@
 import React from "react";
 import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
-import { customStyles, ModalState } from "./settings";
-import {  RenderJoinNamespace, RenderMenu } from "./content";
+import { RenderMenu } from "./content";
 import "../../styles/Modal.css";
 
 Modal.setAppElement("#root");
 const namespace = uuidv4();
 
-export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode }) {
-  console.log("modalstate", mode);
+export const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
+export function GameModal({ open, createNewGameAndCloseOld, dismissModal }) {
   function handleRecreateGame(event) {
     event.preventDefault();
 
@@ -19,49 +28,19 @@ export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode
     window.history.pushState({}, null, `?namespace=${namespace}`);
     window.location.reload();
 
-    if (username) closeModal("recreate", namespace, null);
+    if (username) createNewGameAndCloseOld("recreate", namespace, null);
   }
 
-  function handleJoinGame(event) {
-    event.preventDefault();
-    const username = event.currentTarget.elements.username.value;
-
-    sessionStorage.setItem("ps-username", username);
-    if (username) closeModal("join", null, username);
-  }
-
-  function renderContent(mode) {
-   /*  if (mode === null) return;
-
-    switch (mode) {
-      case ModalState.join:
-        return <RenderJoinNamespace handleJoinGame={handleJoinGame}></RenderJoinNamespace>;
-
-      case ModalState.menu:
-        return <RenderMenu dismissModal={dismissModal} handleRecreateGame={handleRecreateGame}></RenderMenu>;
-
-      default:
-        console.error("Something went wrong rendering the Modal");
-        return <div>Oops ! Something went wrong rendering the Modal</div>;
-    } */
-
+  function renderContent() {
     return <RenderMenu dismissModal={dismissModal} handleRecreateGame={handleRecreateGame}></RenderMenu>;
-
   }
 
   return (
     <>
-      <Modal
-        isOpen={open}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Game Modal"
-        shouldCloseOnOverlayClick={true}
-      >
+      <Modal isOpen={open} style={customStyles} contentLabel="Game Modal" shouldCloseOnOverlayClick={true}>
         <>
           <div className="modal__menu__topbar"></div>
-          <div className="modal_content">{renderContent(mode)}</div>
+          <div className="modal_content">{renderContent()}</div>
         </>
       </Modal>
     </>

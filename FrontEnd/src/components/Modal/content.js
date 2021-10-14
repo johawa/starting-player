@@ -1,21 +1,5 @@
 import { toast } from "react-toastify";
 
-export function RenderJoinNamespace({ handleJoinGame }) {
-  return (
-    <>
-      <h1>Join</h1>
-      <form className="formWrapper" onSubmit={handleJoinGame}>
-        <label htmlFor="username"></label>
-        <input type="text" id="username" placeholder="Username" />
-        <br />
-        <button className="default-button" type="submit">
-          Join Game
-        </button>
-      </form>
-    </>
-  );
-}
-
 export function RenderMenu({ dismissModal, handleRecreateGame }) {
   const copyLinkToClipboad = () => {
     var link = window.location.href;
@@ -33,7 +17,6 @@ export function RenderMenu({ dismissModal, handleRecreateGame }) {
   return (
     <>
       <h1>Menu</h1>
-
       <div className="modal__menu__newGame">
         <h2>Create a new Game</h2>
         <br />

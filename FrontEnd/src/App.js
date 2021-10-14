@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Game from "./Pages/Game";
 import { GameModal } from "./components/Modal/GameModal";
-import { ModalState } from "./components/Modal/settings";
 import { useEventListener } from "./utils/useEventListener";
 import { CreateGame } from "./Pages/CreateGame";
 import { JoinGame } from "./Pages/JoinGame";
@@ -38,7 +37,9 @@ function App() {
       setUsername(username);
       setNamespace(namespace);
     }
-    // new Case
+    // TODO
+    // new Case / recreate
+
     /*  if (username && !namespace) {
       setGameIsCreated(false);
 
@@ -66,20 +67,11 @@ function App() {
     };
   }, []);
 
-  // Modalx
-  function closeModal(msg, namespace, username) {
-    console.log("closeModal", { msg }, { namespace }, { username });
-    /* if (msg === "join") {
-      const namespace = sessionStorage.getItem("ps-namespace");
-      setUsername(username);
-      setNamespace(namespace);
-      setModalIsOpen(false);
-      setMode(null);
-    } */
-    if (msg === "recreate") {
-      setNamespace(namespace);
-      setModalIsOpen(false);
-    }
+  // Modal
+  function createNewGameAndCloseOld(msg, namespace, username) {
+    // TODO
+    setNamespace(namespace);
+    setModalIsOpen(false);
   }
 
   function startPlaying(namespace, username) {
@@ -87,7 +79,6 @@ function App() {
     setNamespace(namespace);
     setMode(MODE.playing);
   }
-
 
   function renderContent() {
     switch (mode) {
@@ -116,7 +107,11 @@ function App() {
 
   function renderModal() {
     return (
-      <GameModal open={modalIsOpen} closeModal={closeModal} dismissModal={() => setModalIsOpen(false)}></GameModal>
+      <GameModal
+        open={modalIsOpen}
+        createNewGameAndCloseOld={createNewGameAndCloseOld}
+        dismissModal={() => setModalIsOpen(false)}
+      ></GameModal>
     );
   }
 
@@ -126,7 +121,7 @@ function App() {
       // Open Modal not on LandingPage
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get("namespace")) {
-        setMode(ModalState.menu);
+        setMode(MODE.menu);
         setModalIsOpen(true);
         console.log("should openModal");
       }
