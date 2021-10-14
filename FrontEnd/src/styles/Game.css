@@ -15,7 +15,7 @@
 }
 
 .cursor {
-  --radius: clamp(3rem, 15vw,8rem);
+  --radius: clamp(3rem, 8vw, 6rem);
   width: calc(2 * var(--radius));
   height: calc(2 * var(--radius));
   border-radius: 50%;
