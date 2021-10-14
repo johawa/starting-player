@@ -9,7 +9,7 @@ const log = console.log;
 
 async function handleJoin(namespaceInstance, socket, data) {
   const { username } = data;
-  // console.log(`Socket ${socket.id} joining namespace ${namespace.name}`);
+  console.log(`Socket ${socket.id} joining  with name ${username}`);
   const user = new User(socket.id, username);
   socket.data = user;
   if (!namespaceInstance) return;

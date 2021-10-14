@@ -13,7 +13,7 @@ const X_KEY = ["88", "x"];
 const SLASH_KEY = ["111", "/"];
 
 function App() {
-  const [modalIsOpen, setModalIsOpen] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [namespace, setNamespace] = useState(null);
   const [username, setUsername] = useState(null);
   const [gameIsCreated, setGameIsCreated] = useState(false);
@@ -23,6 +23,7 @@ function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const namespace = urlParams.get("namespace");
     const username = sessionStorage.getItem("ps-username");
+    console.log({ username }, { namespace });
 
     // refresh Page Case
     if (username && namespace) {
@@ -32,22 +33,22 @@ function App() {
     }
     // new Case
     if (username && !namespace) {
-      setGameIsCreated(true);
+      setGameIsCreated(false);
       setUsername(username);
       sessionStorage.removeItem("ps-namespace");
       sessionStorage.removeItem("ps-username");
     }
     // Join Case
-    if (namespace && !username) {
+    if (!username && namespace) {
       setGameIsCreated(true);
       setUsername(null);
       setNamespace(namespace);
       sessionStorage.setItem("ps-namespace", namespace);
-
+      setModalIsOpen(true);
       setModalState(ModalState.join);
     }
     // Create Case
-    if (!namespace && !username) {
+    if (!username && !namespace) {
       setGameIsCreated(false);
       setUsername(null);
     }
@@ -60,12 +61,14 @@ function App() {
   }, []);
 
   // Modalx
-  function closeModal(msg, namespace, username) {  
+  function closeModal(msg, namespace, username) {
+    console.log("closeModal", { msg }, { namespace }, { username });
     if (msg === "join") {
       const namespace = sessionStorage.getItem("ps-namespace");
       setUsername(username);
       setNamespace(namespace);
       setModalIsOpen(false);
+      setModalState(null);
     }
     if (msg === "recreate") {
       setNamespace(namespace);
@@ -92,6 +95,17 @@ function App() {
     );
   }
 
+  function renderModal() {
+    return (
+      <GameModal
+        open={modalIsOpen}
+        closeModal={closeModal}
+        dismissModal={() => setModalIsOpen(false)}
+        mode={modalState}
+      ></GameModal>
+    );
+  }
+
   // Event Listeners
   function handler({ key }) {
     if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
@@ -100,7 +114,7 @@ function App() {
       if (urlParams.get("namespace")) {
         setModalState(ModalState.menu);
         setModalIsOpen(true);
-        console.log("should openModalx")
+        console.log("should openModalx");
       }
     }
 
@@ -126,7 +140,8 @@ function App() {
   return (
     <>
       {gameIsCreated === false && renderContent()}
-      {namespace && <Game namespace={namespace} username={username}></Game>}
+      {renderModal()}
+      {namespace && username && <Game namespace={namespace} username={username}></Game>}
       {namespace && renderInfo()}
     </>
   );

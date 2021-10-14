@@ -2,13 +2,14 @@ import React from "react";
 import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
 import { customStyles, ModalState } from "./settings";
-import { RenderCreateNewNamespace, RenderJoinNamespace, RenderMenu } from "./content";
+import {  RenderJoinNamespace, RenderMenu } from "./content";
 import "../../styles/Modal.css";
 
 Modal.setAppElement("#root");
 const namespace = uuidv4();
 
 export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode }) {
+  console.log("modalstate", mode);
   function handleRecreateGame(event) {
     event.preventDefault();
 
@@ -25,11 +26,13 @@ export function GameModal({ open, closeModal, afterOpenModal, dismissModal, mode
     event.preventDefault();
     const username = event.currentTarget.elements.username.value;
 
-    window.sessionStorage.setItem("ps-username", username);
+    sessionStorage.setItem("ps-username", username);
     if (username) closeModal("join", null, username);
   }
 
   function renderContent(mode) {
+    if (mode === null) return;
+
     switch (mode) {
       case ModalState.join:
         return <RenderJoinNamespace handleJoinGame={handleJoinGame}></RenderJoinNamespace>;

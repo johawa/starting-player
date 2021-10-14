@@ -20,13 +20,12 @@ import {
   subscribeToUserInterceptRestartGameStart,
   subscribeToUserInterceptRestartGameCancel,
   subscribeToAllUserInterceptRestartCircle,
-  subscribteToUserJoin,
+  subscribeToUserJoinOrDisconnect,
 } from "../utils/socket.helpers";
 import "../styles/App.css";
 import "../styles/Winner.css";
 import "../styles/Looser.css";
 import "../styles/GameEnded.css";
-import { toast } from "react-toastify";
 
 function Game({ namespace, username }) {
   const [timerAnimation, setTimerAnimation] = useState(false);
@@ -48,7 +47,7 @@ function Game({ namespace, username }) {
       initiatetOwnUser(mySocketId);
     });
 
-    subscribteToUserJoin();
+    subscribeToUserJoinOrDisconnect();
 
     subscribeToActiveUsers((err, users) => {
       if (err) return;
@@ -304,7 +303,6 @@ function Game({ namespace, username }) {
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
-        {/*  <GameBackground></GameBackground>  */}
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}

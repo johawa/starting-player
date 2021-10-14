@@ -5,7 +5,7 @@ let socket;
 export const initiateSocket = (namespace, username) => {
   socket = io(`http://192.168.1.105:5000/${namespace}`);
   //console.log(`Connecting socket...`);
-  if (socket && namespace) socket.emit("join", { username });
+  if (socket && namespace && username) socket.emit("join", { username });
 };
 
 export const disconnectSocket = () => {
@@ -17,7 +17,7 @@ export const disconnectSocket = () => {
 export const subscribeToNewConnection = (cb) => {
   if (!socket) return true;
   socket.on("emitNewConnection", (msg) => {
-    // console.log("Websocket event received! [emitNewConnection]", msg);
+     console.log("Websocket event received! [emitNewConnection]", msg);
     return cb(null, msg);
   });
 };
@@ -31,7 +31,7 @@ export const subscribeToActiveUsers = (cb) => {
   });
 };
 
-export const subscribteToUserJoin = () => {
+export const subscribeToUserJoinOrDisconnect = () => {
   if (!socket) return true;
   socket.on("emitUserJoinOrDisconnect", (msg) => {
     const { username, type } = msg;
