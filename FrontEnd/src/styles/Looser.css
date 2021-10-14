@@ -9,24 +9,24 @@
 
 .info_looser {
   position: absolute;
-  color: rgb(27, 27, 27);;
+  color: rgb(27, 27, 27);
   position: absolute;
   top: 22%;
   left: 40%;
   z-index: 2;
   font-weight: 700;
-  font-size: 51px;
+  font-size: 5.1rem;
 }
 
 .point_looser {
   position: relative;
   grid-area: layer;
 
-  font-size: 16px;
-  color: white;
+  font-size: 1.6rem;
+  color: var(--white);
   border-radius: 50%;
 
-  --radius: 72px;
+  --radius: 7.2rem;
 
   --d: calc(var(--i) / 6);
 

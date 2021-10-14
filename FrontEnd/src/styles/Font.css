@@ -1,25 +1,33 @@
-.menu_info_container {
-  color: white;
-  position: absolute;
-  z-index: 2;
+h1 {
+  font-weight: 200;
+  font-size: clamp(4rem, 10vw, 9rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+h2 {
+  font-weight: bold;
+  font-size: clamp(2rem, 7vw, 7rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin: 0;
   text-align: center;
-  width: 100%;
-  bottom: 8%;
 }
 
 .default-button {
   border: none;
-  width: 180px;
-  height: 62px;
-  margin: 30px auto;
+  width: 18rem;
+  height: 6.2rem;
+  margin: 3rem auto;
   color: #705df2;
-  border-radius: 9px;
-  background-color: white;
+  border-radius: var(--default-border-radius);
+  background-color: var(--white);
   border-bottom: solid 4px #69a09f;
   border-left: solid 4px #69a09f;
   border-top: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: bold;
   box-shadow: -1px -1px 0px rgba(255, 255, 255, 0.1) inset;
 
@@ -38,15 +46,15 @@
 
 input {
   line-height: 2;
-  padding: 15px;
+  padding: 1.5rem;
   border: 1px solid #ccc;
-  border-radius: 9px;
-  margin-bottom: 10px;
-  width: 180px;
+  border-radius: var(--default-border-radius);
+  margin-bottom: 1rem;
+  width: 1.8rem;
   box-sizing: border-box;
   color: #150c21;
-  font-size: 15px;
-  text-align:center;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 input,
@@ -56,19 +64,20 @@ input::-webkit-input-placeholder {
   font-weight: bold;
 }
 
-
 ::-webkit-input-placeholder {
   text-align: center;
 }
 
-:-moz-placeholder { /* Firefox 18- */
-  text-align: center;  
+:-moz-placeholder {
+  /* Firefox 18- */
+  text-align: center;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
-  text-align: center;  
+::-moz-placeholder {
+  /* Firefox 19+ */
+  text-align: center;
 }
 
-:-ms-input-placeholder {  
-  text-align: center; 
+:-ms-input-placeholder {
+  text-align: center;
 }

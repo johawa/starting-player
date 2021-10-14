@@ -6,9 +6,6 @@ import { CreateGame } from "./Pages/CreateGame";
 import { JoinGame } from "./Pages/JoinGame";
 import { openModalHandler } from "./utils/helpers";
 
-import "./styles/Fonts.css";
-import "react-toastify/dist/ReactToastify.css";
-
 const MODE = {
   create: "create",
   join: "join",

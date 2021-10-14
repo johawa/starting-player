@@ -22,7 +22,7 @@ import {
   subscribeToAllUserInterceptRestartCircle,
   subscribeToUserJoinOrDisconnect,
 } from "../utils/socket.helpers";
-import "../styles/App.css";
+import "../styles/Game.css";
 import "../styles/Winner.css";
 import "../styles/Looser.css";
 import "../styles/GameEnded.css";

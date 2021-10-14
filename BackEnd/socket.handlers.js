@@ -14,12 +14,14 @@ async function handleJoin(namespaceInstance, socket, data) {
   let activeUsers = await namespaceInstance?.getActiveUsers();
 
   const uniqueUsername = checkForDuplicateName(username, activeUsers);
-  console.log(`Socket ${socket.id} joining  with name ${uniqueUsername}`);
+  // console.log(`Socket ${socket.id} joining  with name ${uniqueUsername}`);
 
   const user = new User(socket.id, uniqueUsername);
   socket.data = user;
 
+  // Update after adding User
   activeUsers = await namespaceInstance?.getActiveUsers();
+
   socket.broadcast.emit("emitUserJoinOrDisconnect", { username: uniqueUsername, type: "join" });
 
   namespaceInstance?.connection.emit("emitActiveUsers", activeUsers);

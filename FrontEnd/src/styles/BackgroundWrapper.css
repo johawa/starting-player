@@ -17,7 +17,7 @@
   position: absolute;
   box-sizing: border-box;
   background: rgba(21, 12, 33, 0.98);
-  padding: 50px;
+  padding: 5rem;
   top: 50%;
   left: 45%;
   transform: translate(-50%, -50%);
@@ -27,33 +27,15 @@
   justify-content: center;
   align-items: center;
   z-index: 2;
-  box-shadow: 0 0 30px 15px #fff, 0 0 50px 30px #f0f, 0 0 70px 45px #0ff;
+  box-shadow: 0 0 3rem 1.5rem #fff, 0 0 5rem 3rem #f0f, 0 0 7rem 4.5rem #0ff;
 }
 
 .formWrapper {
   box-sizing: border-box;
 }
 
-.formWrapper h1 {
-  font-weight: 200;
-  font-size: clamp(4rem, 10vw, 9rem);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
-  margin: 0;
-}
-
-.formWrapper h2 {
-  font-weight: bold;
-  font-size: clamp(2rem, 7vw, 7rem);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
-  margin: 0;
-
-  text-align: center;
-}
-
 .formWrapper form {
-  margin-top: 30px;
+  margin-top: 3rem;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -69,7 +51,7 @@
 .formWrapper form button {
   width: 50% !important;
   background-color: #705df2 !important;
-  color: white;
+  color: var(--white);
   border: unset !important;
 }
 
@@ -88,7 +70,7 @@
   pointer-events: none;
   animation: var(--animation, drift) 12s var(--delay) linear infinite alternate;
   animation-play-state: var(--playState, paused);
-  border: 3px solid white;
+  border: var(--circle-border);
   box-sizing: border-box;
 }
 
@@ -107,7 +89,7 @@
   --delay: 1s;
   top: 50%;
   left: 25%;
-  border: 3px solid white;
+  border: var(--circle-border);
   background: transparent !important;
 }
 
@@ -116,7 +98,7 @@
   --delay: 3s;
   top: 10%;
   left: 50%;
-  border: 3px solid white;
+  border: var(--circle-border);
   background: transparent !important;
 }
 

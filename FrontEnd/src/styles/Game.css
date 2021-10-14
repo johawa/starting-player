@@ -1,17 +1,10 @@
-.app {
+.menu_info_container {
+  color: var(--white);
   position: absolute;
-  top: 0;
-  bottom: 0;
-  height: 100vh;
-  min-height: 100vh;
-  width: 100vw;
-  min-width: 100vw;
-  overflow: hidden;
-
-  /*  background: -webkit-linear-gradient(top, #152c3e, #37618a); */
-  background: #150c21;
-
-  color: white;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  bottom: 8%;
 }
 
 .cursor_wrapper {
@@ -22,32 +15,29 @@
 }
 
 .cursor {
-  --radius: 80px;
+  --radius: 8rem;
   width: calc(2 * var(--radius));
   height: calc(2 * var(--radius));
-  /*  background-color: gray; */
-
-  background: radial-gradient(circle at 20% 70%, var(--c1), var(--c2));
   border-radius: 50%;
   position: relative !important;
-  border: 3px solid white;
+  border: var(--circle-border);
 }
 
 .point_1 {
   width: 50%;
-  height: 2px;
+  height: 0.2rem;
   background: transparent;
   position: absolute;
-  top: calc(50% - 1px);
+  top: calc(50% - 0.1rem);
   transform-origin: right;
 }
 
 .point_2 {
   width: 50%;
-  height: 2px;
+  height: 0.2rem;
   background: transparent;
   position: absolute;
-  top: calc(50% - 1px);
+  top: calc(50% - 0.1rem);
   transform-origin: right;
 }
 
@@ -59,8 +49,8 @@
   height: 1vmin;
   background: transparent;
   border-radius: 50%;
-  top: -10px;
-  left: 0px;
+  top: -1rem;
+  left: 0rem;
 }
 
 .animationRev {
@@ -72,10 +62,10 @@
 }
 
 .animationRev:before {
-  background: white;
+  background: var(--white);
 }
 .animation:before {
-  background: white;
+  background: var(--white);
 }
 
 @keyframes circleAnimation {

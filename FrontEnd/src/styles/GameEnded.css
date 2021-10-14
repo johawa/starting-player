@@ -2,15 +2,15 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 800px;
-  height: 800px;
-  background-color:goldenrod;
+  width: 80rem;
+  height: 80rem;
+  background-color: goldenrod;
   display: flex;
   flex-direction: column;
-  padding-top: 50px;
+  padding-top: 5rem;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: var(--white);
   border-radius: 50%;
-  font-size: 32px;
+  font-size: 3.2rem;
 }
