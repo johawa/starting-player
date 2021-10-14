@@ -1,39 +1,29 @@
 import React from "react";
-import "../styles/CreateGame.css";
+import { BackgroundWrapper } from "../components/Wrapper/BackgroundWrapper";
 
-export function JoinGame({ joinGame }) {
+export function JoinGame({ startPlaying }) {
   function handleJoinGame(event) {
     event.preventDefault();
 
     const username = event.currentTarget.elements.username.value;
+    const namespace = sessionStorage.getItem("ps-namespace");
     sessionStorage.setItem("ps-username", username);
 
-    if (username) joinGame(username);
+    if (username && namespace) startPlaying(namespace, username);
   }
 
   return (
-    <>
-      <div className="create__wrapper">
-        <div className="create__contentWrapper">
-          <div className="formWrapper">
-            <h1>Join</h1>
-            <form onSubmit={handleJoinGame}>
-              <label htmlFor="username"></label>
-              <input type="text" id="username" placeholder="Your Username" />
+    <BackgroundWrapper>
+      <h1>Player Start</h1>
+      <h2>Join</h2>
+      <form onSubmit={handleJoinGame}>
+        <label htmlFor="username"></label>
+        <input type="text" id="username" placeholder="Your Username" />
 
-              <button className="default-button" type="submit">
-                Join Game
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-      <div class="circle"></div>
-    </>
+        <button className="default-button" type="submit">
+          Join Game
+        </button>
+      </form>
+    </BackgroundWrapper>
   );
 }

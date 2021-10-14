@@ -42,6 +42,16 @@
   margin: 0;
 }
 
+.formWrapper h2 {
+  font-weight: bold;
+  font-size: clamp(2rem, 7vw, 7rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin: 0;
+
+  text-align: center;
+}
+
 .formWrapper form {
   margin-top: 30px;
   box-sizing: border-box;

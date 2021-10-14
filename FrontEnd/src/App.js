@@ -82,26 +82,20 @@ function App() {
     }
   }
 
-  function joinGame(username) {
-    const namespace = sessionStorage.getItem("ps-namespace");
+  function startPlaying(namespace, username) {
     setUsername(username);
     setNamespace(namespace);
     setMode(MODE.playing);
   }
 
-  function createGame(namespace, username) {
-    setUsername(username);
-    setNamespace(namespace);
-    setMode(MODE.playing);
-  }
 
   function renderContent() {
     switch (mode) {
       case MODE.create:
-        return <CreateGame createGame={createGame}></CreateGame>;
+        return <CreateGame startPlaying={startPlaying}></CreateGame>;
 
       case MODE.join:
-        return <JoinGame joinGame={joinGame}></JoinGame>;
+        return <JoinGame startPlaying={startPlaying}></JoinGame>;
 
       case MODE.playing:
         return null;
