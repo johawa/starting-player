@@ -2,6 +2,7 @@ const {
   determineIfAllUserArePressingMouseDown,
   determineIfAllUserAreInterceptingRestartCircle,
   determineWinner,
+  checkForDuplicateName,
 } = require("./utils/utils");
 const { User } = require("./utils/models/user");
 
@@ -9,15 +10,18 @@ const log = console.log;
 
 async function handleJoin(namespaceInstance, socket, data) {
   const { username } = data;
-  console.log(`Socket ${socket.id} joining  with name ${username}`);
-  const user = new User(socket.id, username);
-  socket.data = user;
   if (!namespaceInstance) return;
-  socket.broadcast.emit("emitUserJoinOrDisconnect", { username, type: "join" });
+  let activeUsers = await namespaceInstance?.getActiveUsers();
 
-  // TODO check if username is already in use, otherwise add number to it
+  const uniqueUsername = checkForDuplicateName(username, activeUsers);
+  console.log(`Socket ${socket.id} joining  with name ${uniqueUsername}`);
 
-  const activeUsers = await namespaceInstance?.getActiveUsers();
+  const user = new User(socket.id, uniqueUsername);
+  socket.data = user;
+
+  activeUsers = await namespaceInstance?.getActiveUsers();
+  socket.broadcast.emit("emitUserJoinOrDisconnect", { username: uniqueUsername, type: "join" });
+
   namespaceInstance?.connection.emit("emitActiveUsers", activeUsers);
 }
 
@@ -50,7 +54,7 @@ async function handleUserPressedMouse(namespaceInstance, socket) {
   if (Object.keys(socket.data).length === 0) return;
 
   socket.data.setPressingMouseDown(true);
-  console.log(socket.data)
+  console.log(socket.data);
   namespaceInstance?.connection.emit("emituserPressedMouse", socket.data);
   const activeUsers = await namespaceInstance?.getActiveUsers();
 

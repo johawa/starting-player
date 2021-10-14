@@ -3,9 +3,7 @@ function determineIfAllUserArePressingMouseDown(users) {
 }
 
 function determineIfAllUserAreInterceptingRestartCircle(users) {
-  return ![...users].some(
-    (user) => user.isInterceptiongRestartCircle === false
-  );
+  return ![...users].some((user) => user.isInterceptiongRestartCircle === false);
 }
 
 function shuffleArray(array) {
@@ -21,9 +19,20 @@ function determineWinner(activeUsers) {
   return winnerArray;
 }
 
+function checkForDuplicateName(username, activeUsers) {
+  const check = activeUsers?.filter((user) => user.username === username);
+  console.log("check", check.length, activeUsers.length);
+  if (check.length >= 1 && activeUsers.length > 1) {
+    console.log("dublicate");
+    return `${username}_${check.length + 1}`;
+  }
+  return username;
+}
+
 module.exports = {
   determineWinner,
   determineIfAllUserArePressingMouseDown,
   determineIfAllUserAreInterceptingRestartCircle,
   determineWinner,
+  checkForDuplicateName,
 };

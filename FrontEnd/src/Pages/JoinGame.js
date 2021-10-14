@@ -19,7 +19,6 @@ export function JoinGame({ startPlaying }) {
       <form onSubmit={handleJoinGame}>
         <label htmlFor="username"></label>
         <input type="text" id="username" placeholder="Your Username" />
-
         <button className="default-button" type="submit">
           Join Game
         </button>

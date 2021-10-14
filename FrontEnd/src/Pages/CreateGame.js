@@ -22,7 +22,6 @@ export function CreateGame({ startPlaying }) {
       <form onSubmit={handleCreateGame}>
         <label htmlFor="username"></label>
         <input type="text" id="username" placeholder="Your Username" />
-
         <button className="default-button" type="submit">
           create new game
         </button>

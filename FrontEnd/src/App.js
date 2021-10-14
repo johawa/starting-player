@@ -65,7 +65,7 @@ function App() {
   }, []);
 
   // Modal
-  function createNewGameAndCloseOld(msg, namespace, username) {
+  function createNewGameAndCloseOld(namespace) {
     // TODO
     setNamespace(namespace);
     setModalIsOpen(false);
@@ -112,7 +112,7 @@ function App() {
     );
   }
 
-  // Event Listenersx
+  // Event Listeners
   function handler({ key }) {
     const callback = (bln) => {
       if (bln === true) {
