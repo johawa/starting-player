@@ -10,7 +10,7 @@
 .default-button {
   border: none;
   width: 180px;
-  height: 70px;
+  height: 62px;
   margin: 30px auto;
   color: #705df2;
   border-radius: 9px;
@@ -33,6 +33,7 @@
   border-left: solid 3px #69a09f;
   border-right: solid 1px #ccc;
   border-top: solid 1px #ccc;
+  cursor: pointer;
 }
 
 input {
@@ -45,6 +46,7 @@ input {
   box-sizing: border-box;
   color: #150c21;
   font-size: 15px;
+  text-align:center;
 }
 
 input,
@@ -52,4 +54,21 @@ input::-webkit-input-placeholder {
   line-height: 2;
   color: #150c21;
   font-weight: bold;
+}
+
+
+::-webkit-input-placeholder {
+  text-align: center;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  text-align: center;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  text-align: center;  
+}
+
+:-ms-input-placeholder {  
+  text-align: center; 
 }

@@ -4,3 +4,14 @@ body {
   font-family: "Saira", sans-serif;
 }
 
+:root {
+  --color_main: #150c21;
+  --purple_light: #974859;
+  --purple_dark: #512946;
+  --orange_light: #f6b15b;
+  --orange_dark: #d2755c;
+  --blue_light: #a0e3f2;
+  --blue_dark: #2fa7c2;
+  --light_grey: #c4ba7c;
+  --yellow: #f9f871;
+}
