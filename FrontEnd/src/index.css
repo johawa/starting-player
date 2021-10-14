@@ -12,25 +12,92 @@
 
   --circle-border: 3px solid #fff;
   --top-bar: linear-gradient(to right, #4cd964, #5ac8fa, #007aff, #34aadc, #5856d6, #ff2d55);
-  --default-border-radius: 9px;  
+  --default-border-radius: 9px;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
+  position: absolute;
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
   margin: 0;
   padding: 0;
   font-family: "Saira", sans-serif;
-  font-size: 100%;
+  overflow: hidden;
+}
+
+#root {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .app {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  height: 100vh;
-  min-height: 100vh;
-  width: 100vw;
-  min-width: 100vw;
+  border: 3px solid red;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: var(--color_main);
   color: var(--white);
+}
+
+/* Mobile */
+@media only screen and (max-width: 480px) {
+  body {
+    font-size: 12.5%;
+  }
+
+  .app {
+    border: 3px solid magenta;
+  }
+}
+
+/* Ipdas */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  body {
+    font-size: 25%;
+  }
+
+  .app {
+    border: 3px solid aqua;
+  }
+}
+
+/* Laptops */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+  body {
+    font-size: 30%;
+  }
+
+  .app {
+    border: 3px solid yellow;
+  }
+}
+/* 
+Desktop */
+@media only screen and (min-width: 1025px) and (max-width: 1200px) {
+  body {
+    font-size: 62.5%;
+  }
+
+  .app {
+    border: 3px solid blue;
+  }
+}
+
+/* Full HD + */
+@media only screen and (min-width: 1201px) {
+  body {
+    font-size: 100%;
+  }
+
+  .app {
+    border: 3px solid green;
+  }
 }

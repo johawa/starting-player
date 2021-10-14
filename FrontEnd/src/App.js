@@ -128,7 +128,7 @@ function App() {
       {renderContent()}
       {renderModal()}
       {namespace && username && <Game namespace={namespace} username={username}></Game>}
-      {namespace && username && renderInfo()}
+      {namespace && username && !modalIsOpen && renderInfo()}
     </>
   );
 }

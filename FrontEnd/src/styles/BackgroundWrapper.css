@@ -4,15 +4,6 @@
   }
 }
 
-.create__wrapper {
-  background: #150c21;
-  color: #fff;
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  box-sizing: border-box;
-}
-
 .create__contentWrapper {
   position: absolute;
   box-sizing: border-box;
@@ -20,6 +11,7 @@
   padding: 5rem;
   top: 50%;
   left: 45%;
+  width: 40%;
   transform: translate(-50%, -50%);
   overflow: hidden;
   clip-path: polygon(-5% -3%, 101% -2%, 101% 102%, -2% 105%);

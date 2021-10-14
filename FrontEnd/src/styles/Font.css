@@ -1,6 +1,6 @@
 h1 {
   font-weight: 200;
-  font-size: clamp(4rem, 10vw, 9rem);
+  font-size: clamp(3rem, 6vw, 7rem);
   line-height: 1.2;
   letter-spacing: -0.03em;
   margin: 0;
@@ -8,29 +8,36 @@ h1 {
 
 h2 {
   font-weight: bold;
-  font-size: clamp(2rem, 7vw, 7rem);
+  font-size: clamp(1.5rem, 3vw, 6rem);
   line-height: 1.2;
   letter-spacing: -0.03em;
   margin: 0;
   text-align: center;
 }
 
+h3 {
+  
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+ 
+}
+
 .default-button {
-  border: none;
-  width: 18rem;
-  height: 6.2rem;
+  max-width: 18rem;
+  min-width: 10rem;
+  height: 5rem;
   margin: 3rem auto;
   color: #705df2;
   border-radius: var(--default-border-radius);
   background-color: var(--white);
-  border-bottom: solid 4px #69a09f;
+  font-size: clamp(1rem, 1vw, 1.6rem);
+  font-weight: bold;
+  padding: 1rem;
+
   border-left: solid 4px #69a09f;
+  border-bottom: solid 4px #69a09f;
   border-top: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  font-size: 1.8rem;
-  font-weight: bold;
   box-shadow: -1px -1px 0px rgba(255, 255, 255, 0.1) inset;
-
   -moz-transition: all 0.2s ease;
   -webkit-transition: all 0.2s ease;
   transition: all 0.2s ease;
@@ -46,14 +53,15 @@ h2 {
 
 input {
   line-height: 2;
+  height: 5rem;
   padding: 1.5rem;
   border: 1px solid #ccc;
   border-radius: var(--default-border-radius);
   margin-bottom: 1rem;
-  width: 1.8rem;
+  width: 100%;
   box-sizing: border-box;
   color: #150c21;
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 1vw, 1.6rem);
   text-align: center;
 }
 
