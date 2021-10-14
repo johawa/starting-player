@@ -4,13 +4,10 @@ import { GameModal } from "./components/Modal/GameModal";
 import { useEventListener } from "./utils/useEventListener";
 import { CreateGame } from "./Pages/CreateGame";
 import { JoinGame } from "./Pages/JoinGame";
-import { toast } from "react-toastify";
+import { openModalHandler } from "./utils/helpers";
+
 import "./styles/Fonts.css";
 import "react-toastify/dist/ReactToastify.css";
-
-const ESCAPE_KEYS = ["27", "Escape"];
-const X_KEY = ["88", "x"];
-const SLASH_KEY = ["111", "/"];
 
 const MODE = {
   create: "create",
@@ -115,33 +112,16 @@ function App() {
     );
   }
 
-  // Event Listeners
+  // Event Listenersx
   function handler({ key }) {
-    if (ESCAPE_KEYS.includes(String(key)) || X_KEY.includes(String(key).toLowerCase())) {
-      // Open Modal not on LandingPage
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("namespace")) {
+    const callback = (bln) => {
+      if (bln === true) {
         setMode(MODE.menu);
         setModalIsOpen(true);
-        console.log("should openModal");
       }
-    }
+    };
 
-    if (SLASH_KEY.includes(String(key))) {
-      // Open Modal not on LandingPage
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("namespace")) {
-        var link = window.location.href;
-        navigator.clipboard.writeText(link).then(
-          function () {
-            toast("📋 Invitation link copied to Clipboard");
-          },
-          function (err) {
-            toast.error("Something went wrong copying the Invitation Link");
-          }
-        );
-      }
-    }
+    openModalHandler(key, callback);
   }
 
   useEventListener("keydown", handler);
