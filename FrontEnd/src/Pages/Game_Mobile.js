@@ -28,7 +28,9 @@ import "../styles/Looser.css";
 import "../styles/GameEnded.css";
 
 import { useSpring, animated } from "@react-spring/web";
-import { createUseGesture, dragAction, useDrag, useGesture } from "@use-gesture/react";
+import { createUseGesture, dragAction, useDrag } from "@use-gesture/react";
+
+const useGesture = createUseGesture([dragAction]);
 
 const log = console.log;
 
@@ -36,11 +38,29 @@ function GameMobile({ namespace, username }) {
   const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
 
-  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, x: 0, y: 0 });
+  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, MyX: 0, MyY: 0 });
 
-  const touchStart = useGesture({
-    onDrag: (state) => console.log(state),
-  });
+  const [position, api] = useSpring(() => ({
+    x: 0,
+    y: 0,
+  }));
+
+  const ref = React.useRef(null);
+
+  useGesture(
+    {
+      onDragStart: ({ xy: [x, y] }) => handleDragStart(x, y),
+      onDrag: ({ pinching, cancel, offset: [x, y] }) => {
+        if (pinching) return cancel();
+        api.start({ x, y });
+      },
+      onDragEnd: () => handleDragEnd(),
+    },
+    {
+      target: ref,
+      drag: { from: () => [position.x.get(), position.y.get()] },
+    }
+  );
 
   useEffect(() => {
     if (namespace) initiateSocket(namespace, username);
@@ -71,35 +91,46 @@ function GameMobile({ namespace, username }) {
     setActiveUsers(users);
   }
 
-  function handleOnPointerDown(ev) {
-    console.log("on Pointer Down", ev);
-    const newState = { pointerDown: true, x: ev.pageX, y: ev.pageY };
+  function handleDragStart(x, y, state) {
+    console.log(state);
+    const newState = { pointerDown: true, MyX: x, MyY: y };
+    setIsPointerDown(newState);
+  }
+
+  function handleDragEnd() {
+    api.start({ x: 0, y: 0 });
+    const newState = { pointerDown: false, MyX: 0, MyY: 0 };
     setIsPointerDown(newState);
   }
 
   function renderOwnPLayer() {
-    const { pointerDown, x, y } = isPointerDown;
-    console.log(pointerDown, x, y);
-    if (activeUsers && mySocketId && pointerDown === true) {
+    const { pointerDown, MyX, MyY } = isPointerDown;
+    console.log({ position }, MyX, MyY);
+
+    if (activeUsers && mySocketId) {
       const ownUser = activeUsers.filter((user) => user.id === mySocketId);
 
       return (
-        <div className="cursor_wrapper" style={{ top: y, left: x }} key={mySocketId}>
+        <animated.div
+          className="cursor_wrapper"
+          style={{
+            ...position,
+            left: `${MyX - 40}px`,
+            top: `${MyY - 40}px`,
+            visibility: pointerDown ? "visible" : "hidden",
+          }}
+          key={mySocketId}
+        >
           <div style={{ backgroundColor: "red", height: "80px", width: "80px" }}></div>
           {renderName(`(${ownUser[0]?.username}) - It's you `)}
-        </div>
+        </animated.div>
       );
     }
   }
 
   return (
     <>
-      <div
-        {...touchStart()}
-        className="app"
-        onPointerDown={handleOnPointerDown}
-        onPointerCancel={() => console.log("cancel")}
-      >
+      <div className="app" ref={ref}>
         {renderOwnPLayer()}
       </div>
     </>

@@ -39,6 +39,11 @@ body {
 }
 
 .app {
+  cursor: grab;
+  position: absolute;
+  touch-action: none;
+  user-select: none;
+
   position: relative;
   border: 3px solid red;
   box-sizing: border-box;
