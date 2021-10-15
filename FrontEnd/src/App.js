@@ -6,13 +6,10 @@ import { CreateGame } from "./Pages/CreateGame";
 import { JoinGame } from "./Pages/JoinGame";
 import { openModalHandler } from "./utils/helpers";
 import { isBrowser } from "react-device-detect";
-import { useSpring, animated } from "@react-spring/web";
-import { createUseGesture, dragAction } from "@use-gesture/react";
 
 
 import Game_mobile from "./Pages/Game_Mobile";
 
-const useGesture = createUseGesture([dragAction]);
 
 const MODE = {
   create: "create",
@@ -131,40 +128,8 @@ function App() {
 
   useEventListener("keydown", handler);
 
-  useEffect(() => {
-    const handler = (e) => e.preventDefault();
-    document.addEventListener("gesturestart", handler);
-    document.addEventListener("gesturechange", handler);
-    return () => {
-      document.removeEventListener("gesturestart", handler);
-      document.removeEventListener("gesturechange", handler);
-    };
-  }, []);
-
-  const [style, api] = useSpring(() => ({
-    x: 0,
-    y: 0,
-  }));
-  const ref = React.useRef(null);
-
-  useGesture(
-    {
-      // onHover: ({ active, event }) => console.log('hover', event, active),
-      onMove: ({ event }) => console.log("move", event),
-      onDrag: ({ pinching, cancel, offset: [x, y], ...rest }) => {
-        if (pinching) return cancel();
-        api.start({ x, y });
-      },
-    },
-    {
-      target: ref,
-      drag: { from: () => [style.x.get(), style.y.get()] },
-    }
-  );
-
   return (
     <>
-      <animated.div style={style} ref={ref} className="test" />
       {renderContent()}
       {renderModal()}
       {namespace && username && <Game_mobile namespace={namespace} username={username}></Game_mobile>}

@@ -9,14 +9,14 @@ const { User } = require("./utils/models/user");
 const log = console.log;
 
 async function handleJoin(namespaceInstance, socket, data) {
-  const { username } = data;
+  const { username, isMobile } = data;
   if (!namespaceInstance) return;
   let activeUsers = await namespaceInstance?.getActiveUsers();
 
   const uniqueUsername = checkForDuplicateName(username, activeUsers);
   // console.log(`Socket ${socket.id} joining  with name ${uniqueUsername}`);
 
-  const user = new User(socket.id, uniqueUsername);
+  const user = new User(socket.id, uniqueUsername, isMobile);
   socket.data = user;
 
   // Update after adding User

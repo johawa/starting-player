@@ -1,11 +1,12 @@
 import io from "socket.io-client";
 import { toast } from "react-toastify";
+import { isMobile } from "react-device-detect";
 let socket;
 
 export const initiateSocket = (namespace, username) => {
   socket = io(`http://192.168.1.105:5000/${namespace}`);
   //console.log(`Connecting socket...`);
-  if (socket && namespace && username) socket.emit("join", { username });
+  if (socket && namespace && username) socket.emit("join", { username, isMobile });
 };
 
 export const disconnectSocket = () => {
@@ -17,7 +18,7 @@ export const disconnectSocket = () => {
 export const subscribeToNewConnection = (cb) => {
   if (!socket) return true;
   socket.on("emitNewConnection", (msg) => {
-     console.log("Websocket event received! [emitNewConnection]", msg);
+    console.log("Websocket event received! [emitNewConnection]", msg);
     return cb(null, msg);
   });
 };

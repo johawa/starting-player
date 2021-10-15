@@ -27,15 +27,12 @@ import "../styles/Winner.css";
 import "../styles/Looser.css";
 import "../styles/GameEnded.css";
 
-function Game_Mobile({ namespace, username }) {
-  const [timerAnimation, setTimerAnimation] = useState(false);
+import { useSpring, animated } from "@react-spring/web";
+import { createUseGesture, dragAction, useDrag } from "@use-gesture/react";
 
-  const [gameEnded, setGameEnded] = useState(false);
-  const [winnerArray, setWinnerArray] = useState(null);
-
+function GameMobile({ namespace, username }) {
   const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
-  const [playersInterceptingRestartCircle, setPlayersInterceptingRestartCircle] = useState(null);
 
   const cursors = useRef([]);
 
@@ -54,56 +51,10 @@ function Game_Mobile({ namespace, username }) {
       recordActiveUsers(users);
     });
 
-    subscribeToCursorPositionsData((err, cords) => {
-      if (err) return;
-      setCursorPosition(cords);
-    });
-
-    subscribeToUserMouseDown((err, id) => {
-      if (err) return;
-      userIsPressingMouseDown(id);
-    });
-
-    subscribeToUserMouseUp((err, player) => {
-      if (err) return;
-      userIsPressingMouseUp(player);
-    });
-
-    subscribeToAllUserPressingMouseDown((err, boolean) => {
-      if (err) return;
-      allUserPressingMouseDown(boolean);
-    });
-
     return () => {
       disconnectSocket();
     };
   }, []);
-
-  useEffect(() => {
-    // winner
-    subscribeToWinnerArray((err, data) => {
-      if (err) return;
-      processWinners(data);
-    });
-  }, [mySocketId]);
-
-  useEffect(() => {
-    // restart
-    subscribeToUserInterceptRestartGameStart((err, id) => {
-      if (err) return;
-      userIsInterceptingRestartGame(id);
-    });
-
-    subscribeToUserInterceptRestartGameCancel((err, id) => {
-      if (err) return;
-      userIsInterceptingRestartGame(id);
-    });
-
-    subscribeToAllUserInterceptRestartCircle((err, id) => {
-      if (err) return;
-      allUserInterceptRestartCircle();
-    });
-  }, [playersInterceptingRestartCircle, gameEnded]);
 
   // init Functions
   function initiatetOwnUser(id) {
@@ -112,163 +63,16 @@ function Game_Mobile({ namespace, username }) {
 
   function recordActiveUsers(users) {
     setActiveUsers(users);
-    syncInitCursorPositionOfOtherUsers(users);
-  }
-
-  // sync the positions of other players when you join a game
-  function syncInitCursorPositionOfOtherUsers(users) {
-    users.forEach((user) => {
-      if (user.id !== mySocketId) {
-        setCursorPosition(user);
-      }
-    });
-  }
-
-  // Mouse Move
-  function handleMouseMove(ev) {
-    if (mySocketId) {
-      const data = { x: ev.pageX, y: ev.pageY };
-
-      sendCursorPositionData(data); // send to Socket.io
-
-      // restartGame Logic
-      if (gameEnded === true && data.x < 800 && data.y < 800) {
-        sendInterceptRestartGameStart();
-        // console.log("mousePosition", data, "intercept");
-      }
-      if ((gameEnded === true && data.x >= 800) || data.y >= 800) {
-        sendInterceptRestartGameCancel();
-        // console.log("mousePosition", data, "intercept ended");
-      }
-    }
-  }
-  function setCursorPosition(user) {
-    const socketId = user.id;
-    const radius = 80;
-
-    if (socketId && cursors.current[`${socketId}`] && activeUsers) {
-      cursors.current[`${socketId}`].style.top = `+${user.y - radius}px`;
-      cursors.current[`${socketId}`].style.left = `+${user.x - radius}px`;
-    }
-  }
-
-  // Mouse Down
-  function handleMouseDown(ev) {
-    sendUserMouseDown(); // send to Socket.io
-  }
-
-  function userIsPressingMouseDown(user) {
-    if (user.id) {
-      cursors.current[`${user.id}`].firstChild.style.backgroundColor = `${user.clr}`;
-    }
-  }
-
-  // Mouse Up
-  function handleMouseUp(ev) {
-    sendUserMouseUp(); // send to Socket.io
-  }
-
-  function userIsPressingMouseUp(id) {
-    if (id) {
-      cursors.current[`${id}`].firstChild.style.backgroundColor = "transparent";
-    }
-  }
-
-  // Events
-  // All Users Pressing Mouse Down
-
-  function allUserPressingMouseDown(bln) {
-    setTimerAnimation(true);
-
-    if (bln === false) {
-      setTimerAnimation(false);
-    }
-  }
-
-  // Restart Games
-  function userIsInterceptingRestartGame(users) {
-    const amount = users.filter((user) => user.isInterceptiongRestartCircle).length;
-
-    setPlayersInterceptingRestartCircle(amount);
-  }
-
-  function allUserInterceptRestartCircle() {
-    // RestartGame
-    setTimerAnimation(false);
-    setGameEnded(false);
-    setWinnerArray(null);
-    setPlayersInterceptingRestartCircle(null);
-  }
-
-  function processWinners(data) {
-    if (mySocketId) {
-      const winnerArray = data.map((user, index) => {
-        return { id: user.id, position: index };
-      });
-      setWinnerArray(winnerArray);
-      setGameEnded(true);
-    }
-  }
-
-  function renderCursorState(id) {
-    if (gameEnded === true && winnerArray) {
-      const userWithPosition = winnerArray.filter((user) => user.id === id);
-      const position = userWithPosition[0] ? userWithPosition[0].position + 1 : null;
-
-      if (position && position === 1) {
-        return (
-          <>
-            <div className="info_winner">🥇</div>
-            <div className="cursor winner">
-              <WinnerCircle></WinnerCircle>
-            </div>
-          </>
-        );
-      } else if (position && position !== 1) {
-        return (
-          <>
-            <div className="info_looser">{position}</div>
-            <div className="cursor looser">
-              <LooserCircle finalRank={position}></LooserCircle>
-            </div>
-          </>
-        );
-      }
-    } else if (gameEnded === false && !winnerArray) {
-      return (
-        <div className="cursor">
-          <div className={timerAnimation ? "point_1 animationRev" : "point_1"}></div>
-          <div className={timerAnimation ? "point_2 animation" : "point_2"}></div>
-        </div>
-      );
-    }
-  }
-
-  function renderOtherPlayers() {
-    if (activeUsers && mySocketId) {
-      const otherUsers = activeUsers.filter((user) => user.id !== mySocketId);
-
-      return otherUsers.map((user) => {
-        return (
-          <div
-            ref={(element) => {
-              cursors.current[`${user.id}`] = element;
-            }}
-            className="cursor_wrapper"
-            key={user.id}
-          >
-            {renderCursorState(user.id)}
-            {renderName(user.username)}
-          </div>
-        );
-      });
-    }
   }
 
   function renderOwnPLayer() {
     if (activeUsers && mySocketId) {
       const ownUser = activeUsers.filter((user) => user.id === mySocketId);
+      console.log({ ownUser });
 
+      /*   if (ownUser[0]?.isMobile === true) {
+        return <animated.div {...bind()} style={{ x, y }} className="test" />;
+      } */
       return (
         <div
           ref={(element) => {
@@ -277,38 +81,25 @@ function Game_Mobile({ namespace, username }) {
           className="cursor_wrapper"
           key={mySocketId}
         >
-          {renderCursorState(mySocketId)}
-          {renderName(`(${ownUser[0]?.username}) - It's you`)}
+          <div style={{ backgroundColor: "red", height: "80px", width: "80px" }}></div>
+          {renderName(`(${ownUser[0]?.username}) - It's you `)}
         </div>
       );
     }
   }
 
-  function renderGameEnded() {
-    return (
-      <div className="gameEnded">
-        <h3>Game Ended, come here to restart 🎉</h3>
-        <p>
-          {playersInterceptingRestartCircle ? playersInterceptingRestartCircle : 0}/{activeUsers.length}
-        </p>
-      </div>
-    );
-  }
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
+  const bind = useDrag(({ offset: [x, y], down }) => api.start({ x, y }, console.log("down", down)));
+
+  const touchStart = useDrag((state) => console.log("down", state.offset));
 
   return (
     <>
-      <div
-        className="app"
-        onMouseMove={(ev) => handleMouseMove(ev)}
-        onMouseDown={(ev) => handleMouseDown(ev)}
-        onMouseUp={(ev) => handleMouseUp(ev)}
-      >
-        {gameEnded && renderGameEnded()}
+      <animated.div {...touchStart()} className="app">
         {renderOwnPLayer()}
-        {renderOtherPlayers()}
-      </div>
+      </animated.div>
     </>
   );
 }
 
-export default Game_Mobile;
+export default GameMobile;
