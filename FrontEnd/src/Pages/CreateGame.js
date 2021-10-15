@@ -1,7 +1,7 @@
 import React from "react";
 import { BackgroundWrapper, BackgroundWrapper_Mobile } from "../components/Wrapper/BackgroundWrapper";
 import { v4 as uuidv4 } from "uuid";
-import { BrowserView, MobileView, isBrowser, isMobile } from "react-device-detect";
+import { isBrowser } from "react-device-detect";
 
 const namespace = uuidv4();
 
