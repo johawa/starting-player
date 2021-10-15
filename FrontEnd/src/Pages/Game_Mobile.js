@@ -28,13 +28,19 @@ import "../styles/Looser.css";
 import "../styles/GameEnded.css";
 
 import { useSpring, animated } from "@react-spring/web";
-import { createUseGesture, dragAction, useDrag } from "@use-gesture/react";
+import { createUseGesture, dragAction, useDrag, useGesture } from "@use-gesture/react";
+
+const log = console.log;
 
 function GameMobile({ namespace, username }) {
   const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
 
-  const cursors = useRef([]);
+  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, x: 0, y: 0 });
+
+  const touchStart = useGesture({
+    onDrag: (state) => console.log(state),
+  });
 
   useEffect(() => {
     if (namespace) initiateSocket(namespace, username);
@@ -65,22 +71,20 @@ function GameMobile({ namespace, username }) {
     setActiveUsers(users);
   }
 
-  function renderOwnPLayer() {
-    if (activeUsers && mySocketId) {
-      const ownUser = activeUsers.filter((user) => user.id === mySocketId);
-      console.log({ ownUser });
+  function handleOnPointerDown(ev) {
+    console.log("on Pointer Down", ev);
+    const newState = { pointerDown: true, x: ev.pageX, y: ev.pageY };
+    setIsPointerDown(newState);
+  }
 
-      /*   if (ownUser[0]?.isMobile === true) {
-        return <animated.div {...bind()} style={{ x, y }} className="test" />;
-      } */
+  function renderOwnPLayer() {
+    const { pointerDown, x, y } = isPointerDown;
+    console.log(pointerDown, x, y);
+    if (activeUsers && mySocketId && pointerDown === true) {
+      const ownUser = activeUsers.filter((user) => user.id === mySocketId);
+
       return (
-        <div
-          ref={(element) => {
-            cursors.current[`${mySocketId}`] = element;
-          }}
-          className="cursor_wrapper"
-          key={mySocketId}
-        >
+        <div className="cursor_wrapper" style={{ top: y, left: x }} key={mySocketId}>
           <div style={{ backgroundColor: "red", height: "80px", width: "80px" }}></div>
           {renderName(`(${ownUser[0]?.username}) - It's you `)}
         </div>
@@ -88,16 +92,16 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
-  const bind = useDrag(({ offset: [x, y], down }) => api.start({ x, y }, console.log("down", down)));
-
-  const touchStart = useDrag((state) => console.log("down", state.offset));
-
   return (
     <>
-      <animated.div {...touchStart()} className="app">
+      <div
+        {...touchStart()}
+        className="app"
+        onPointerDown={handleOnPointerDown}
+        onPointerCancel={() => console.log("cancel")}
+      >
         {renderOwnPLayer()}
-      </animated.div>
+      </div>
     </>
   );
 }
