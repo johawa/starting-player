@@ -38,11 +38,12 @@ function GameMobile({ namespace, username }) {
   const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
 
-  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, MyX: 0, MyY: 0 });
+  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, PointerX: 0, PointerY: 0 });
 
   const [position, api] = useSpring(() => ({
     x: 0,
     y: 0,
+    config: { tension: 300 },
   }));
 
   const ref = React.useRef(null);
@@ -93,30 +94,28 @@ function GameMobile({ namespace, username }) {
 
   function handleDragStart(x, y, state) {
     console.log(state);
-    const newState = { pointerDown: true, MyX: x, MyY: y };
+    const newState = { pointerDown: true, PointerX: x, PointerY: y };
     setIsPointerDown(newState);
   }
 
   function handleDragEnd() {
     api.start({ x: 0, y: 0 });
-    const newState = { pointerDown: false, MyX: 0, MyY: 0 };
+    const newState = { pointerDown: false, PointerX: 0, PointerY: 0 };
     setIsPointerDown(newState);
   }
 
   function renderOwnPLayer() {
-    const { pointerDown, MyX, MyY } = isPointerDown;
-    console.log({ position }, MyX, MyY);
+    const { pointerDown, PointerX, PointerY } = isPointerDown;
 
     if (activeUsers && mySocketId) {
       const ownUser = activeUsers.filter((user) => user.id === mySocketId);
-
       return (
         <animated.div
           className="cursor_wrapper"
           style={{
             ...position,
-            left: `${MyX - 40}px`,
-            top: `${MyY - 40}px`,
+            left: `${PointerX - 40}px`,
+            top: `${PointerY - 40}px`,
             visibility: pointerDown ? "visible" : "hidden",
           }}
           key={mySocketId}

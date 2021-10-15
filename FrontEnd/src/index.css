@@ -19,8 +19,15 @@
   box-sizing: border-box;
 }
 
+html,
 body {
-  position: absolute;
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+  overflow: hidden;
+}
+
+body {
+  position: fixed;
   height: 100%;
   min-height: 100%;
   width: 100%;
