@@ -70,6 +70,9 @@ body {
   .app {
     border: 3px solid magenta;
   }
+  .Toastify__toast-body div:nth-child(2) {
+    font-size: 0.9rem;
+  }
 }
 
 /* Ipdas */
@@ -81,6 +84,9 @@ body {
   .app {
     border: 3px solid aqua;
   }
+  .Toastify__toast-body div:nth-child(2) {
+    font-size: 0.9rem;
+  }
 }
 
 /* Laptops */
@@ -91,6 +97,9 @@ body {
 
   .app {
     border: 3px solid yellow;
+  }
+  .Toastify__toast-body div:nth-child(2) {
+    font-size: 0.9rem;
   }
 }
 /* 

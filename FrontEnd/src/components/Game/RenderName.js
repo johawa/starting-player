@@ -1,3 +1,7 @@
-export function renderName(name) {
-    return <p>{name}</p>;
-  }
+export function renderName(name, isMobile) {
+  return (
+    <p>
+      {isMobile ? "📱" : null} {name}
+    </p>
+  );
+}

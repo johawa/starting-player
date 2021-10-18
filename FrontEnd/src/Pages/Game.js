@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
-import { WinnerCircle } from "../components/Game/WinnerCircle";
-import { LooserCircle } from "../components/Game/LooserCircle";
+import RenderCursorWithState from "../components/Game/Cursor/RenderCursorWithState";
+import { WinnerCircle } from "../components/Game/Cursor/WinnerCircle";
+import { LooserCircle } from "../components/Game/Cursor/LooserCircle";
 import { renderName } from "../components/Game/RenderName";
 import {
   initiateSocket,
@@ -27,6 +28,7 @@ import "../styles/Game.css";
 import "../styles/Winner.css";
 import "../styles/Looser.css";
 import "../styles/GameEnded.css";
+import renderCursorWithState from "../components/Game/Cursor/RenderCursorWithState";
 
 function Game({ namespace, username }) {
   const [timerAnimation, setTimerAnimation] = useState(false);
@@ -258,7 +260,7 @@ function Game({ namespace, username }) {
             key={user.id}
           >
             {renderCursorState(user.id)}
-            {renderName(user.username)}
+            {renderName(user.username, user.isMobile)}
           </div>
         );
       });
@@ -278,7 +280,7 @@ function Game({ namespace, username }) {
           key={mySocketId}
         >
           {renderCursorState(mySocketId)}
-          {renderName(`(${ownUser[0]?.username}) - It's you`)}
+          {renderName(`(${ownUser[0]?.username}) - It's you`, null)}
         </div>
       );
     }

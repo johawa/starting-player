@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import { WinnerCircle } from "../components/Game/WinnerCircle";
-import { LooserCircle } from "../components/Game/LooserCircle";
+import { WinnerCircle } from "../components/Game/Cursor/WinnerCircle";
+import { LooserCircle } from "../components/Game/Cursor/LooserCircle";
 import { renderName } from "../components/Game/RenderName";
 import {
   initiateSocket,
@@ -59,9 +59,10 @@ function GameMobile({ namespace, username }) {
   useGesture(
     {
       onDragStart: ({ xy: [x, y] }) => handleDragStart(x, y),
-      onDrag: ({ pinching, cancel, offset: [x, y] }) => {
+      onDrag: ({ pinching, cancel, offset: [x, y] }, state) => {
         if (pinching) return cancel();
         api.start({ x, y });
+        handleOnDrag(x, y, state);
       },
       onDragEnd: () => handleDragEnd(),
     },
@@ -86,6 +87,26 @@ function GameMobile({ namespace, username }) {
       recordActiveUsers(users);
     });
 
+    subscribeToCursorPositionsData((err, cords) => {
+      if (err) return;
+      setCursorPosition(cords);
+    });
+
+    subscribeToUserMouseDown((err, id) => {
+      if (err) return;
+      userIsPressingMouseDown(id);
+    });
+
+    subscribeToUserMouseUp((err, player) => {
+      if (err) return;
+      userIsPressingMouseUp(player);
+    });
+
+    subscribeToAllUserPressingMouseDown((err, boolean) => {
+      if (err) return;
+      allUserPressingMouseDown(boolean);
+    });
+
     return () => {
       disconnectSocket();
     };
@@ -100,16 +121,68 @@ function GameMobile({ namespace, username }) {
     setActiveUsers(users);
   }
 
+  function setCursorPosition(user) {
+    const socketId = user.id;
+    const radius = 80;
+
+    if (socketId && cursors.current[`${socketId}`] && activeUsers) {
+      cursors.current[`${socketId}`].style.top = `+${user.y - radius}px`;
+      cursors.current[`${socketId}`].style.left = `+${user.x - radius}px`;
+    }
+  }
+
   function handleDragStart(x, y, state) {
     console.log(state);
     const newState = { pointerDown: true, PointerX: x, PointerY: y };
     setIsPointerDown(newState);
   }
 
+  function handleOnDrag(x, y, state) {
+    console.log("onDrag", state);
+    if (mySocketId) {
+      const data = { x, y };
+
+      sendCursorPositionData(data); // send to Socket.io
+
+      // restartGame Logic
+      if (gameEnded === true && data.x < 800 && data.y < 800) {
+        sendInterceptRestartGameStart();
+        // console.log("mousePosition", data, "intercept");
+      }
+      if ((gameEnded === true && data.x >= 800) || data.y >= 800) {
+        sendInterceptRestartGameCancel();
+        // console.log("mousePosition", data, "intercept ended");
+      }
+    }
+  }
+
   function handleDragEnd() {
     api.start({ x: 0, y: 0 });
     const newState = { pointerDown: false, PointerX: 0, PointerY: 0 };
     setIsPointerDown(newState);
+  }
+
+  function userIsPressingMouseDown(user) {
+    if (user.id) {
+      cursors.current[`${user.id}`].firstChild.style.backgroundColor = `${user.clr}`;
+    }
+  }
+
+  function userIsPressingMouseUp(id) {
+    if (id) {
+      cursors.current[`${id}`].firstChild.style.backgroundColor = "transparent";
+    }
+  }
+
+  // Events
+  // All Users Pressing Mouse Down
+
+  function allUserPressingMouseDown(bln) {
+    setTimerAnimation(true);
+
+    if (bln === false) {
+      setTimerAnimation(false);
+    }
   }
 
   function renderCursorState(id) {
@@ -160,7 +233,7 @@ function GameMobile({ namespace, username }) {
             key={user.id}
           >
             {renderCursorState(user.id)}
-            {renderName(user.username)}
+            {renderName(user.username, user.isMobile)}
           </div>
         );
       });
