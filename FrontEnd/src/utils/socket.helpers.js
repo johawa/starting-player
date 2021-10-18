@@ -74,7 +74,7 @@ export const sendUserMouseDown = () => {
 export const subscribeToUserMouseDown = (cb) => {
   if (!socket) return true;
   socket.on("emituserPressedMouse", (msg) => {
-    console.log("Websocket event received! [emituserPressedMouse]", msg);
+    // console.log("Websocket event received! [emituserPressedMouse]", msg);
     return cb(null, msg);
   });
 };

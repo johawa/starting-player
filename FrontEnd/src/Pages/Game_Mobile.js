@@ -31,6 +31,7 @@ import "../styles/Game_Mobile.css";
 
 import { useSpring, animated } from "@react-spring/web";
 import { createUseGesture, dragAction, useDrag } from "@use-gesture/react";
+import { isMobile } from "react-device-detect";
 
 const useGesture = createUseGesture([dragAction]);
 
@@ -43,6 +44,7 @@ function GameMobile({ namespace, username }) {
 
   const [activeUsers, setActiveUsers] = useState([]);
   const [mySocketId, setMySocketId] = useState(null);
+  const [playersInterceptingRestartCircle, setPlayersInterceptingRestartCircle] = useState(null);
 
   const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, PointerX: 0, PointerY: 0 });
 
@@ -87,11 +89,11 @@ function GameMobile({ namespace, username }) {
       recordActiveUsers(users);
     });
 
-    subscribeToCursorPositionsData((err, cords) => {
+    /*   subscribeToCursorPositionsData((err, cords) => {
       if (err) return;
       setCursorPosition(cords);
     });
-
+ */
     subscribeToUserMouseDown((err, id) => {
       if (err) return;
       userIsPressingMouseDown(id);
@@ -112,6 +114,36 @@ function GameMobile({ namespace, username }) {
     };
   }, []);
 
+  useEffect(() => {
+    subscribeToCursorPositionsData((err, cords) => {
+      if (err) return;
+      setCursorPosition(cords);
+    });
+    // winner
+    subscribeToWinnerArray((err, data) => {
+      if (err) return;
+      processWinners(data);
+    });
+  }, [mySocketId]);
+
+  useEffect(() => {
+    // restart
+    subscribeToUserInterceptRestartGameStart((err, id) => {
+      if (err) return;
+      userIsInterceptingRestartGame(id);
+    });
+
+    subscribeToUserInterceptRestartGameCancel((err, id) => {
+      if (err) return;
+      userIsInterceptingRestartGame(id);
+    });
+
+    subscribeToAllUserInterceptRestartCircle((err, id) => {
+      if (err) return;
+      allUserInterceptRestartCircle();
+    });
+  }, [playersInterceptingRestartCircle, gameEnded]);
+
   // init Functions
   function initiatetOwnUser(id) {
     setMySocketId(id);
@@ -123,9 +155,10 @@ function GameMobile({ namespace, username }) {
 
   function setCursorPosition(user) {
     const socketId = user.id;
-    const radius = 80;
+    const radius = 40;
+    console.log(user.id, mySocketId);
 
-    if (socketId && cursors.current[`${socketId}`] && activeUsers) {
+    if (socketId && cursors.current[`${socketId}`] && activeUsers && user.id !== mySocketId) {
       cursors.current[`${socketId}`].style.top = `+${user.y}%`;
       cursors.current[`${socketId}`].style.left = `+${user.x}%`;
       // center cursor
@@ -137,6 +170,8 @@ function GameMobile({ namespace, username }) {
     console.log(state);
     const newState = { pointerDown: true, PointerX: x, PointerY: y };
     setIsPointerDown(newState);
+
+    sendUserMouseDown(); // send to Socket.io
   }
 
   function handleOnDrag(state) {
@@ -144,7 +179,6 @@ function GameMobile({ namespace, username }) {
       const percentageX = (state.xy[0] / window.screen.width) * 100;
       const percentageY = (state.xy[1] / window.screen.height) * 100;
       const data = { x: percentageX, y: percentageY };
-      console.log("onDrag", percentageX, percentageY);
 
       sendCursorPositionData(data); // send to Socket.io
 
@@ -164,6 +198,8 @@ function GameMobile({ namespace, username }) {
     api.start({ x: 0, y: 0 });
     const newState = { pointerDown: false, PointerX: 0, PointerY: 0 };
     setIsPointerDown(newState);
+
+    sendUserMouseUp(); // send to Socket.io
   }
 
   function userIsPressingMouseDown(user) {
@@ -189,7 +225,7 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function renderCursorState(id) {
+  function renderCursorState(id, mobile) {
     if (gameEnded === true && winnerArray) {
       const userWithPosition = winnerArray.filter((user) => user.id === id);
       const position = userWithPosition[0] ? userWithPosition[0].position + 1 : null;
@@ -223,6 +259,38 @@ function GameMobile({ namespace, username }) {
     }
   }
 
+  function userIsInterceptingRestartGame(users) {
+    const amount = users.filter((user) => user.isInterceptiongRestartCircle).length;
+
+    setPlayersInterceptingRestartCircle(amount);
+  }
+
+  function allUserPressingMouseDown(bln) {
+    setTimerAnimation(true);
+
+    if (bln === false) {
+      setTimerAnimation(false);
+    }
+  }
+
+  function allUserInterceptRestartCircle() {
+    // RestartGame
+    setTimerAnimation(false);
+    setGameEnded(false);
+    setWinnerArray(null);
+    setPlayersInterceptingRestartCircle(null);
+  }
+
+  function processWinners(data) {
+    if (mySocketId) {
+      const winnerArray = data.map((user, index) => {
+        return { id: user.id, position: index };
+      });
+      setWinnerArray(winnerArray);
+      setGameEnded(true);
+    }
+  }
+
   function renderOtherPlayers() {
     if (activeUsers && mySocketId) {
       const otherUsers = activeUsers.filter((user) => user.id !== mySocketId);
@@ -249,9 +317,13 @@ function GameMobile({ namespace, username }) {
 
     if (activeUsers && mySocketId) {
       const ownUser = activeUsers.filter((user) => user.id === mySocketId);
+
       return (
         <animated.div
           className="cursor_wrapper"
+          ref={(element) => {
+            cursors.current[`${mySocketId}`] = element;
+          }}
           style={{
             ...position,
             left: `${PointerX - 45}px`, // width (90px)/ 2
@@ -260,16 +332,29 @@ function GameMobile({ namespace, username }) {
           }}
           key={mySocketId}
         >
-          <div className="cursor_mobile"></div>
+          {/*      <div className="cursor_mobile"></div> */}
+          {renderCursorState(mySocketId, true)}
           {renderName(`(${ownUser[0]?.username}📱) - It's you `)}
         </animated.div>
       );
     }
   }
 
+  function renderGameEnded() {
+    return (
+      <div className="gameEnded">
+        <h3>Game Ended, come here to restart 🎉</h3>
+        <p>
+          {playersInterceptingRestartCircle ? playersInterceptingRestartCircle : 0}/{activeUsers.length}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="app" ref={ref}>
+        {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>
