@@ -59,12 +59,12 @@ function GameMobile({ namespace, username }) {
 
   useGesture(
     {
-      onDragStart: ({ xy: [x, y] }) => handleDragStart(x, y),
+      onDragStart: () => handleDragStart(),
       onDrag: ({ pinching, cancel, offset: [x, y], ...state }) => {
         if (pinching) return cancel();
         handleOnDrag(state, x, y);
       },
-      onDragEnd: ({ offset: [x, y] }) => handleDragEnd(x, y),
+      onDragEnd: () => handleDragEnd(),
     },
     {
       target: ref,
@@ -161,19 +161,10 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function handleDragStart(x, y, state) {
-    if (!gameEnded) {
-      setIsPointerDown(true);
-      sendUserMouseDown(); // send to Socket.io
-    }
-  }
-
   function handleOnDrag(state, x, y) {
     const percentageX = (state.xy[0] / window.screen.width) * 100;
     const percentageY = (state.xy[1] / window.screen.height) * 100;
     const data = { x: percentageX, y: percentageY };
-
-    console.log(state.xy[0], state.xy[1], x, y);
 
     api.start({ x, y });
 
@@ -181,7 +172,6 @@ function GameMobile({ namespace, username }) {
       sendCursorPositionData(data); // send to Socket.io
     }
 
-    console.log("onDrag", data);
     // restartGame Logic
     if (gameEnded === true && data.x < 30 && data.y <= 30) {
       sendInterceptRestartGameStart();
@@ -193,11 +183,14 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function handleDragEnd(x, y) {
-    /*     api.start({ x: x, y: y });
-    const newState = { pointerDown: false, PointerX: isPointerDown.x, PointerY: isPointerDown.y };
-    setIsPointerDown(newState); */
+  function handleDragStart(x, y, state) {
+    if (!gameEnded) {
+      setIsPointerDown(true);
+      sendUserMouseDown(); // send to Socket.io
+    }
+  }
 
+  function handleDragEnd() {
     if (!gameEnded) {
       setIsPointerDown(false);
       sendUserMouseUp();
@@ -205,15 +198,15 @@ function GameMobile({ namespace, username }) {
   }
 
   function userIsPressingMouseDown(user) {
-    /*  if (user.id) {
+    if (user.id) {
       cursors.current[`${user.id}`].firstChild.style.backgroundColor = `${user.clr}`;
-    } */
+    }
   }
 
   function userIsPressingMouseUp(id) {
-    /*   if (id) {
+    if (id) {
       cursors.current[`${id}`].firstChild.style.backgroundColor = "transparent";
-    } */
+    }
   }
 
   // Events
@@ -317,38 +310,26 @@ function GameMobile({ namespace, username }) {
   }
 
   function renderOwnPLayer() {
-    /*     if (activeUsers && mySocketId) { */
-    const ownUser = activeUsers?.filter((user) => user.id === mySocketId);
+    if (activeUsers && mySocketId) {
+      const ownUser = activeUsers?.filter((user) => user.id === mySocketId);
 
-/*     const percentageX = (position.x.get() / window.screen.width) * 100;
-    const percentageY = (position.y.get() / window.screen.height) * 100; */
-
-    /*     console.log("renderOwnPLayer", percentageX, percentageY); */
-
-    return (
-      <animated.div
-        className="cursor_wrapper"
-        ref={(element) => {
-          cursors.current[`${mySocketId}`] = element;
-        }}
-        /*  onPointerDown={handleDragStart}
-        onPointerUp={handleDragEnd} */
-
-        key={mySocketId}
-        style={{
-          ...position,
-         /*  left: `${percentageX}%`, // width (90px)/ 2
-          top: `${percentageY}%`, // height (90px)/ 2 */
-          /*  visibility: pointerDown || gameEnded ? "visible" : "hidden", */
-        }}
-        /*     key={mySocketId} */
-      >
-        {/*      <div className="cursor_mobile"></div> */}
-        {renderCursorState(mySocketId, true)}
-        {renderName(`(${ownUser[0]?.username}📱) - It's you `)}
-      </animated.div>
-    );
-    /*   } */
+      return (
+        <animated.div
+          className="cursor_wrapper"
+          ref={(element) => {
+            cursors.current[`${mySocketId}`] = element;
+          }}
+          key={mySocketId}
+          style={{
+            ...position,
+          }}
+          key={mySocketId}
+        >
+          {renderCursorState(mySocketId, true)}
+          {renderName(`(${ownUser[0]?.username}📱) - It's you `)}
+        </animated.div>
+      );
+    }
   }
 
   function renderGameEnded() {
