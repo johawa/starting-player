@@ -2,8 +2,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 800px;
-  height: 800px;
+  width: 25vw;
+  height: 25vw;
   background-color: goldenrod;
   display: flex;
   flex-direction: column;

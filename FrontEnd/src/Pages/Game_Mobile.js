@@ -66,7 +66,7 @@ function GameMobile({ namespace, username }) {
         api.start({ x, y });
         handleOnDrag(state);
       },
-      onDragEnd: () => handleDragEnd(),
+      onDragEnd: ({ offset: [x, y] }) => handleDragEnd(x, y),
     },
     {
       target: ref,
@@ -89,11 +89,6 @@ function GameMobile({ namespace, username }) {
       recordActiveUsers(users);
     });
 
-    /*   subscribeToCursorPositionsData((err, cords) => {
-      if (err) return;
-      setCursorPosition(cords);
-    });
- */
     subscribeToUserMouseDown((err, id) => {
       if (err) return;
       userIsPressingMouseDown(id);
@@ -115,10 +110,10 @@ function GameMobile({ namespace, username }) {
   }, []);
 
   useEffect(() => {
-    subscribeToCursorPositionsData((err, cords) => {
+    /*   subscribeToCursorPositionsData((err, cords) => {
       if (err) return;
       setCursorPosition(cords);
-    });
+    }); */
     // winner
     subscribeToWinnerArray((err, data) => {
       if (err) return;
@@ -183,20 +178,20 @@ function GameMobile({ namespace, username }) {
       sendCursorPositionData(data); // send to Socket.io
 
       // restartGame Logic
-      if (gameEnded === true && data.x < 800 && data.y < 800) {
+      if (gameEnded === true && data.x < 25 && data.y < 25) {
         sendInterceptRestartGameStart();
         // console.log("mousePosition", data, "intercept");
       }
-      if ((gameEnded === true && data.x >= 800) || data.y >= 800) {
+      if ((gameEnded === true && data.x >= 25) || data.y >= 25) {
         sendInterceptRestartGameCancel();
         // console.log("mousePosition", data, "intercept ended");
       }
     }
   }
 
-  function handleDragEnd() {
-    api.start({ x: 0, y: 0 });
-    const newState = { pointerDown: false, PointerX: 0, PointerY: 0 };
+  function handleDragEnd(x, y) {
+    /*     api.start({ x: x, y: y }); */
+    const newState = { pointerDown: false, PointerX: isPointerDown.x, PointerY: isPointerDown.y };
     setIsPointerDown(newState);
 
     sendUserMouseUp(); // send to Socket.io
@@ -328,7 +323,7 @@ function GameMobile({ namespace, username }) {
             ...position,
             left: `${PointerX - 45}px`, // width (90px)/ 2
             top: `${PointerY - 45}px`, // height (90px)/ 2
-            visibility: pointerDown ? "visible" : "hidden",
+            /*  visibility: pointerDown || gameEnded ? "visible" : "hidden", */
           }}
           key={mySocketId}
         >

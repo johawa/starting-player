@@ -56,7 +56,7 @@ async function handleUserPressedMouse(namespaceInstance, socket) {
   if (Object.keys(socket.data).length === 0) return;
 
   socket.data.setPressingMouseDown(true);
-  console.log(socket.data);
+
   namespaceInstance?.connection.emit("emituserPressedMouse", socket.data);
   const activeUsers = await namespaceInstance?.getActiveUsers();
 

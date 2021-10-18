@@ -137,11 +137,11 @@ function Game({ namespace, username }) {
       sendCursorPositionData(data); // send to Socket.io
 
       // restartGame Logic
-      if (gameEnded === true && data.x < 800 && data.y < 800) {
+      if (gameEnded === true && data.x < 25 && data.y < 25) {
         sendInterceptRestartGameStart();
         // console.log("mousePosition", data, "intercept");
       }
-      if ((gameEnded === true && data.x >= 800) || data.y >= 800) {
+      if ((gameEnded === true && data.x >= 25) || data.y >= 25) {
         sendInterceptRestartGameCancel();
         // console.log("mousePosition", data, "intercept ended");
       }
