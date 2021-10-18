@@ -126,8 +126,10 @@ function GameMobile({ namespace, username }) {
     const radius = 80;
 
     if (socketId && cursors.current[`${socketId}`] && activeUsers) {
-      cursors.current[`${socketId}`].style.top = `+${user.y - radius}px`;
-      cursors.current[`${socketId}`].style.left = `+${user.x - radius}px`;
+      cursors.current[`${socketId}`].style.top = `+${user.y}%`;
+      cursors.current[`${socketId}`].style.left = `+${user.x}%`;
+      // center cursor
+      cursors.current[`${socketId}`].style.transform = `translate(-${radius}px, -${radius}px)`;
     }
   }
 
@@ -138,9 +140,11 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleOnDrag(x, y, state) {
-    console.log("onDrag", x, y, state);
     if (mySocketId) {
-      const data = { x: state.xy[0], y: state.xy[1] };
+      const percentageX = (state.xy[0] / window.screen.width) * 100;
+      const percentageY = (state.xy[1] / window.screen.height) * 100;
+      const data = { x: percentageX, y: percentageY };
+      console.log("onDrag", percentageX, percentageY);
 
       sendCursorPositionData(data); // send to Socket.io
 

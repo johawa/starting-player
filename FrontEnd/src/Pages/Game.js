@@ -129,7 +129,10 @@ function Game({ namespace, username }) {
   // Mouse Move
   function handleMouseMove(ev) {
     if (mySocketId) {
-      const data = { x: ev.pageX, y: ev.pageY };
+      const percentageX = (ev.pageX / window.visualViewport.width) * 100;
+      const percentageY = (ev.pageY / window.visualViewport.height) * 100;
+      const data = { x: percentageX, y: percentageY };
+      console.log("handleMouseMove", percentageX, percentageY);
 
       sendCursorPositionData(data); // send to Socket.io
 
@@ -146,11 +149,13 @@ function Game({ namespace, username }) {
   }
   function setCursorPosition(user) {
     const socketId = user.id;
-    const radius = 80;
+    const radius = 90;
 
     if (socketId && cursors.current[`${socketId}`] && activeUsers) {
-      cursors.current[`${socketId}`].style.top = `+${user.y - radius}px`;
-      cursors.current[`${socketId}`].style.left = `+${user.x - radius}px`;
+      cursors.current[`${socketId}`].style.top = `+${user.y}%`;
+      cursors.current[`${socketId}`].style.left = `+${user.x}%`;
+      // center cursor
+      cursors.current[`${socketId}`].style.transform = `translate(-${radius}px, -${radius}px)`;
     }
   }
 
