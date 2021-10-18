@@ -46,7 +46,7 @@ function GameMobile({ namespace, username }) {
   const [mySocketId, setMySocketId] = useState(null);
   const [playersInterceptingRestartCircle, setPlayersInterceptingRestartCircle] = useState(null);
 
-  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, PointerX: 0, PointerY: 0 });
+  const [isPointerDown, setIsPointerDown] = useState(false);
 
   const [position, api] = useSpring(() => ({
     x: 0,
@@ -168,6 +168,7 @@ function GameMobile({ namespace, username }) {
     /*  const newState = { pointerDown: true, PointerX: x, PointerY: y };
     setIsPointerDown(newState);
  */
+    setIsPointerDown(true);
     sendUserMouseDown(); // send to Socket.io
   }
 
@@ -195,7 +196,7 @@ function GameMobile({ namespace, username }) {
     /*     api.start({ x: x, y: y }); */
     /*    const newState = { pointerDown: false, PointerX: isPointerDown.x, PointerY: isPointerDown.y };
     setIsPointerDown(newState); */
-
+    setIsPointerDown(false);
     sendUserMouseUp(); // send to Socket.io
   }
 
@@ -222,7 +223,7 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function renderCursorState(id, mobile) {
+  function renderCursorState(id, mobileAndOwn) {
     if (gameEnded === true && winnerArray) {
       const userWithPosition = winnerArray.filter((user) => user.id === id);
       const position = userWithPosition[0] ? userWithPosition[0].position + 1 : null;
@@ -231,7 +232,7 @@ function GameMobile({ namespace, username }) {
         return (
           <>
             <div className="info_winner">🥇</div>
-            <div className="cursor winner">
+            <div className={`cursor winner`}>
               <WinnerCircle></WinnerCircle>
             </div>
           </>
@@ -240,7 +241,7 @@ function GameMobile({ namespace, username }) {
         return (
           <>
             <div className="info_looser">{position}</div>
-            <div className="cursor looser">
+            <div className={`cursor looser`}>
               <LooserCircle finalRank={position}></LooserCircle>
             </div>
           </>
@@ -248,7 +249,7 @@ function GameMobile({ namespace, username }) {
       }
     } else if (gameEnded === false && !winnerArray) {
       return (
-        <div className="cursor">
+        <div className={`cursor ${mobileAndOwn ? "ownPlayer" : null}`}>
           <div className={timerAnimation ? "point_1 animationRev" : "point_1"}></div>
           <div className={timerAnimation ? "point_2 animation" : "point_2"}></div>
         </div>
@@ -310,14 +311,12 @@ function GameMobile({ namespace, username }) {
   }
 
   function renderOwnPLayer() {
-    const { pointerDown, PointerX, PointerY } = isPointerDown;
-
     if (activeUsers && mySocketId) {
       const ownUser = activeUsers.filter((user) => user.id === mySocketId);
 
       return (
         <animated.div
-          className="cursor_wrapper ownPlayer"
+          className="cursor_wrapper"
           ref={(element) => {
             cursors.current[`${mySocketId}`] = element;
           }}
