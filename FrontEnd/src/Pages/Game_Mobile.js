@@ -46,7 +46,7 @@ function GameMobile({ namespace, username }) {
   const [mySocketId, setMySocketId] = useState(null);
   const [playersInterceptingRestartCircle, setPlayersInterceptingRestartCircle] = useState(null);
 
-  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, x: 0, y: 0 });
+  const [isPointerDown, setIsPointerDown] = useState(false);
 
   const [position, api] = useSpring(() => ({
     x: 0,
@@ -320,8 +320,8 @@ function GameMobile({ namespace, username }) {
     /*     if (activeUsers && mySocketId) { */
     const ownUser = activeUsers?.filter((user) => user.id === mySocketId);
 
-    const percentageX = (position.x.get() / window.screen.width) * 100;
-    const percentageY = (position.y.get() / window.screen.height) * 100;
+/*     const percentageX = (position.x.get() / window.screen.width) * 100;
+    const percentageY = (position.y.get() / window.screen.height) * 100; */
 
     /*     console.log("renderOwnPLayer", percentageX, percentageY); */
 
@@ -337,8 +337,8 @@ function GameMobile({ namespace, username }) {
         key={mySocketId}
         style={{
           ...position,
-          left: `${percentageX}%`, // width (90px)/ 2
-          top: `${percentageY}%`, // height (90px)/ 2
+         /*  left: `${percentageX}%`, // width (90px)/ 2
+          top: `${percentageY}%`, // height (90px)/ 2 */
           /*  visibility: pointerDown || gameEnded ? "visible" : "hidden", */
         }}
         /*     key={mySocketId} */
@@ -365,7 +365,6 @@ function GameMobile({ namespace, username }) {
   return (
     <>
       <div className="app" ref={ref}>
-        <button onClick={() => console.log(ref)}>Ref</button>
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
