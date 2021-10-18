@@ -68,7 +68,10 @@ function GameMobile({ namespace, username }) {
     },
     {
       target: ref,
-      drag: { from: () => [position.x.get(), position.y.get()] },
+      drag: {
+        from: () => [position.x.get(), position.y.get()],
+        bounds: { top: 0, left: 0, bottom: window.screen.height, right: window.screen.width },
+      },
     }
   );
 
@@ -164,8 +167,24 @@ function GameMobile({ namespace, username }) {
   function handleOnDrag(state, x, y) {
     const percentageX = (state.xy[0] / window.screen.width) * 100;
     const percentageY = (state.xy[1] / window.screen.height) * 100;
-    const data = { x: percentageX, y: percentageY };
+    let data = { x: percentageX, y: percentageY };
 
+    const rect = cursors.current[`${mySocketId}`].getBoundingClientRect();
+
+    if (x >= window.screen.width) {
+      console.log("toBig");
+      data = { x: 99, y };
+      api.start({ x: window.screen.width - rect.width, y });
+      return;
+    }
+    if (y >= window.screen.height) {
+      console.log("toBig");
+      data = { x, y: 99 };
+      api.start({ x, y: window.screen.height - rect.height });
+      return;
+    }
+
+    console.log("continue");
     api.start({ x, y });
 
     if (mySocketId) {
