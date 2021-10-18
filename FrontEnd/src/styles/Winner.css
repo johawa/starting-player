@@ -12,6 +12,7 @@
   left: 32%;
   z-index: 2;
   font-size: 3rem;
+  background-color: transparent !important;
 }
 
 .point_winner {
@@ -35,6 +36,22 @@
   --r: calc((var(--r-amount) * var(--d)) + var(--r-offset));
 
   transform: rotate(var(--r)) translate(var(--radius));
+}
+
+/* Ipdas + Mobile*/
+@media only screen and (max-width: 768px) {
+  .point_winner {
+    --radius: 40px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .info_winner {
+    position: absolute;
+    top: 11%;
+    left: 17%;
+    font-size: 3rem;
+  }
 }
 
 @keyframes rotate {

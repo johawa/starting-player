@@ -46,7 +46,7 @@ function GameMobile({ namespace, username }) {
   const [mySocketId, setMySocketId] = useState(null);
   const [playersInterceptingRestartCircle, setPlayersInterceptingRestartCircle] = useState(null);
 
-  const [isPointerDown, setIsPointerDown] = useState(false);
+  const [isPointerDown, setIsPointerDown] = useState({ pointerDown: false, x: 0, y: 0 });
 
   const [position, api] = useSpring(() => ({
     x: 0,
@@ -54,8 +54,7 @@ function GameMobile({ namespace, username }) {
     config: { tension: 300 },
   }));
 
-  const ref = React.useRef(null);
-
+  const ref = React.useRef();
   const cursors = useRef([]);
 
   useGesture(
@@ -63,8 +62,7 @@ function GameMobile({ namespace, username }) {
       onDragStart: ({ xy: [x, y] }) => handleDragStart(x, y),
       onDrag: ({ pinching, cancel, offset: [x, y], ...state }) => {
         if (pinching) return cancel();
-        api.start({ x, y });
-        handleOnDrag(state);
+        handleOnDrag(state, x, y);
       },
       onDragEnd: ({ offset: [x, y] }) => handleDragEnd(x, y),
     },
@@ -153,7 +151,6 @@ function GameMobile({ namespace, username }) {
     const radius = 40;
 
     if (socketId && cursors.current[`${socketId}`] && activeUsers && mySocketId) {
-      console.log("setCursorPosition", user.id === mySocketId);
       if (user.id === mySocketId) {
         return;
       }
@@ -165,51 +162,58 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleDragStart(x, y, state) {
-    /*  const newState = { pointerDown: true, PointerX: x, PointerY: y };
-    setIsPointerDown(newState);
- */
-    setIsPointerDown(true);
-    sendUserMouseDown(); // send to Socket.io
+    if (!gameEnded) {
+      setIsPointerDown(true);
+      sendUserMouseDown(); // send to Socket.io
+    }
   }
 
-  function handleOnDrag(state) {
+  function handleOnDrag(state, x, y) {
+    const percentageX = (state.xy[0] / window.screen.width) * 100;
+    const percentageY = (state.xy[1] / window.screen.height) * 100;
+    const data = { x: percentageX, y: percentageY };
+
+    console.log(state.xy[0], state.xy[1], x, y);
+
+    api.start({ x, y });
+
     if (mySocketId) {
-      const percentageX = (state.xy[0] / window.screen.width) * 100;
-      const percentageY = (state.xy[1] / window.screen.height) * 100;
-      const data = { x: percentageX, y: percentageY };
-
       sendCursorPositionData(data); // send to Socket.io
+    }
 
-      // restartGame Logic
-      if (gameEnded === true && data.x < 25 && data.y < 25) {
-        sendInterceptRestartGameStart();
-        // console.log("mousePosition", data, "intercept");
-      }
-      if ((gameEnded === true && data.x >= 25) || data.y >= 25) {
-        sendInterceptRestartGameCancel();
-        // console.log("mousePosition", data, "intercept ended");
-      }
+    console.log("onDrag", data);
+    // restartGame Logic
+    if (gameEnded === true && data.x < 30 && data.y <= 30) {
+      sendInterceptRestartGameStart();
+      // console.log("mousePosition", data, "intercept");
+    }
+    if ((gameEnded === true && data.x >= 30) || data.y >= 30) {
+      sendInterceptRestartGameCancel();
+      // console.log("mousePosition", data, "intercept ended");
     }
   }
 
   function handleDragEnd(x, y) {
-    /*     api.start({ x: x, y: y }); */
-    /*    const newState = { pointerDown: false, PointerX: isPointerDown.x, PointerY: isPointerDown.y };
+    /*     api.start({ x: x, y: y });
+    const newState = { pointerDown: false, PointerX: isPointerDown.x, PointerY: isPointerDown.y };
     setIsPointerDown(newState); */
-    setIsPointerDown(false);
-    sendUserMouseUp(); // send to Socket.io
+
+    if (!gameEnded) {
+      setIsPointerDown(false);
+      sendUserMouseUp();
+    } // send to Socket.io
   }
 
   function userIsPressingMouseDown(user) {
-    if (user.id) {
+    /*  if (user.id) {
       cursors.current[`${user.id}`].firstChild.style.backgroundColor = `${user.clr}`;
-    }
+    } */
   }
 
   function userIsPressingMouseUp(id) {
-    if (id) {
+    /*   if (id) {
       cursors.current[`${id}`].firstChild.style.backgroundColor = "transparent";
-    }
+    } */
   }
 
   // Events
@@ -230,21 +234,21 @@ function GameMobile({ namespace, username }) {
 
       if (position && position === 1) {
         return (
-          <>
+          <div>
             <div className="info_winner">🥇</div>
             <div className={`cursor winner`}>
               <WinnerCircle></WinnerCircle>
             </div>
-          </>
+          </div>
         );
       } else if (position && position !== 1) {
         return (
-          <>
+          <div>
             <div className="info_looser">{position}</div>
             <div className={`cursor looser`}>
               <LooserCircle finalRank={position}></LooserCircle>
             </div>
-          </>
+          </div>
         );
       }
     } else if (gameEnded === false && !winnerArray) {
@@ -272,6 +276,8 @@ function GameMobile({ namespace, username }) {
   }
 
   function allUserInterceptRestartCircle() {
+    console.log("restart Game");
+
     // RestartGame
     setTimerAnimation(false);
     setGameEnded(false);
@@ -311,29 +317,38 @@ function GameMobile({ namespace, username }) {
   }
 
   function renderOwnPLayer() {
-    if (activeUsers && mySocketId) {
-      const ownUser = activeUsers.filter((user) => user.id === mySocketId);
+    /*     if (activeUsers && mySocketId) { */
+    const ownUser = activeUsers?.filter((user) => user.id === mySocketId);
 
-      return (
-        <animated.div
-          className="cursor_wrapper"
-          ref={(element) => {
-            cursors.current[`${mySocketId}`] = element;
-          }}
-          style={{
-            ...position,
-            /*  left: `${PointerX - 45}px`, // width (90px)/ 2
-            top: `${PointerY - 45}px`, // height (90px)/ 2 */
-            /*  visibility: pointerDown || gameEnded ? "visible" : "hidden", */
-          }}
-          key={mySocketId}
-        >
-          {/*      <div className="cursor_mobile"></div> */}
-          {renderCursorState(mySocketId, true)}
-          {renderName(`(${ownUser[0]?.username}📱) - It's you `)}
-        </animated.div>
-      );
-    }
+    const percentageX = (position.x.get() / window.screen.width) * 100;
+    const percentageY = (position.y.get() / window.screen.height) * 100;
+
+    /*     console.log("renderOwnPLayer", percentageX, percentageY); */
+
+    return (
+      <animated.div
+        className="cursor_wrapper"
+        ref={(element) => {
+          cursors.current[`${mySocketId}`] = element;
+        }}
+        /*  onPointerDown={handleDragStart}
+        onPointerUp={handleDragEnd} */
+
+        key={mySocketId}
+        style={{
+          ...position,
+          left: `${percentageX}%`, // width (90px)/ 2
+          top: `${percentageY}%`, // height (90px)/ 2
+          /*  visibility: pointerDown || gameEnded ? "visible" : "hidden", */
+        }}
+        /*     key={mySocketId} */
+      >
+        {/*      <div className="cursor_mobile"></div> */}
+        {renderCursorState(mySocketId, true)}
+        {renderName(`(${ownUser[0]?.username}📱) - It's you `)}
+      </animated.div>
+    );
+    /*   } */
   }
 
   function renderGameEnded() {
@@ -350,6 +365,7 @@ function GameMobile({ namespace, username }) {
   return (
     <>
       <div className="app" ref={ref}>
+        <button onClick={() => console.log(ref)}>Ref</button>
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}

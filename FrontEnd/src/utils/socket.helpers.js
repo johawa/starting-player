@@ -147,7 +147,7 @@ export const subscribeToUserInterceptRestartGameCancel = (cb) => {
 export const subscribeToAllUserInterceptRestartCircle = (cb) => {
   if (!socket) return true;
   socket.on("emitAllUserInterceptRestartCircle", () => {
-    //console.log("Websocket event received! [emitAllUserInterceptRestartCircle]");
+    console.log("Websocket event received! [emitAllUserInterceptRestartCircle]");
     return cb(null);
   });
 };

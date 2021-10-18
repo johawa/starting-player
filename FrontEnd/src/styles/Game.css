@@ -20,6 +20,7 @@
   position: absolute;
   touch-action: none;
   user-select: none;
+
   z-index: 10000;
   box-sizing: border-box;
 
@@ -29,9 +30,13 @@
 }
 
 .cursor {
-  --radius: clamp(3rem, 8vw, 6rem);
-  width: calc(2 * var(--radius));
-  height: calc(2 * var(--radius));
+  min-height: 0vw;
+  /*   --radius: clamp(3rem, 8vw, 6rem); */
+  --radius: 20px;
+  width: 80px;
+  height: 80px;
+  /*   width: calc(2 * var(--radius));
+  height: calc(2 * var(--radius)); */
   border-radius: 50%;
   position: relative !important;
   border: var(--circle-border);
@@ -65,6 +70,15 @@
   border-radius: 50%;
   top: -1rem;
   left: 0rem;
+}
+
+/* Ipdas + Mobile*/
+@media only screen and (max-width: 768px) {
+  .point_1:before,
+  .point_2:before {
+    height: 10px;
+    width: 10px;
+  }
 }
 
 .animationRev {
