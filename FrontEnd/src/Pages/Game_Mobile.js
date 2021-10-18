@@ -59,7 +59,7 @@ function GameMobile({ namespace, username }) {
   useGesture(
     {
       onDragStart: ({ xy: [x, y] }) => handleDragStart(x, y),
-      onDrag: ({ pinching, cancel, offset: [x, y] }, state) => {
+      onDrag: ({ pinching, cancel, offset: [x, y], ...state }) => {
         if (pinching) return cancel();
         api.start({ x, y });
         handleOnDrag(x, y, state);
@@ -138,9 +138,9 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleOnDrag(x, y, state) {
-    console.log("onDrag", state);
+    console.log("onDrag", x, y, state);
     if (mySocketId) {
-      const data = { x, y };
+      const data = { x: state.xy[0], y: state.xy[1] };
 
       sendCursorPositionData(data); // send to Socket.io
 
