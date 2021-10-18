@@ -7,8 +7,8 @@ class User {
     /*  this.clr = COLORS.sort(() => 0.5 - Math.random()).pop(); */
     this.clr = "#" + (0x1000000 + Math.random() * 0xffffff).toString(16).substr(1, 6);
     this.isMobile = isMobile;
-    this.x = 80;
-    this.y = 80;
+    this.x = isMobile ? Math.floor(Math.random() * 80) : 80; // Mobile Users init Position is set randomly between x/y: 0-80%
+    this.y = isMobile ? Math.floor(Math.random() * 80) : 80;
     this.isPressingMouseDown = false;
     this.isInterceptiongRestartCircle = false;
   }

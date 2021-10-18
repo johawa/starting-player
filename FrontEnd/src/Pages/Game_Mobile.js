@@ -62,7 +62,7 @@ function GameMobile({ namespace, username }) {
       onDrag: ({ pinching, cancel, offset: [x, y], ...state }) => {
         if (pinching) return cancel();
         api.start({ x, y });
-        handleOnDrag(x, y, state);
+        handleOnDrag(state);
       },
       onDragEnd: () => handleDragEnd(),
     },
@@ -139,7 +139,7 @@ function GameMobile({ namespace, username }) {
     setIsPointerDown(newState);
   }
 
-  function handleOnDrag(x, y, state) {
+  function handleOnDrag(state) {
     if (mySocketId) {
       const percentageX = (state.xy[0] / window.screen.width) * 100;
       const percentageY = (state.xy[1] / window.screen.height) * 100;
