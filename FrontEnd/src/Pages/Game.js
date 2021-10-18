@@ -281,7 +281,7 @@ function Game({ namespace, username }) {
           ref={(element) => {
             cursors.current[`${mySocketId}`] = element;
           }}
-          className="cursor_wrapper"
+          className="cursor_wrapper ownPlayer"
           key={mySocketId}
         >
           {renderCursorState(mySocketId)}

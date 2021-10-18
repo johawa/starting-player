@@ -110,10 +110,10 @@ function GameMobile({ namespace, username }) {
   }, []);
 
   useEffect(() => {
-    /*   subscribeToCursorPositionsData((err, cords) => {
+    subscribeToCursorPositionsData((err, cords) => {
       if (err) return;
       setCursorPosition(cords);
-    }); */
+    });
     // winner
     subscribeToWinnerArray((err, data) => {
       if (err) return;
@@ -151,9 +151,12 @@ function GameMobile({ namespace, username }) {
   function setCursorPosition(user) {
     const socketId = user.id;
     const radius = 40;
-    console.log(user.id, mySocketId);
 
-    if (socketId && cursors.current[`${socketId}`] && activeUsers && user.id !== mySocketId) {
+    if (socketId && cursors.current[`${socketId}`] && activeUsers && mySocketId) {
+      console.log("setCursorPosition", user.id === mySocketId);
+      if (user.id === mySocketId) {
+        return;
+      }
       cursors.current[`${socketId}`].style.top = `+${user.y}%`;
       cursors.current[`${socketId}`].style.left = `+${user.x}%`;
       // center cursor
@@ -162,10 +165,9 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleDragStart(x, y, state) {
-    console.log(state);
-    const newState = { pointerDown: true, PointerX: x, PointerY: y };
+    /*  const newState = { pointerDown: true, PointerX: x, PointerY: y };
     setIsPointerDown(newState);
-
+ */
     sendUserMouseDown(); // send to Socket.io
   }
 
@@ -191,8 +193,8 @@ function GameMobile({ namespace, username }) {
 
   function handleDragEnd(x, y) {
     /*     api.start({ x: x, y: y }); */
-    const newState = { pointerDown: false, PointerX: isPointerDown.x, PointerY: isPointerDown.y };
-    setIsPointerDown(newState);
+    /*    const newState = { pointerDown: false, PointerX: isPointerDown.x, PointerY: isPointerDown.y };
+    setIsPointerDown(newState); */
 
     sendUserMouseUp(); // send to Socket.io
   }
@@ -315,14 +317,14 @@ function GameMobile({ namespace, username }) {
 
       return (
         <animated.div
-          className="cursor_wrapper"
+          className="cursor_wrapper ownPlayer"
           ref={(element) => {
             cursors.current[`${mySocketId}`] = element;
           }}
           style={{
             ...position,
-            left: `${PointerX - 45}px`, // width (90px)/ 2
-            top: `${PointerY - 45}px`, // height (90px)/ 2
+            /*  left: `${PointerX - 45}px`, // width (90px)/ 2
+            top: `${PointerY - 45}px`, // height (90px)/ 2 */
             /*  visibility: pointerDown || gameEnded ? "visible" : "hidden", */
           }}
           key={mySocketId}
