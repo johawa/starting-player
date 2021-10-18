@@ -1,0 +1,8 @@
+.cursor_mobile {
+  border: var(--circle-border);
+  border-radius: 50%;
+  height: 90px;
+  width: 90px;
+  transform-origin: center center;
+  background-color: transparent;
+}

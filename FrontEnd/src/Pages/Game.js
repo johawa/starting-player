@@ -23,13 +23,13 @@ import {
   subscribeToUserJoinOrDisconnect,
 } from "../utils/socket.helpers";
 import "../styles/Game.css";
+
 import "../styles/Winner.css";
 import "../styles/Looser.css";
 import "../styles/GameEnded.css";
 
 function Game({ namespace, username }) {
   const [timerAnimation, setTimerAnimation] = useState(false);
-
   const [gameEnded, setGameEnded] = useState(false);
   const [winnerArray, setWinnerArray] = useState(null);
 

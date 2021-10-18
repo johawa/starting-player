@@ -7,9 +7,7 @@ import { JoinGame } from "./Pages/JoinGame";
 import { openModalHandler } from "./utils/helpers";
 import { isBrowser } from "react-device-detect";
 
-
 import Game_mobile from "./Pages/Game_Mobile";
-
 
 const MODE = {
   create: "create",
@@ -114,6 +112,14 @@ function App() {
     );
   }
 
+  function renderGame() {
+    if (isBrowser === true) {
+      return <Game namespace={namespace} username={username}></Game>;
+    }
+    
+    return <Game_mobile namespace={namespace} username={username}></Game_mobile>;
+  }
+
   // Event Listeners
   function handler({ key }) {
     const callback = (bln) => {
@@ -132,7 +138,7 @@ function App() {
     <>
       {renderContent()}
       {renderModal()}
-      {namespace && username && <Game_mobile namespace={namespace} username={username}></Game_mobile>}
+      {namespace && username && renderGame()}
       {namespace && username && !modalIsOpen && isBrowser && renderInfo()}
     </>
   );
