@@ -7,6 +7,10 @@
 }
 
 .info_winner {
+  position: absolute;
+  top: 25%;
+  left: 32%;
+
   font-size: 3rem;
   background-color: transparent !important;
 }
@@ -43,6 +47,9 @@
   }
 
   .info_winner {
+    position: unset;
+    top: unset;
+    left: unset;
     font-size: 2.3rem;
   }
 }

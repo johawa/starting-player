@@ -1,6 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import { WinnerCircle } from "../components/Game/Cursor/WinnerCircle";
-import { LooserCircle } from "../components/Game/Cursor/LooserCircle";
 import { renderName } from "../components/Game/RenderName";
 import {
   initiateSocket,
