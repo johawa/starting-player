@@ -3,6 +3,7 @@
 import React from "react";
 import { useDrag } from "@use-gesture/react";
 import { a, useSpring, config } from "@react-spring/web";
+import { copyLinkToClipboad } from "../../utils/helpers";
 import "../../styles/MobileMenu.css";
 
 const items = ["copy Invitation Link", "cancel"];
@@ -35,7 +36,15 @@ export default function MobileMenu({ openIndicator }) {
   const display = y.to((py) => (py < height ? "block" : "none"));
 
   function handClickOnItem(entry) {
-    console.log(entry);
+    switch (entry) {
+      case items[0]:
+        copyLinkToClipboad(close);
+        break;
+
+      default:
+        console.error("Something went wrong in [MobileMenu -> handClickOnItem]");
+        break;
+    }
   }
 
   return (

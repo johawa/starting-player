@@ -1,17 +1,8 @@
-import { toast } from "react-toastify";
+import { copyLinkToClipboad } from "../../utils/helpers";
 
 export function RenderMenu({ dismissModal, handleRecreateGame }) {
-  const copyLinkToClipboad = () => {
-    var link = window.location.href;
-    navigator.clipboard.writeText(link).then(
-      function () {
-        toast("📋 Invitation link copied to clipboard");
-        dismissModal();
-      },
-      function (err) {
-        toast.error("Something went wrong copying the invitation link");
-      }
-    );
+  const handleCopyLinkToClipboard = () => {
+    copyLinkToClipboad(dismissModal);
   };
 
   return (
@@ -30,7 +21,7 @@ export function RenderMenu({ dismissModal, handleRecreateGame }) {
         </form>
       </div>
       <div className="modal__menu__copy">
-        <button className="default-button" onClick={copyLinkToClipboad}>
+        <button className="default-button" onClick={handleCopyLinkToClipboard}>
           Copy Invitation Link
         </button>
       </div>

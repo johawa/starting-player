@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
-import { RenderMenu } from "./content";
+import { RenderMenu } from "./RenderMenu";
 import "../../styles/Modal.css";
 
 Modal.setAppElement("#root");

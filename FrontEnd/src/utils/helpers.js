@@ -36,3 +36,16 @@ export function openModalHandler(key, cb) {
     }
   }
 }
+
+export const copyLinkToClipboad = (cb) => {
+  var link = window.location.href;
+  navigator.clipboard.writeText(link).then(
+    function () {
+      toast("📋 Invitation link copied to clipboard");
+      cb();
+    },
+    function (err) {
+      toast.error("Something went wrong copying the invitation link");
+    }
+  );
+};
