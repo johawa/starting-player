@@ -23,6 +23,16 @@ function App() {
   const [mode, setMode] = useState(MODE.create);
 
   useEffect(() => {
+    window.document.addEventListener(
+      "touchmove",
+      function (event) {
+        if (event.scale !== 1) {
+          event.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+
     const urlParams = new URLSearchParams(window.location.search);
     const namespace = urlParams.get("namespace");
     const username = sessionStorage.getItem("ps-username");
@@ -116,7 +126,7 @@ function App() {
     if (isBrowser === true) {
       return <Game namespace={namespace} username={username}></Game>;
     }
-    
+
     return <Game_mobile namespace={namespace} username={username}></Game_mobile>;
   }
 

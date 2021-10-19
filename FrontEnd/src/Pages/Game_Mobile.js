@@ -170,21 +170,30 @@ function GameMobile({ namespace, username }) {
     let data = { x: percentageX, y: percentageY };
 
     const rect = cursors.current[`${mySocketId}`].getBoundingClientRect();
+    console.log(rect, window.screen.height - rect.height, y);
 
-    if (x >= window.screen.width) {
+    if (x >= window.screen.width || y >= window.screen.height) {
       console.log("toBig");
-      data = { x: 99, y };
-      api.start({ x: window.screen.width - rect.width, y });
+      if (x >= window.screen.width) {
+        console.log("toBigX");
+        data = { x: 99 };
+        api.start({ x: window.screen.width - rect.width });
+      }
+      if (y >= window.screen.height) {
+        console.log("toBigY");
+        data = { y: 99 };
+        api.start({ y: window.screen.height - rect.height });
+      }
+
       return;
     }
-    if (y >= window.screen.height) {
-      console.log("toBig");
-      data = { x, y: 99 };
-      api.start({ x, y: window.screen.height - rect.height });
-      return;
-    }
 
-    console.log("continue");
+    /*     if () {
+      console.log("toBig");
+ 
+      return;
+    } */
+
     api.start({ x, y });
 
     if (mySocketId) {
