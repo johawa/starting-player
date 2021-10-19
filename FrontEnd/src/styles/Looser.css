@@ -47,3 +47,20 @@
     transform: rotate(-180deg);
   }
 }
+
+/* Ipdas + Mobile*/
+@media only screen and (max-width: 768px) {
+  .point_looser {
+    --radius: 35px;
+    width: 10px;
+    height: 10px;
+    font-size: 0.8rem;
+  }
+
+  .info_looser {
+    position: absolute;
+    top: 8%;
+    left: 39%;
+    font-size: 2.3rem;
+  }
+}

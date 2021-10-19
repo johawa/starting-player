@@ -41,7 +41,7 @@
 /* Ipdas + Mobile*/
 @media only screen and (max-width: 768px) {
   .point_winner {
-    --radius: 40px;
+    --radius: 32px;
     width: 10px;
     height: 10px;
   }
@@ -49,8 +49,8 @@
   .info_winner {
     position: absolute;
     top: 11%;
-    left: 17%;
-    font-size: 3rem;
+    left: 27%;
+    font-size: 2.3rem;
   }
 }
 
