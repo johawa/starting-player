@@ -39,6 +39,11 @@ export function openModalHandler(key, cb) {
 
 export const copyLinkToClipboad = (cb) => {
   var link = window.location.href;
+  if (!navigator.clipboard) {
+    toast.error("Please Update your Browser to Use this Function");
+    return cb();
+  }
+
   navigator.clipboard.writeText(link).then(
     function () {
       toast("📋 Invitation link copied to clipboard");

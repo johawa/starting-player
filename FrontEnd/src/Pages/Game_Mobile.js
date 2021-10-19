@@ -28,7 +28,7 @@ import "../styles/Looser.css";
 import "../styles/GameEnded.css";
 
 import "../styles/Game_Mobile.css";
-import MobileMenu from "../components/Modal/MobileMenu";
+import MenuMobile from "../components/Modal/Menu_Mobile";
 import { useSpring, animated } from "@react-spring/web";
 import { createUseGesture, dragAction, useDrag } from "@use-gesture/react";
 import { isMobile } from "react-device-detect";
@@ -58,10 +58,10 @@ function GameMobile({ namespace, username }) {
 
   const ref = React.useRef();
   const cursors = useRef([]);
-  var ratio = window.devicePixelRatio || 1;
+
   useGesture(
     {
-      onDragStart: () => handleDragStart(),
+      onDragStart: ({ event }) => handleDragStart(event),
       onDrag: ({ pinching, cancel, offset: [x, y], ...state }) => {
         if (pinching) return cancel();
         handleOnDrag(state, x, y);
@@ -207,12 +207,15 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function handleDragStart() {
+  function handleDragStart(event) {
+    
     if (isMobileMenuOpen === true) return;
+
+    if (event.target.className === "actionBtn") return;
 
     if (!gameEnded) {
       setIsPointerDown(true);
-      sendUserMouseDown(); // send to Socket.io
+      sendUserMouseDown(); /// send to Socket.io
     }
   }
 
@@ -372,14 +375,13 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleMobileMenuOpenState(isOpen) {
-    console.log("handleMobileMenuOpenState", isOpen);
     setMobileMenuOpen(isOpen);
   }
 
   return (
     <>
       <div className="app" ref={ref}>
-        <MobileMenu openIndicator={handleMobileMenuOpenState}></MobileMenu>
+        <MenuMobile openIndicator={handleMobileMenuOpenState}></MenuMobile>
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}

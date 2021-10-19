@@ -1,10 +1,10 @@
 /* Credits to https://codesandbox.io/s/github/pmndrs/use-gesture/tree/main/demo/src/sandboxes/action-sheet?file=/src/App.jsx */
 
 .actionBtn {
-  position: fixed;
+  position: absolute;
   z-index: 2000;
-  bottom: 80px;
-  right: 40px;
+  bottom: 35px;
+  right: 30px;
   height: 48px;
   width: 48px;
   border-radius: 24px;
@@ -14,6 +14,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  border: 1px solid red;
 }
 
 .actionBtn:after {

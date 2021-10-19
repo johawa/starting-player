@@ -4,16 +4,17 @@ import React from "react";
 import { useDrag } from "@use-gesture/react";
 import { a, useSpring, config } from "@react-spring/web";
 import { copyLinkToClipboad } from "../../utils/helpers";
-import "../../styles/MobileMenu.css";
+import "../../styles/Menu_Mobile.css";
 
 const items = ["copy Invitation Link", "cancel"];
 const height = items.length * 60 + 80;
 
-export default function MobileMenu({ openIndicator }) {
+export default function MenuMobile({ openIndicator }) {
   const [{ y }, api] = useSpring(() => ({ y: height }));
 
-  const open = ({ canceled }) => {
-    console.log("open");
+  const open = ({ canceled, nativeEvent }) => {
+    console.log("open", nativeEvent);
+
     openIndicator(true);
     api.start({ y: 0, immediate: false, config: canceled ? config.wobbly : config.stiff });
   };

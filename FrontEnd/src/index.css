@@ -51,7 +51,6 @@ body {
 
 .app {
   cursor: grab;
-  position: absolute;
   touch-action: none;
   user-select: none;
 
