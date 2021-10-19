@@ -26,9 +26,10 @@ import "../styles/Game.css";
 import "../styles/Winner.css";
 import "../styles/Looser.css";
 import "../styles/GameEnded.css";
-
 import "../styles/Game_Mobile.css";
+
 import MenuMobile from "../components/Modal/Menu_Mobile";
+import Confetti from "react-confetti";
 import { useSpring, animated } from "@react-spring/web";
 import { createUseGesture, dragAction, useDrag } from "@use-gesture/react";
 import { isMobile } from "react-device-detect";
@@ -201,8 +202,6 @@ function GameMobile({ namespace, username }) {
 
     const gameEndDimensions = window.document.documentElement.clientWidth * 0.45 - Math.floor(rect.width);
 
-    console.log(gameEndDimensions, x);
-
     // restartGame Logic
     if (gameEnded === true && x < gameEndDimensions && y <= gameEndDimensions) {
       sendInterceptRestartGameStart();
@@ -268,7 +267,7 @@ function GameMobile({ namespace, username }) {
           <div>
             <div className="info_winner">🥇</div>
             <div className={`cursor winner`}>
-              <WinnerCircle></WinnerCircle>
+              {/* <WinnerCircle></WinnerCircle> */}
             </div>
           </div>
         );
@@ -385,10 +384,27 @@ function GameMobile({ namespace, username }) {
     setMobileMenuOpen(isOpen);
   }
 
+  function checkIfOwnPLayerHasWon() {
+    if (!winnerArray || !mySocketId) return;
+
+    const userWithPosition = winnerArray.filter((user) => user.id === mySocketId);
+    const isWinner = userWithPosition[0].position === 0;
+
+    if (isWinner) {
+      return (
+        <Confetti
+          width={window.document.documentElement.clientWidth}
+          height={window.document.documentElement.clientHeight}
+          numberOfPieces={100}
+        />
+      );
+    }
+  }
+
   return (
     <>
       <div className="app" ref={ref}>
-        {/* <span>{isDragging ? "Dragging" : null}</span> */}
+        {gameEnded && checkIfOwnPLayerHasWon()}
         <MenuMobile openIndicator={handleMobileMenuOpenState}></MenuMobile>
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
