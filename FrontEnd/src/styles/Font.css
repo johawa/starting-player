@@ -30,7 +30,7 @@ p {
   min-width: 10rem;
   height: 5rem;
   margin: 3rem auto;
-  color: #705df2;
+  color: var(--purple);
   border-radius: var(--default-border-radius);
   background-color: var(--white);
   font-size: clamp(1rem, 1vw, 1.6rem);

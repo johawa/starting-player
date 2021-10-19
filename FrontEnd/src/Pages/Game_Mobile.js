@@ -28,7 +28,7 @@ import "../styles/Looser.css";
 import "../styles/GameEnded.css";
 
 import "../styles/Game_Mobile.css";
-
+import MobileMenu from "../components/Modal/MobileMenu";
 import { useSpring, animated } from "@react-spring/web";
 import { createUseGesture, dragAction, useDrag } from "@use-gesture/react";
 import { isMobile } from "react-device-detect";
@@ -48,7 +48,7 @@ function GameMobile({ namespace, username }) {
 
   const [isPointerDown, setIsPointerDown] = useState(false);
 
- 
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [position, api] = useSpring(() => ({
     x: 0,
@@ -172,6 +172,8 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleOnDrag(state, x, y) {
+    if (isMobileMenuOpen === true) return;
+
     const percentageX = (state.xy[0] / window.document.documentElement.clientWidth) * 100;
     const percentageY = (state.xy[1] / window.document.documentElement.clientHeight) * 100;
     let data = { x: percentageX, y: percentageY };
@@ -205,7 +207,9 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function handleDragStart(x, y, state) {
+  function handleDragStart() {
+    if (isMobileMenuOpen === true) return;
+
     if (!gameEnded) {
       setIsPointerDown(true);
       sendUserMouseDown(); // send to Socket.io
@@ -213,6 +217,8 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleDragEnd() {
+    if (isMobileMenuOpen === true) return;
+
     if (!gameEnded) {
       setIsPointerDown(false);
       sendUserMouseUp();
@@ -365,27 +371,15 @@ function GameMobile({ namespace, username }) {
     );
   }
 
+  function handleMobileMenuOpenState(isOpen) {
+    console.log("handleMobileMenuOpenState", isOpen);
+    setMobileMenuOpen(isOpen);
+  }
+
   return (
     <>
       <div className="app" ref={ref}>
-        <span>
-          {/*  {"Screen wh:" + window.screen.width + "x" + window.screen.height}
-          <br />
-          {"Client wh:" +
-            window.document.documentElement.clientWidth +
-            "x" +
-            window.document.documentElement.clientHeight}
-          <br />
-          {"Ratio wh:" + window.screen.width * ratio + "x" + window.screen.height * ratio}
-          <br />
-          {toBig && "to Big"}
-          <br />
-          "x" {x}
-          <br />
-          "rectWidth" {rectWidth}
-          <br />
-          "x + rectWidth" {rectWidth + x} */}
-        </span>
+        <MobileMenu openIndicator={handleMobileMenuOpenState}></MobileMenu>
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
