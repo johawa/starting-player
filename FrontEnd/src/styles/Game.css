@@ -42,7 +42,7 @@
   border: var(--circle-border);
 }
 
-.cursor_winner {
+.cursor_result {
   border-radius: 50%;
   position: relative !important;
   border: var(--circle-border);

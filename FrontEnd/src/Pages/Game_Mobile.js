@@ -265,18 +265,16 @@ function GameMobile({ namespace, username }) {
       if (position && position === 1) {
         return (
           <div>
-            <div className="cursor_winner">
+            <div className="cursor_result">
               <div className="info_winner">🥇</div>
-              {/* <WinnerCircle></WinnerCircle> */}
             </div>
           </div>
         );
       } else if (position && position !== 1) {
         return (
           <div>
-            <div className="info_looser">{position}</div>
-            <div className={`cursor looser`}>
-              <LooserCircle finalRank={position}></LooserCircle>
+            <div className="cursor_result">
+              <div className="info_looser">{position}</div>
             </div>
           </div>
         );
