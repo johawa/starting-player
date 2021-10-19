@@ -48,6 +48,8 @@ function GameMobile({ namespace, username }) {
 
   const [isPointerDown, setIsPointerDown] = useState(false);
 
+ 
+
   const [position, api] = useSpring(() => ({
     x: 0,
     y: 0,
@@ -56,7 +58,7 @@ function GameMobile({ namespace, username }) {
 
   const ref = React.useRef();
   const cursors = useRef([]);
-
+  var ratio = window.devicePixelRatio || 1;
   useGesture(
     {
       onDragStart: () => handleDragStart(),
@@ -70,7 +72,12 @@ function GameMobile({ namespace, username }) {
       target: ref,
       drag: {
         from: () => [position.x.get(), position.y.get()],
-        bounds: { top: 0, left: 0, bottom: window.screen.height, right: window.screen.width },
+        bounds: {
+          top: 0,
+          left: 0,
+          bottom: window.document.documentElement.clientHeight,
+          right: window.document.documentElement.clientWidth,
+        },
       },
     }
   );
@@ -165,34 +172,21 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleOnDrag(state, x, y) {
-    const percentageX = (state.xy[0] / window.screen.width) * 100;
-    const percentageY = (state.xy[1] / window.screen.height) * 100;
+    const percentageX = (state.xy[0] / window.document.documentElement.clientWidth) * 100;
+    const percentageY = (state.xy[1] / window.document.documentElement.clientHeight) * 100;
     let data = { x: percentageX, y: percentageY };
 
     const rect = cursors.current[`${mySocketId}`].getBoundingClientRect();
-    console.log(rect, window.screen.height - rect.height, y);
+    const rectPositionRightCorner = x + Math.floor(rect.width);
+    const rectPositionBottom = y + Math.floor(rect.height);
 
-    if (x >= window.screen.width || y >= window.screen.height) {
+    if (
+      rectPositionRightCorner >= window.document.documentElement.clientWidth ||
+      rectPositionBottom >= window.document.documentElement.clientHeight
+    ) {
       console.log("toBig");
-      if (x >= window.screen.width) {
-        console.log("toBigX");
-        data = { x: 99 };
-        api.start({ x: window.screen.width - rect.width });
-      }
-      if (y >= window.screen.height) {
-        console.log("toBigY");
-        data = { y: 99 };
-        api.start({ y: window.screen.height - rect.height });
-      }
-
       return;
     }
-
-    /*     if () {
-      console.log("toBig");
- 
-      return;
-    } */
 
     api.start({ x, y });
 
@@ -374,6 +368,24 @@ function GameMobile({ namespace, username }) {
   return (
     <>
       <div className="app" ref={ref}>
+        <span>
+          {/*  {"Screen wh:" + window.screen.width + "x" + window.screen.height}
+          <br />
+          {"Client wh:" +
+            window.document.documentElement.clientWidth +
+            "x" +
+            window.document.documentElement.clientHeight}
+          <br />
+          {"Ratio wh:" + window.screen.width * ratio + "x" + window.screen.height * ratio}
+          <br />
+          {toBig && "to Big"}
+          <br />
+          "x" {x}
+          <br />
+          "rectWidth" {rectWidth}
+          <br />
+          "x + rectWidth" {rectWidth + x} */}
+        </span>
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
