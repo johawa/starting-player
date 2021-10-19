@@ -39,10 +39,10 @@ export const subscribeToUserJoinOrDisconnect = () => {
     console.log("Websocket event received! [emitUserJoinOrDisconnect]", msg);
     switch (type) {
       case "join":
-        toast.info(`User ${username} joined`, { hideProgressBar: true, autoClose: 2000 });
+        toast.info(`User ${username} joined`, { hideProgressBar: true, autoClose: isMobile ? 500 : 2000 });
         break;
       case "disconnect":
-        toast.info(`User ${username} left`, { hideProgressBar: true, autoClose: 2000 });
+        toast.info(`User ${username} left`, { hideProgressBar: true, autoClose: isMobile ? 500 : 2000 });
         break;
       default:
         console.error("Something went wrong in [subscribteToUserJoin]");

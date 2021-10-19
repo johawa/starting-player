@@ -48,6 +48,7 @@ function GameMobile({ namespace, username }) {
 
   const [isPointerDown, setIsPointerDown] = useState(false);
 
+  const [isDragging, setIsDragging] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const [position, api] = useSpring(() => ({
@@ -63,7 +64,7 @@ function GameMobile({ namespace, username }) {
     {
       onDragStart: ({ event }) => handleDragStart(event),
       onDrag: ({ pinching, cancel, offset: [x, y], ...state }) => {
-        if (pinching) return cancel();
+        /*   if (pinching) return cancel(); */
         handleOnDrag(state, x, y);
       },
       onDragEnd: () => handleDragEnd(),
@@ -172,13 +173,15 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleOnDrag(state, x, y) {
-    if (isMobileMenuOpen === true) return;
+    if (isMobileMenuOpen === true || !mySocketId) return;
+    setIsDragging(true);
 
     const percentageX = (state.xy[0] / window.document.documentElement.clientWidth) * 100;
     const percentageY = (state.xy[1] / window.document.documentElement.clientHeight) * 100;
     let data = { x: percentageX, y: percentageY };
 
-    const rect = cursors.current[`${mySocketId}`].getBoundingClientRect();
+    const rect = cursors.current[`${mySocketId}`].firstChild.getBoundingClientRect();
+
     const rectPositionRightCorner = x + Math.floor(rect.width);
     const rectPositionBottom = y + Math.floor(rect.height);
 
@@ -196,19 +199,22 @@ function GameMobile({ namespace, username }) {
       sendCursorPositionData(data); // send to Socket.io
     }
 
+    const gameEndDimensions = window.document.documentElement.clientWidth * 0.45 - Math.floor(rect.width);
+
+    console.log(gameEndDimensions, x);
+
     // restartGame Logic
-    if (gameEnded === true && data.x < 30 && data.y <= 30) {
+    if (gameEnded === true && x < gameEndDimensions && y <= gameEndDimensions) {
       sendInterceptRestartGameStart();
       // console.log("mousePosition", data, "intercept");
     }
-    if ((gameEnded === true && data.x >= 30) || data.y >= 30) {
+    if ((gameEnded === true && x >= gameEndDimensions) || y >= gameEndDimensions) {
       sendInterceptRestartGameCancel();
       // console.log("mousePosition", data, "intercept ended");
     }
   }
 
   function handleDragStart(event) {
-    
     if (isMobileMenuOpen === true) return;
 
     if (event.target.className === "actionBtn") return;
@@ -220,6 +226,7 @@ function GameMobile({ namespace, username }) {
   }
 
   function handleDragEnd() {
+    setIsDragging(false);
     if (isMobileMenuOpen === true) return;
 
     if (!gameEnded) {
@@ -366,10 +373,10 @@ function GameMobile({ namespace, username }) {
   function renderGameEnded() {
     return (
       <div className="gameEnded">
-        <h3>Game Ended, come here to restart 🎉</h3>
-        <p>
+        <span>Game Ended, come here to restart 🎉</span>
+        <span>
           {playersInterceptingRestartCircle ? playersInterceptingRestartCircle : 0}/{activeUsers.length}
-        </p>
+        </span>
       </div>
     );
   }
@@ -381,6 +388,7 @@ function GameMobile({ namespace, username }) {
   return (
     <>
       <div className="app" ref={ref}>
+        {/* <span>{isDragging ? "Dragging" : null}</span> */}
         <MenuMobile openIndicator={handleMobileMenuOpenState}></MenuMobile>
         {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}

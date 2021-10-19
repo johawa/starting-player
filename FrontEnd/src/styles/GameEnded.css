@@ -12,16 +12,23 @@
   align-items: center;
   color: var(--white);
   border-radius: 50%;
-  font-size: 3.2rem;
+  margin: 0 auto;
   text-align: center;
 }
 
+.gameEnded span:nth-child(1) {
+  font-size: medium;
+}
+
+.gameEnded span:nth-child(2) {
+  font-size: small;
+}
 
 /* Ipdas + Mobile*/
 @media only screen and (max-width: 768px) {
   .gameEnded {
     width: 45vw;
     height: 45vw;
-    padding-top: 0rem;
-  }  
+    padding-top: 1rem;
+  }
 }
