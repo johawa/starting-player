@@ -31,7 +31,6 @@
 }
 
 .cursor {
-  min-height: 0vw;
   /*   --radius: clamp(3rem, 8vw, 6rem); */
   --radius: 20px;
   width: 80px;
@@ -41,6 +40,17 @@
   border-radius: 50%;
   position: relative !important;
   border: var(--circle-border);
+}
+
+.cursor_winner {
+  border-radius: 50%;
+  position: relative !important;
+  border: var(--circle-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
 }
 
 .point_1 {
