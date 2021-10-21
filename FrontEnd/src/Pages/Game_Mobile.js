@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { renderName } from "../components/Game/RenderName";
+import { renderName, RenderGameEnded } from "../components/Game/UtilComponents";
 import {
   initiateSocket,
   subscribeToNewConnection,
@@ -365,17 +365,6 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function renderGameEnded() {
-    return (
-      <div className="gameEnded">
-        <span>Game Ended, come here to restart 🎉</span>
-        <span>
-          {playersInterceptingRestartCircle ? playersInterceptingRestartCircle : 0}/{activeUsers.length}
-        </span>
-      </div>
-    );
-  }
-
   function handleMobileMenuOpenState(isOpen) {
     setMobileMenuOpen(isOpen);
   }
@@ -402,7 +391,12 @@ function GameMobile({ namespace, username }) {
       <div className="app" ref={ref}>
         {gameEnded && checkIfOwnPLayerHasWon()}
         <MenuMobile openIndicator={handleMobileMenuOpenState}></MenuMobile>
-        {gameEnded && renderGameEnded()}
+        {gameEnded && (
+          <RenderGameEnded
+            playersInterceptingRestartCircle={playersInterceptingRestartCircle}
+            activeUsersLength={activeUsers.length}
+          ></RenderGameEnded>
+        )}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>

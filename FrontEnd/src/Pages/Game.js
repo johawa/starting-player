@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import Confetti from "react-confetti";
 import { WinnerCircle } from "../components/Game/Cursor/WinnerCircle";
 import { LooserCircle } from "../components/Game/Cursor/LooserCircle";
-import { renderName } from "../components/Game/RenderName";
+import { renderName, RenderGameEnded } from "../components/Game/UtilComponents";
 import {
   initiateSocket,
   subscribeToNewConnection,
@@ -130,16 +130,18 @@ function Game({ namespace, username }) {
       const percentageX = (ev.pageX / window.visualViewport.width) * 100;
       const percentageY = (ev.pageY / window.visualViewport.height) * 100;
       const data = { x: percentageX, y: percentageY };
-      console.log("handleMouseMove", percentageX, percentageY);
 
       sendCursorPositionData(data); // send to Socket.io
 
+      const rect = cursors.current[`${mySocketId}`].firstChild.getBoundingClientRect();
+      const gameEndDimensions = window.screen.width * 0.25 - Math.floor(rect.width);
+      console.log("handleMouseMove", percentageX, percentageY);
       // restartGame Logic
-      if (gameEnded === true && data.x < 25 && data.y < 25) {
+      if (gameEnded === true && ev.pageX < gameEndDimensions && ev.pageY < gameEndDimensions) {
         sendInterceptRestartGameStart();
         // console.log("mousePosition", data, "intercept");
       }
-      if ((gameEnded === true && data.x >= 25) || data.y >= 25) {
+      if ((gameEnded === true && ev.pageX >= gameEndDimensions) || ev.pageY >= gameEndDimensions) {
         sendInterceptRestartGameCancel();
         // console.log("mousePosition", data, "intercept ended");
       }
@@ -289,16 +291,6 @@ function Game({ namespace, username }) {
     }
   }
 
-  function renderGameEnded() {
-    return (
-      <div className="gameEnded">
-        <h3>Game Ended, come here to restart 🎉</h3>
-        <p>
-          {playersInterceptingRestartCircle ? playersInterceptingRestartCircle : 0}/{activeUsers.length}
-        </p>
-      </div>
-    );
-  }
 
   function checkIfOwnPLayerHasWon() {
     if (!winnerArray || !mySocketId) return;
@@ -326,7 +318,12 @@ function Game({ namespace, username }) {
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
         {gameEnded && checkIfOwnPLayerHasWon()}
-        {gameEnded && renderGameEnded()}
+        {gameEnded && (
+          <RenderGameEnded
+            playersInterceptingRestartCircle={playersInterceptingRestartCircle}
+            activeUsersLength={activeUsers.length}
+          ></RenderGameEnded>
+        )}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>
