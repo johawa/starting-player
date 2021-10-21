@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import Confetti from "react-confetti";
+
 import { WinnerCircle } from "../components/Game/Cursor/WinnerCircle";
 import { LooserCircle } from "../components/Game/Cursor/LooserCircle";
-import { renderName, RenderGameEnded } from "../components/Game/UtilComponents";
+import { renderName, RenderGameEnded, RenderConfetti } from "../components/Game/UtilComponents";
 import {
   initiateSocket,
   subscribeToNewConnection,
@@ -291,22 +291,16 @@ function Game({ namespace, username }) {
     }
   }
 
-
-  function checkIfOwnPLayerHasWon() {
-    if (!winnerArray || !mySocketId) return;
-
-    const userWithPosition = winnerArray.filter((user) => user.id === mySocketId);
-    const isWinner = userWithPosition[0].position === 0;
-
-    if (isWinner) {
-      return (
-        <Confetti
-          width={window.document.documentElement.clientWidth}
-          height={window.document.documentElement.clientHeight}
-          numberOfPieces={100}
-        />
-      );
-    }
+  function renderGameEnded() {
+    return (
+      <>
+        <RenderConfetti winnerArray={winnerArray} mySocketId={mySocketId}></RenderConfetti>
+        <RenderGameEnded
+          playersInterceptingRestartCircle={playersInterceptingRestartCircle}
+          activeUsersLength={activeUsers.length}
+        ></RenderGameEnded>
+      </>
+    );
   }
 
   return (
@@ -317,13 +311,7 @@ function Game({ namespace, username }) {
         onMouseDown={(ev) => handleMouseDown(ev)}
         onMouseUp={(ev) => handleMouseUp(ev)}
       >
-        {gameEnded && checkIfOwnPLayerHasWon()}
-        {gameEnded && (
-          <RenderGameEnded
-            playersInterceptingRestartCircle={playersInterceptingRestartCircle}
-            activeUsersLength={activeUsers.length}
-          ></RenderGameEnded>
-        )}
+        {gameEnded && renderGameEnded()}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>

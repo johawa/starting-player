@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import { renderName, RenderGameEnded } from "../components/Game/UtilComponents";
+import { renderName, RenderGameEnded, RenderConfetti } from "../components/Game/UtilComponents";
+import { RenderCursorState } from "../components/Game/Cursor/RenderCursorState";
 import {
   initiateSocket,
   subscribeToNewConnection,
@@ -255,38 +256,6 @@ function GameMobile({ namespace, username }) {
     }
   }
 
-  function renderCursorState(id, mobileAndOwn) {
-    if (gameEnded === true && winnerArray) {
-      const userWithPosition = winnerArray.filter((user) => user.id === id);
-      const position = userWithPosition[0] ? userWithPosition[0].position + 1 : null;
-
-      if (position && position === 1) {
-        return (
-          <div>
-            <div className="cursor_result">
-              <div className="info_winner">🥇</div>
-            </div>
-          </div>
-        );
-      } else if (position && position !== 1) {
-        return (
-          <div>
-            <div className="cursor_result">
-              <div className="info_looser">{position}</div>
-            </div>
-          </div>
-        );
-      }
-    } else if (gameEnded === false && !winnerArray) {
-      return (
-        <div className={`cursor ${mobileAndOwn ? "ownPlayer" : null}`}>
-          <div className={timerAnimation ? "point_1 animationRev" : "point_1"}></div>
-          <div className={timerAnimation ? "point_2 animation" : "point_2"}></div>
-        </div>
-      );
-    }
-  }
-
   function userIsInterceptingRestartGame(users) {
     const amount = users.filter((user) => user.isInterceptiongRestartCircle).length;
 
@@ -334,7 +303,12 @@ function GameMobile({ namespace, username }) {
             className="cursor_wrapper"
             key={user.id}
           >
-            {renderCursorState(user.id)}
+            <RenderCursorState
+              gameEnded={gameEnded}
+              winnerArray={winnerArray}
+              timerAnimation={timerAnimation}
+              id={user.id}
+            ></RenderCursorState>
             {renderName(user.username, user.isMobile)}
           </div>
         );
@@ -358,7 +332,12 @@ function GameMobile({ namespace, username }) {
           }}
           key={mySocketId}
         >
-          {renderCursorState(mySocketId, true)}
+          <RenderCursorState
+            gameEnded={gameEnded}
+            winnerArray={winnerArray}
+            timerAnimation={timerAnimation}
+            id={mySocketId}
+          ></RenderCursorState>
           {renderName(`(${ownUser[0]?.username}📱) - It's you `)}
         </animated.div>
       );
@@ -369,34 +348,23 @@ function GameMobile({ namespace, username }) {
     setMobileMenuOpen(isOpen);
   }
 
-  function checkIfOwnPLayerHasWon() {
-    if (!winnerArray || !mySocketId) return;
-
-    const userWithPosition = winnerArray.filter((user) => user.id === mySocketId);
-    const isWinner = userWithPosition[0].position === 0;
-
-    if (isWinner) {
-      return (
-        <Confetti
-          width={window.document.documentElement.clientWidth}
-          height={window.document.documentElement.clientHeight}
-          numberOfPieces={100}
-        />
-      );
-    }
+  function renderGameEnded() {
+    return (
+      <>
+        <RenderConfetti winnerArray={winnerArray} mySocketId={mySocketId}></RenderConfetti>
+        <RenderGameEnded
+          playersInterceptingRestartCircle={playersInterceptingRestartCircle}
+          activeUsersLength={activeUsers.length}
+        ></RenderGameEnded>
+      </>
+    );
   }
 
   return (
     <>
       <div className="app" ref={ref}>
-        {gameEnded && checkIfOwnPLayerHasWon()}
+        {gameEnded && renderGameEnded()}
         <MenuMobile openIndicator={handleMobileMenuOpenState}></MenuMobile>
-        {gameEnded && (
-          <RenderGameEnded
-            playersInterceptingRestartCircle={playersInterceptingRestartCircle}
-            activeUsersLength={activeUsers.length}
-          ></RenderGameEnded>
-        )}
         {renderOwnPLayer()}
         {renderOtherPlayers()}
       </div>

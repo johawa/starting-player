@@ -1,7 +1,7 @@
-import { WinnerCircle } from "./WinnerCircle";
 import { LooserCircle } from "./LooserCircle";
+import { WinnerCircle } from "./WinnerCircle";
 
-function renderCursorWithState(winnerArray, gameEnded, id, timerAnimation) {
+export function RenderCursorState({ gameEnded, winnerArray, timerAnimation, id }) {
   if (gameEnded === true && winnerArray) {
     const userWithPosition = winnerArray.filter((user) => user.id === id);
     const position = userWithPosition[0] ? userWithPosition[0].position + 1 : null;
@@ -34,5 +34,3 @@ function renderCursorWithState(winnerArray, gameEnded, id, timerAnimation) {
     );
   }
 }
-
-export default renderCursorWithState;

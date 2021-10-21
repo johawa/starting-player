@@ -1,3 +1,5 @@
+import Confetti from "react-confetti";
+
 export function renderName(name, isMobile) {
   return (
     <p>
@@ -15,4 +17,21 @@ export function RenderGameEnded({ playersInterceptingRestartCircle, activeUsersL
       </p>
     </div>
   );
+}
+
+export function RenderConfetti({ winnerArray, mySocketId }) {
+  // Confetti is only rendered for the winner
+  const userWithPosition = winnerArray.filter((user) => user.id === mySocketId);
+  const isWinner = userWithPosition[0].position === 0;
+
+  if (isWinner) {
+    return (
+      <Confetti
+        width={window.document.documentElement.clientWidth}
+        height={window.document.documentElement.clientHeight}
+        numberOfPieces={100}
+      />
+    );
+  }
+  return null;
 }
